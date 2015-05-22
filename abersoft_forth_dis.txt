@@ -1,0 +1,5764 @@
+; 2015-05-22 First complet result of <dis.fsb>.
+
+7B22  C_nfa: defb 0x01+0x80,"","C"+0x80
+7B24  C_lfa: defw TILL_nfa
+7B26  C_cfa: defw 0x6306
+7B28  C_pfa: 
+7B28 defw 1_cfa
+7B2A defw TEXT_cfa
+7B2C defw PAD_cfa
+7B2E defw COUNT_cfa
+7B30 defw #LAG_cfa
+7B32 defw ROT_cfa
+7B34 defw OVER_cfa
+7B36 defw MIN_cfa
+7B38 defw >R_cfa
+7B3A defw R_cfa
+7B3C defw R#_cfa
+7B3E defw +!_cfa
+7B40 defw R_cfa
+7B42 defw -_cfa
+7B44 defw >R_cfa
+7B46 defw DUP_cfa
+7B48 defw HERE_cfa
+7B4A defw R_cfa
+7B4C defw CMOVE_cfa
+7B4E defw HERE_cfa
+7B50 defw #LEAD_cfa
+7B52 defw +_cfa
+7B54 defw R>_cfa
+7B56 defw CMOVE_cfa
+7B58 defw R>_cfa
+7B5A defw CMOVE_cfa
+7B5C defw UPDATE_cfa
+7B5E defw 0_cfa
+7B60 defw M_cfa
+7B62 defw ;S_cfa
+
+
+7AF9  TILL_nfa: defb 0x04+0x80,"TIL","L"+0x80
+7AFE  TILL_lfa: defw X_nfa
+7B00  TILL_cfa: defw 0x6306
+7B02  TILL_pfa: 
+7B02 defw #LEAD_cfa
+7B04 defw +_cfa
+7B06 defw 1_cfa
+7B08 defw TEXT_cfa
+7B0A defw 1LINE_cfa
+7B0C defw 0=_cfa
+7B0E defw 0_cfa
+7B10 defw ?ERROR_cfa
+7B12 defw #LEAD_cfa
+7B14 defw +_cfa
+7B16 defw SWAP_cfa
+7B18 defw -_cfa
+7B1A defw DELETE_cfa
+7B1C defw 0_cfa
+7B1E defw M_cfa
+7B20 defw ;S_cfa
+
+
+7AE1  X_nfa: defb 0x01+0x80,"","X"+0x80
+7AE3  X_lfa: defw B_nfa
+7AE5  X_cfa: defw 0x6306
+7AE7  X_pfa: 
+7AE7 defw 1_cfa
+7AE9 defw TEXT_cfa
+7AEB defw FIND_cfa
+7AED defw PAD_cfa
+7AEF defw C@_cfa
+7AF1 defw DELETE_cfa
+7AF3 defw 0_cfa
+7AF5 defw M_cfa
+7AF7 defw ;S_cfa
+
+
+7AD1  B_nfa: defb 0x01+0x80,"","B"+0x80
+7AD3  B_lfa: defw F_nfa
+7AD5  B_cfa: defw 0x6306
+7AD7  B_pfa: 
+7AD7 defw PAD_cfa
+7AD9 defw C@_cfa
+7ADB defw MINUS_cfa
+7ADD defw M_cfa
+7ADF defw ;S_cfa
+
+
+7AC3  F_nfa: defb 0x01+0x80,"","F"+0x80
+7AC5  F_lfa: defw N_nfa
+7AC7  F_cfa: defw 0x6306
+7AC9  F_pfa: 
+7AC9 defw 1_cfa
+7ACB defw TEXT_cfa
+7ACD defw N_cfa
+7ACF defw ;S_cfa
+
+
+7AB5  N_nfa: defb 0x01+0x80,"","N"+0x80
+7AB7  N_lfa: defw DELETE_nfa
+7AB9  N_cfa: defw 0x6306
+7ABB  N_pfa: 
+7ABB defw FIND_cfa
+7ABD defw 0_cfa
+7ABF defw M_cfa
+7AC1 defw ;S_cfa
+
+
+7A86  DELETE_nfa: defb 0x06+0x80,"DELET","E"+0x80
+7A8D  DELETE_lfa: defw FIND_nfa
+7A8F  DELETE_cfa: defw 0x6306
+7A91  DELETE_pfa: 
+7A91 defw >R_cfa
+7A93 defw #LAG_cfa
+7A95 defw +_cfa
+7A97 defw R_cfa
+7A99 defw -_cfa
+7A9B defw #LAG_cfa
+7A9D defw R_cfa
+7A9F defw MINUS_cfa
+7AA1 defw R#_cfa
+7AA3 defw +!_cfa
+7AA5 defw #LEAD_cfa
+7AA7 defw +_cfa
+7AA9 defw SWAP_cfa
+7AAB defw CMOVE_cfa
+7AAD defw R>_cfa
+7AAF defw BLANKS_cfa
+7AB1 defw UPDATE_cfa
+7AB3 defw ;S_cfa
+
+
+7A57  FIND_nfa: defb 0x04+0x80,"FIN","D"+0x80
+7A5C  FIND_lfa: defw 1LINE_nfa
+7A5E  FIND_cfa: defw 0x6306
+7A60  FIND_pfa: 
+7A60 defw LIT_cfa,0x03FF
+7A64 defw R#_cfa
+7A66 defw @_cfa
+7A68 defw <_cfa
+7A6A defw 0BRANCH_cfa,0x0012; to 7A7E 
+7A6E defw TOP_cfa
+7A70 defw PAD_cfa
+7A72 defw HERE_cfa
+7A74 defw C/L_cfa
+7A76 defw 1+_cfa
+7A78 defw CMOVE_cfa
+7A7A defw 0_cfa
+7A7C defw ERROR_cfa
+7A7E defw 1LINE_cfa
+7A80 defw 0BRANCH_cfa,0xFFDE; to 7A60 
+7A84 defw ;S_cfa
+
+
+7A3F  1LINE_nfa: defb 0x05+0x80,"1LIN","E"+0x80
+7A45  1LINE_lfa: defw MATCH_nfa
+7A47  1LINE_cfa: defw 0x6306
+7A49  1LINE_pfa: 
+7A49 defw #LAG_cfa
+7A4B defw PAD_cfa
+7A4D defw COUNT_cfa
+7A4F defw MATCH_cfa
+7A51 defw R#_cfa
+7A53 defw +!_cfa
+7A55 defw ;S_cfa
+
+
+79F1  MATCH_nfa: defb 0x05+0x80,"MATC","H"+0x80
+79F7  MATCH_lfa: defw -TEXT_nfa
+79F9  MATCH_cfa: defw 0x6306
+79FB  MATCH_pfa: 
+79FB defw >R_cfa
+79FD defw >R_cfa
+79FF defw 2DUP_cfa
+7A01 defw R>_cfa
+7A03 defw R>_cfa
+7A05 defw 2SWAP_cfa
+7A07 defw OVER_cfa
+7A09 defw +_cfa
+7A0B defw SWAP_cfa
+7A0D defw (DO)_cfa
+7A0F defw 2DUP_cfa
+7A11 defw I_cfa
+7A13 defw -TEXT_cfa
+7A15 defw 0BRANCH_cfa,0x001A; to 7A31 
+7A19 defw >R_cfa
+7A1B defw 2DROP_cfa
+7A1D defw R>_cfa
+7A1F defw -_cfa
+7A21 defw I_cfa
+7A23 defw SWAP_cfa
+7A25 defw -_cfa
+7A27 defw 0_cfa
+7A29 defw SWAP_cfa
+7A2B defw 0_cfa
+7A2D defw 0_cfa
+7A2F defw LEAVE_cfa
+7A31 defw (LOOP)_cfa,0xFFDC; to 7A0F 
+7A35 defw 2DROP_cfa
+7A37 defw SWAP_cfa
+7A39 defw 0=_cfa
+7A3B defw SWAP_cfa
+7A3D defw ;S_cfa
+
+
+79B1  -TEXT_nfa: defb 0x05+0x80,"-TEX","T"+0x80
+79B7  -TEXT_lfa: defw COPY_nfa
+79B9  -TEXT_cfa: defw 0x6306
+79BB  -TEXT_pfa: 
+79BB defw SWAP_cfa
+79BD defw -DUP_cfa
+79BF defw 0BRANCH_cfa,0x002A; to 79EB 
+79C3 defw OVER_cfa
+79C5 defw +_cfa
+79C7 defw SWAP_cfa
+79C9 defw (DO)_cfa
+79CB defw DUP_cfa
+79CD defw C@_cfa
+79CF defw I_cfa
+79D1 defw C@_cfa
+79D3 defw -_cfa
+79D5 defw 0BRANCH_cfa,0x000A; to 79E1 
+79D9 defw 0=_cfa
+79DB defw LEAVE_cfa
+79DD defw BRANCH_cfa,0x0004; to 79E3 
+79E1 defw 1+_cfa
+79E3 defw (LOOP)_cfa,0xFFE6; to 79CB 
+79E7 defw BRANCH_cfa,0x0006; to 79EF 
+79EB defw DROP_cfa
+79ED defw 0=_cfa
+79EF defw ;S_cfa
+
+
+7974  COPY_nfa: defb 0x04+0x80,"COP","Y"+0x80
+7979  COPY_lfa: defw CLEAR_nfa
+797B  COPY_cfa: defw 0x6306
+797D  COPY_pfa: 
+797D defw B/SCR_cfa
+797F defw *_cfa
+7981 defw OFFSET_cfa
+7983 defw @_cfa
+7985 defw +_cfa
+7987 defw SWAP_cfa
+7989 defw B/SCR_cfa
+798B defw *_cfa
+798D defw B/SCR_cfa
+798F defw OVER_cfa
+7991 defw +_cfa
+7993 defw SWAP_cfa
+7995 defw (DO)_cfa
+7997 defw DUP_cfa
+7999 defw I_cfa
+799B defw BLOCK_cfa
+799D defw 2_cfa
+799F defw -_cfa
+79A1 defw !_cfa
+79A3 defw 1+_cfa
+79A5 defw UPDATE_cfa
+79A7 defw (LOOP)_cfa,0xFFEE; to 7997 
+79AB defw DROP_cfa
+79AD defw FLUSH_cfa
+79AF defw ;S_cfa
+
+
+7954  CLEAR_nfa: defb 0x05+0x80,"CLEA","R"+0x80
+795A  CLEAR_lfa: defw TOP_nfa
+795C  CLEAR_cfa: defw 0x6306
+795E  CLEAR_pfa: 
+795E defw SCR_cfa
+7960 defw !_cfa
+7962 defw LIT_cfa,0x0010
+7966 defw 0_cfa
+7968 defw (DO)_cfa
+796A defw I_cfa
+796C defw E_cfa
+796E defw (LOOP)_cfa,0xFFFA; to 796A 
+7972 defw ;S_cfa
+
+
+7944  TOP_nfa: defb 0x03+0x80,"TO","P"+0x80
+7948  TOP_lfa: defw I_nfa
+794A  TOP_cfa: defw 0x6306
+794C  TOP_pfa: 
+794C defw 0_cfa
+794E defw R#_cfa
+7950 defw !_cfa
+7952 defw ;S_cfa
+
+
+7936  I_nfa: defb 0x01+0x80,"","I"+0x80
+7938  I_lfa: defw P_nfa
+793A  I_cfa: defw 0x6306
+793C  I_pfa: 
+793C defw DUP_cfa
+793E defw S_cfa
+7940 defw R_cfa
+7942 defw ;S_cfa
+
+
+7928  P_nfa: defb 0x01+0x80,"","P"+0x80
+792A  P_lfa: defw R_nfa
+792C  P_cfa: defw 0x6306
+792E  P_pfa: 
+792E defw 1_cfa
+7930 defw TEXT_cfa
+7932 defw R_cfa
+7934 defw ;S_cfa
+
+
+7918  R_nfa: defb 0x01+0x80,"","R"+0x80
+791A  R_lfa: defw L_nfa
+791C  R_cfa: defw 0x6306
+791E  R_pfa: 
+791E defw PAD_cfa
+7920 defw 1+_cfa
+7922 defw SWAP_cfa
+7924 defw -MOVE_cfa
+7926 defw ;S_cfa
+
+
+7906  L_nfa: defb 0x01+0x80,"","L"+0x80
+7908  L_lfa: defw T_nfa
+790A  L_cfa: defw 0x6306
+790C  L_pfa: 
+790C defw SCR_cfa
+790E defw @_cfa
+7910 defw LIST_cfa
+7912 defw 0_cfa
+7914 defw M_cfa
+7916 defw ;S_cfa
+
+
+78EC  T_nfa: defb 0x01+0x80,"","T"+0x80
+78EE  T_lfa: defw M_nfa
+78F0  T_cfa: defw 0x6306
+78F2  T_pfa: 
+78F2 defw DUP_cfa
+78F4 defw C/L_cfa
+78F6 defw *_cfa
+78F8 defw R#_cfa
+78FA defw !_cfa
+78FC defw DUP_cfa
+78FE defw H_cfa
+7900 defw 0_cfa
+7902 defw M_cfa
+7904 defw ;S_cfa
+
+
+78C8  M_nfa: defb 0x01+0x80,"","M"+0x80
+78CA  M_lfa: defw D_nfa
+78CC  M_cfa: defw 0x6306
+78CE  M_pfa: 
+78CE defw R#_cfa
+78D0 defw +!_cfa
+78D2 defw CR_cfa
+78D4 defw SPACE_cfa
+78D6 defw #LEAD_cfa
+78D8 defw TYPE_cfa
+78DA defw LIT_cfa,0x005F
+78DE defw EMIT_cfa
+78E0 defw #LAG_cfa
+78E2 defw TYPE_cfa
+78E4 defw #LOCATE_cfa
+78E6 defw ._cfa
+78E8 defw DROP_cfa
+78EA defw ;S_cfa
+
+
+78A2  D_nfa: defb 0x01+0x80,"","D"+0x80
+78A4  D_lfa: defw S_nfa
+78A6  D_cfa: defw 0x6306
+78A8  D_pfa: 
+78A8 defw DUP_cfa
+78AA defw H_cfa
+78AC defw LIT_cfa,0x000F
+78B0 defw DUP_cfa
+78B2 defw ROT_cfa
+78B4 defw (DO)_cfa
+78B6 defw I_cfa
+78B8 defw 1+_cfa
+78BA defw LINE_cfa
+78BC defw I_cfa
+78BE defw -MOVE_cfa
+78C0 defw (LOOP)_cfa,0xFFF4; to 78B6 
+78C4 defw E_cfa
+78C6 defw ;S_cfa
+
+
+787A  S_nfa: defb 0x01+0x80,"","S"+0x80
+787C  S_lfa: defw E_nfa
+787E  S_cfa: defw 0x6306
+7880  S_pfa: 
+7880 defw DUP_cfa
+7882 defw 1_cfa
+7884 defw -_cfa
+7886 defw LIT_cfa,0x000E
+788A defw (DO)_cfa
+788C defw I_cfa
+788E defw LINE_cfa
+7890 defw I_cfa
+7892 defw 1+_cfa
+7894 defw -MOVE_cfa
+7896 defw LIT_cfa,0xFFFF
+789A defw (+LOOP)_cfa,0xFFF0; to 788C 
+789E defw E_cfa
+78A0 defw ;S_cfa
+
+
+786A  E_nfa: defb 0x01+0x80,"","E"+0x80
+786C  E_lfa: defw H_nfa
+786E  E_cfa: defw 0x6306
+7870  E_pfa: 
+7870 defw LINE_cfa
+7872 defw C/L_cfa
+7874 defw BLANKS_cfa
+7876 defw UPDATE_cfa
+7878 defw ;S_cfa
+
+
+7852  H_nfa: defb 0x01+0x80,"","H"+0x80
+7854  H_lfa: defw -MOVE_nfa
+7856  H_cfa: defw 0x6306
+7858  H_pfa: 
+7858 defw LINE_cfa
+785A defw PAD_cfa
+785C defw 1+_cfa
+785E defw C/L_cfa
+7860 defw DUP_cfa
+7862 defw PAD_cfa
+7864 defw C!_cfa
+7866 defw CMOVE_cfa
+7868 defw ;S_cfa
+
+
+783E  -MOVE_nfa: defb 0x05+0x80,"-MOV","E"+0x80
+7844  -MOVE_lfa: defw #LAG_nfa
+7846  -MOVE_cfa: defw 0x6306
+7848  -MOVE_pfa: 
+7848 defw LINE_cfa
+784A defw C/L_cfa
+784C defw CMOVE_cfa
+784E defw UPDATE_cfa
+7850 defw ;S_cfa
+
+
+7825  #LAG_nfa: defb 0x04+0x80,"#LA","G"+0x80
+782A  #LAG_lfa: defw #LEAD_nfa
+782C  #LAG_cfa: defw 0x6306
+782E  #LAG_pfa: 
+782E defw #LEAD_cfa
+7830 defw DUP_cfa
+7832 defw >R_cfa
+7834 defw +_cfa
+7836 defw C/L_cfa
+7838 defw R>_cfa
+783A defw -_cfa
+783C defw ;S_cfa
+
+
+7813  #LEAD_nfa: defb 0x05+0x80,"#LEA","D"+0x80
+7819  #LEAD_lfa: defw #LOCATE_nfa
+781B  #LEAD_cfa: defw 0x6306
+781D  #LEAD_pfa: 
+781D defw #LOCATE_cfa
+781F defw LINE_cfa
+7821 defw SWAP_cfa
+7823 defw ;S_cfa
+
+
+77FD  #LOCATE_nfa: defb 0x07+0x80,"#LOCAT","E"+0x80
+7805  #LOCATE_lfa: defw  _nfa
+7807  #LOCATE_cfa: defw 0x6306
+7809  #LOCATE_pfa: 
+7809 defw R#_cfa
+780B defw @_cfa
+780D defw C/L_cfa
+780F defw /MOD_cfa
+7811 defw ;S_cfa
+
+
+6CF6   _nfa: defb 0x01+0x80,""," "+0x80
+6CF8   _lfa: defw DIS-ALL_nfa
+6CFA   _cfa: defw 0x0000
+6CFC   _pfa: ; Word type not implemented.
+
+
+9822  DIS-ALL_nfa: defb 0x07+0x80,"DIS-AL","L"+0x80
+982A  DIS-ALL_lfa: defw DIS-FROM_nfa
+982C  DIS-ALL_cfa: defw 0x6306
+982E  DIS-ALL_pfa: 
+982E defw CONTEXT_cfa
+9830 defw @_cfa
+9832 defw @_cfa
+9834 defw DIS-FROM_cfa
+9836 defw ;S_cfa
+
+
+97FB  DIS-FROM_nfa: defb 0x08+0x80,"DIS-FRO","M"+0x80
+9804  DIS-FROM_lfa: defw DIS_nfa
+9806  DIS-FROM_cfa: defw 0x6306
+9808  DIS-FROM_pfa: 
+9808 defw PFA_cfa
+980A defw DUP_cfa
+980C defw DIS_cfa
+980E defw LFA_cfa
+9810 defw @_cfa
+9812 defw DUP_cfa
+9814 defw 0=_cfa
+9816 defw ?TERMINAL_cfa
+9818 defw OR_cfa
+981A defw 0BRANCH_cfa,0xFFEC; to 9808 
+981E defw DROP_cfa
+9820 defw ;S_cfa
+
+
+979C  DIS_nfa: defb 0x03+0x80,"DI","S"+0x80
+97A0  DIS_lfa: defw HEADER_nfa
+97A2  DIS_cfa: defw 0x6306
+97A4  DIS_pfa: 
+97A4 defw DUP_cfa
+97A6 defw HEADER_cfa
+97A8 defw DUP_cfa
+97AA defw COLON?_cfa
+97AC defw 0BRANCH_cfa,0x0006; to 97B4 
+97B0 defw DIS-COLON_cfa
+97B2 defw EXIT_cfa
+97B4 defw DUP_cfa
+97B6 defw CONSTANT?_cfa
+97B8 defw 0BRANCH_cfa,0x0006; to 97C0 
+97BC defw DIS-VALUE_cfa
+97BE defw EXIT_cfa
+97C0 defw DUP_cfa
+97C2 defw VARIABLE?_cfa
+97C4 defw 0BRANCH_cfa,0x0006; to 97CC 
+97C8 defw DIS-VALUE_cfa
+97CA defw EXIT_cfa
+97CC defw DUP_cfa
+97CE defw USER?_cfa
+97D0 defw 0BRANCH_cfa,0x0006; to 97D8 
+97D4 defw DIS-VALUE_cfa
+97D6 defw EXIT_cfa
+97D8 defw DROP_cfa
+97DA defw (.")_cfa
+97DC defb 0x1C,"; Word type not implemented."
+97F9 defw ;S_cfa
+
+
+977D  HEADER_nfa: defb 0x06+0x80,"HEADE","R"+0x80
+9784  HEADER_lfa: defw PARAMETER-FIELD_nfa
+9786  HEADER_cfa: defw 0x6306
+9788  HEADER_pfa: 
+9788 defw CR_cfa
+978A defw CR_cfa
+978C defw DUP_cfa
+978E defw NAME-FIELD_cfa
+9790 defw DUP_cfa
+9792 defw LINK-FIELD_cfa
+9794 defw DUP_cfa
+9796 defw CODE-FIELD_cfa
+9798 defw PARAMETER-FIELD_cfa
+979A defw ;S_cfa
+
+
+975D  PARAMETER-FIELD_nfa: defb 0x0F+0x80,"PARAMETER-FIEL","D"+0x80
+976D  PARAMETER-FIELD_lfa: defw CODE-FIELD_nfa
+976F  PARAMETER-FIELD_cfa: defw 0x6306
+9771  PARAMETER-FIELD_pfa: 
+9771 defw DUP_cfa
+9773 defw ADDRESS_cfa
+9775 defw SPACE_cfa
+9777 defw PFA-LABEL_cfa
+9779 defw DEF_cfa
+977B defw ;S_cfa
+
+
+973A  CODE-FIELD_nfa: defb 0x0A+0x80,"CODE-FIEL","D"+0x80
+9745  CODE-FIELD_lfa: defw (CODE-FIELD)_nfa
+9747  CODE-FIELD_cfa: defw 0x6306
+9749  CODE-FIELD_pfa: 
+9749 defw DUP_cfa
+974B defw CFA_cfa
+974D defw DUP_cfa
+974F defw ADDRESS_cfa
+9751 defw SPACE_cfa
+9753 defw CFA-LABEL_cfa
+9755 defw DEF_cfa
+9757 defw DEFW_cfa
+9759 defw (CODE-FIELD)_cfa
+975B defw ;S_cfa
+
+
+970B  (CODE-FIELD)_nfa: defb 0x0C+0x80,"(CODE-FIELD",")"+0x80
+9718  (CODE-FIELD)_lfa: defw LINK-FIELD_nfa
+971A  (CODE-FIELD)_cfa: defw 0x6306
+971C  (CODE-FIELD)_pfa: 
+971C defw DUP_cfa
+971E defw CFA_cfa
+9720 defw @_cfa
+9722 defw 2DUP_cfa
+9724 defw =_cfa
+9726 defw 0BRANCH_cfa,0x000C; to 9734 
+972A defw DROP_cfa
+972C defw NFA_cfa
+972E defw NFA-LABEL_cfa
+9730 defw BRANCH_cfa,0x0006; to 9738 
+9734 defw NHEX._cfa
+9736 defw DROP_cfa
+9738 defw ;S_cfa
+
+
+96D8  LINK-FIELD_nfa: defb 0x0A+0x80,"LINK-FIEL","D"+0x80
+96E3  LINK-FIELD_lfa: defw NAME-FIELD_nfa
+96E5  LINK-FIELD_cfa: defw 0x6306
+96E7  LINK-FIELD_pfa: 
+96E7 defw DUP_cfa
+96E9 defw DUP_cfa
+96EB defw LFA_cfa
+96ED defw ADDRESS_cfa
+96EF defw SPACE_cfa
+96F1 defw LFA-LABEL_cfa
+96F3 defw DEF_cfa
+96F5 defw LFA_cfa
+96F7 defw DEFW_cfa
+96F9 defw @_cfa
+96FB defw DUP_cfa
+96FD defw 0BRANCH_cfa,0x0008; to 9707 
+9701 defw NFA-LABEL_cfa
+9703 defw BRANCH_cfa,0x0004; to 9709 
+9707 defw U._cfa
+9709 defw ;S_cfa
+
+
+96A5  NAME-FIELD_nfa: defb 0x0A+0x80,"NAME-FIEL","D"+0x80
+96B0  NAME-FIELD_lfa: defw COUNT-BYTE_nfa
+96B2  NAME-FIELD_cfa: defw 0x6306
+96B4  NAME-FIELD_pfa: 
+96B4 defw NFA_cfa
+96B6 defw DUP_cfa
+96B8 defw ADDRESS_cfa
+96BA defw DUP_cfa
+96BC defw SPACE_cfa
+96BE defw NFA-LABEL_cfa
+96C0 defw DEF_cfa
+96C2 defw DEFB_cfa
+96C4 defw DUP_cfa
+96C6 defw C@_cfa
+96C8 defw COUNT-BYTE_cfa
+96CA defw DUP_cfa
+96CC defw C@_cfa
+96CE defw LEN-ONLY_cfa
+96D0 defw (.")_cfa
+96D2 defb 0x01,","
+96D4 defw NAME_cfa
+96D6 defw ;S_cfa
+
+
+9674  COUNT-BYTE_nfa: defb 0x0A+0x80,"COUNT-BYT","E"+0x80
+967F  COUNT-BYTE_lfa: defw LEN-ONLY_nfa
+9681  COUNT-BYTE_cfa: defw 0x6306
+9683  COUNT-BYTE_pfa: 
+9683 defw DUP_cfa
+9685 defw LEN-ONLY_cfa
+9687 defw BHEX._cfa
+9689 defw (.")_cfa
+968B defb 0x05,"+0x80"
+9691 defw LIT_cfa,0x0040
+9695 defw AND_cfa
+9697 defw 0BRANCH_cfa,0x000A; to 96A3 
+969B defw (.")_cfa
+969D defb 0x05,"+0x40"
+96A3 defw ;S_cfa
+
+
+965F  LEN-ONLY_nfa: defb 0x08+0x80,"LEN-ONL","Y"+0x80
+9668  LEN-ONLY_lfa: defw NAME_nfa
+966A  LEN-ONLY_cfa: defw 0x6306
+966C  LEN-ONLY_pfa: 
+966C defw LIT_cfa,0x003F
+9670 defw AND_cfa
+9672 defw ;S_cfa
+
+
+961A  NAME_nfa: defb 0x04+0x80,"NAM","E"+0x80
+961F  NAME_lfa: defw DIS-COLON_nfa
+9621  NAME_cfa: defw 0x6306
+9623  NAME_pfa: 
+9623 defw LIT_cfa,0x0022
+9627 defw EMIT_cfa
+9629 defw 2DUP_cfa
+962B defw 1_cfa
+962D defw /STRING_cfa
+962F defw TYPE_cfa
+9631 defw LIT_cfa,0x0022
+9635 defw EMIT_cfa
+9637 defw LIT_cfa,0x002C
+963B defw EMIT_cfa
+963D defw LIT_cfa,0x0022
+9641 defw EMIT_cfa
+9643 defw +_cfa
+9645 defw C@_cfa
+9647 defw LIT_cfa,0x007F
+964B defw AND_cfa
+964D defw EMIT_cfa
+964F defw LIT_cfa,0x0022
+9653 defw EMIT_cfa
+9655 defw (.")_cfa
+9657 defb 0x05,"+0x80"
+965D defw ;S_cfa
+
+
+95E6  DIS-COLON_nfa: defb 0x09+0x80,"DIS-COLO","N"+0x80
+95F0  DIS-COLON_lfa: defw DIS-VALUE_nfa
+95F2  DIS-COLON_cfa: defw 0x6306
+95F4  DIS-COLON_pfa: 
+95F4 defw DUP_cfa
+95F6 defw ADDRESS_cfa
+95F8 defw DUP_cfa
+95FA defw COLON-END?_cfa
+95FC defw 0=_cfa
+95FE defw 0BRANCH_cfa,0x0012; to 9612 
+9602 defw DEFW_cfa
+9604 defw DUP_cfa
+9606 defw @_cfa
+9608 defw CFA-LABEL_cfa
+960A defw DIS-SPECIAL-CASES_cfa
+960C defw 2+_cfa
+960E defw BRANCH_cfa,0xFFE4; to 95F4 
+9612 defw DEFW_cfa
+9614 defw @_cfa
+9616 defw CFA-LABEL_cfa
+9618 defw ;S_cfa
+
+
+95CC  DIS-VALUE_nfa: defb 0x09+0x80,"DIS-VALU","E"+0x80
+95D6  DIS-VALUE_lfa: defw USER?_nfa
+95D8  DIS-VALUE_cfa: defw 0x6306
+95DA  DIS-VALUE_pfa: 
+95DA defw DUP_cfa
+95DC defw ADDRESS_cfa
+95DE defw DEFW_cfa
+95E0 defw @_cfa
+95E2 defw NHEX._cfa
+95E4 defw ;S_cfa
+
+
+95B6  USER?_nfa: defb 0x05+0x80,"USER","?"+0x80
+95BC  USER?_lfa: defw VARIABLE?_nfa
+95BE  USER?_cfa: defw 0x6306
+95C0  USER?_pfa: 
+95C0 defw CFA_cfa
+95C2 defw @_cfa
+95C4 defw LIT_cfa,0x6374
+95C8 defw =_cfa
+95CA defw ;S_cfa
+
+
+959C  VARIABLE?_nfa: defb 0x09+0x80,"VARIABLE","?"+0x80
+95A6  VARIABLE?_lfa: defw CONSTANT?_nfa
+95A8  VARIABLE?_cfa: defw 0x6306
+95AA  VARIABLE?_pfa: 
+95AA defw CFA_cfa
+95AC defw @_cfa
+95AE defw LIT_cfa,0x6362
+95B2 defw =_cfa
+95B4 defw ;S_cfa
+
+
+9582  CONSTANT?_nfa: defb 0x09+0x80,"CONSTANT","?"+0x80
+958C  CONSTANT?_lfa: defw COLON?_nfa
+958E  CONSTANT?_cfa: defw 0x6306
+9590  CONSTANT?_pfa: 
+9590 defw CFA_cfa
+9592 defw @_cfa
+9594 defw LIT_cfa,0x6348
+9598 defw =_cfa
+959A defw ;S_cfa
+
+
+9567  COLON?_nfa: defb 0x06+0x80,"COLON","?"+0x80
+956E  COLON?_lfa: defw COLON-END?_nfa
+9570  COLON?_cfa: defw 0x6306
+9572  COLON?_pfa: 
+9572 defw CFA_cfa
+9574 defw @_cfa
+9576 defw LIT_cfa,0x62F4
+957A defw CFA_cfa
+957C defw @_cfa
+957E defw =_cfa
+9580 defw ;S_cfa
+
+
+94E6  COLON-END?_nfa: defb 0x0A+0x80,"COLON-END","?"+0x80
+94F1  COLON-END?_lfa: defw ADDR_nfa
+94F3  COLON-END?_cfa: defw 0x6306
+94F5  COLON-END?_pfa: 
+94F5 defw LIT_cfa,0x94E4
+94F9 defw !_cfa
+94FB defw TRUE_cfa
+94FD defw ADDR_cfa
+94FF defw @_cfa
+9501 defw LIT_cfa,0x6148
+9505 defw =_cfa
+9507 defw 0BRANCH_cfa,0x0004; to 950D 
+950B defw EXIT_cfa
+950D defw ADDR_cfa
+950F defw @_cfa
+9511 defw LIT_cfa,0x676E
+9515 defw =_cfa
+9517 defw 0BRANCH_cfa,0x0004; to 951D 
+951B defw EXIT_cfa
+951D defw ADDR_cfa
+951F defw LIT_cfa,0x6E04
+9523 defw =_cfa
+9525 defw 0BRANCH_cfa,0x0004; to 952B 
+9529 defw EXIT_cfa
+952B defw ADDR_cfa
+952D defw LIT_cfa,0x6DAE
+9531 defw =_cfa
+9533 defw 0BRANCH_cfa,0x0004; to 9539 
+9537 defw EXIT_cfa
+9539 defw ADDR_cfa
+953B defw LIT_cfa,0x6D6A
+953F defw =_cfa
+9541 defw 0BRANCH_cfa,0x0004; to 9547 
+9545 defw EXIT_cfa
+9547 defw ADDR_cfa
+9549 defw LIT_cfa,0x6C99
+954D defw =_cfa
+954F defw 0BRANCH_cfa,0x0004; to 9555 
+9553 defw EXIT_cfa
+9555 defw ADDR_cfa
+9557 defw LIT_cfa,0x6B2A
+955B defw =_cfa
+955D defw 0BRANCH_cfa,0x0004; to 9563 
+9561 defw EXIT_cfa
+9563 defw 0=_cfa
+9565 defw ;S_cfa
+
+
+94DB  ADDR_nfa: defb 0x04+0x80,"ADD","R"+0x80
+94E0  ADDR_lfa: defw DIS-SPECIAL-CASES_nfa
+94E2  ADDR_cfa: defw 0x6348
+94E4  ADDR_pfa: 
+94E4 defw 0x9565
+
+
+9431  DIS-SPECIAL-CASES_nfa: defb 0x11+0x80,"DIS-SPECIAL-CASE","S"+0x80
+9443  DIS-SPECIAL-CASES_lfa: defw DIS-DOT-QUOTE_nfa
+9445  DIS-SPECIAL-CASES_cfa: defw 0x6306
+9447  DIS-SPECIAL-CASES_pfa: 
+9447 defw DUP_cfa
+9449 defw @_cfa
+944B defw LIT_cfa,0x66F7
+944F defw OVER_cfa
+9451 defw =_cfa
+9453 defw 0BRANCH_cfa,0x000A; to 945F 
+9457 defw DROP_cfa
+9459 defw DIS-COMPILE_cfa
+945B defw BRANCH_cfa,0x007C; to 94D9 
+945F defw LIT_cfa,0x5E7D
+9463 defw OVER_cfa
+9465 defw =_cfa
+9467 defw 0BRANCH_cfa,0x000A; to 9473 
+946B defw DROP_cfa
+946D defw DIS-LITERAL_cfa
+946F defw BRANCH_cfa,0x0068; to 94D9 
+9473 defw LIT_cfa,0x5EA1
+9477 defw OVER_cfa
+9479 defw =_cfa
+947B defw 0BRANCH_cfa,0x000A; to 9487 
+947F defw DROP_cfa
+9481 defw DIS-BRANCH_cfa
+9483 defw BRANCH_cfa,0x0054; to 94D9 
+9487 defw LIT_cfa,0x5EB9
+948B defw OVER_cfa
+948D defw =_cfa
+948F defw 0BRANCH_cfa,0x000A; to 949B 
+9493 defw DROP_cfa
+9495 defw DIS-BRANCH_cfa
+9497 defw BRANCH_cfa,0x0040; to 94D9 
+949B defw LIT_cfa,0x5ECE
+949F defw OVER_cfa
+94A1 defw =_cfa
+94A3 defw 0BRANCH_cfa,0x000A; to 94AF 
+94A7 defw DROP_cfa
+94A9 defw DIS-BRANCH_cfa
+94AB defw BRANCH_cfa,0x002C; to 94D9 
+94AF defw LIT_cfa,0x5F08
+94B3 defw OVER_cfa
+94B5 defw =_cfa
+94B7 defw 0BRANCH_cfa,0x000A; to 94C3 
+94BB defw DROP_cfa
+94BD defw DIS-BRANCH_cfa
+94BF defw BRANCH_cfa,0x0018; to 94D9 
+94C3 defw LIT_cfa,0x6847
+94C7 defw OVER_cfa
+94C9 defw =_cfa
+94CB defw 0BRANCH_cfa,0x000A; to 94D7 
+94CF defw DROP_cfa
+94D1 defw DIS-DOT-QUOTE_cfa
+94D3 defw BRANCH_cfa,0x0004; to 94D9 
+94D7 defw DROP_cfa
+94D9 defw ;S_cfa
+
+
+9407  DIS-DOT-QUOTE_nfa: defb 0x0D+0x80,"DIS-DOT-QUOT","E"+0x80
+9415  DIS-DOT-QUOTE_lfa: defw QUOTED_nfa
+9417  DIS-DOT-QUOTE_cfa: defw 0x6306
+9419  DIS-DOT-QUOTE_pfa: 
+9419 defw 2+_cfa
+941B defw DUP_cfa
+941D defw ADDRESS_cfa
+941F defw DEFB_cfa
+9421 defw DUP_cfa
+9423 defw COUNT_cfa
+9425 defw QUOTED_cfa
+9427 defw DUP_cfa
+9429 defw C@_cfa
+942B defw +_cfa
+942D defw 1-_cfa
+942F defw ;S_cfa
+
+
+93E2  QUOTED_nfa: defb 0x06+0x80,"QUOTE","D"+0x80
+93E9  QUOTED_lfa: defw DIS-BRANCH_nfa
+93EB  QUOTED_cfa: defw 0x6306
+93ED  QUOTED_pfa: 
+93ED defw DUP_cfa
+93EF defw BHEX._cfa
+93F1 defw LIT_cfa,0x002C
+93F5 defw EMIT_cfa
+93F7 defw LIT_cfa,0x0022
+93FB defw EMIT_cfa
+93FD defw TYPE_cfa
+93FF defw LIT_cfa,0x0022
+9403 defw EMIT_cfa
+9405 defw ;S_cfa
+
+
+93BD  DIS-BRANCH_nfa: defb 0x0A+0x80,"DIS-BRANC","H"+0x80
+93C8  DIS-BRANCH_lfa: defw DIS-LITERAL_nfa
+93CA  DIS-BRANCH_cfa: defw 0x6306
+93CC  DIS-BRANCH_pfa: 
+93CC defw DIS-LITERAL_cfa
+93CE defw (.")_cfa
+93D0 defb 0x05,"; to "
+93D6 defw DUP_cfa
+93D8 defw DUP_cfa
+93DA defw @_cfa
+93DC defw +_cfa
+93DE defw U._cfa
+93E0 defw ;S_cfa
+
+
+939F  DIS-LITERAL_nfa: defb 0x0B+0x80,"DIS-LITERA","L"+0x80
+93AB  DIS-LITERAL_lfa: defw DIS-COMPILE_nfa
+93AD  DIS-LITERAL_cfa: defw 0x6306
+93AF  DIS-LITERAL_pfa: 
+93AF defw 2+_cfa
+93B1 defw DUP_cfa
+93B3 defw @_cfa
+93B5 defw (.")_cfa
+93B7 defb 0x01,","
+93B9 defw NHEX._cfa
+93BB defw ;S_cfa
+
+
+9381  DIS-COMPILE_nfa: defb 0x0B+0x80,"DIS-COMPIL","E"+0x80
+938D  DIS-COMPILE_lfa: defw DEFB_nfa
+938F  DIS-COMPILE_cfa: defw 0x6306
+9391  DIS-COMPILE_pfa: 
+9391 defw 2+_cfa
+9393 defw DUP_cfa
+9395 defw @_cfa
+9397 defw (.")_cfa
+9399 defb 0x01,","
+939B defw CFA-LABEL_cfa
+939D defw ;S_cfa
+
+
+936E  DEFB_nfa: defb 0x04+0x80,"DEF","B"+0x80
+9373  DEFB_lfa: defw DEFW_nfa
+9375  DEFB_cfa: defw 0x6306
+9377  DEFB_pfa: 
+9377 defw (.")_cfa
+9379 defb 0x05,"defb "
+937F defw ;S_cfa
+
+
+935B  DEFW_nfa: defb 0x04+0x80,"DEF","W"+0x80
+9360  DEFW_lfa: defw PFA-LABEL_nfa
+9362  DEFW_cfa: defw 0x6306
+9364  DEFW_pfa: 
+9364 defw (.")_cfa
+9366 defb 0x05,"defw "
+936C defw ;S_cfa
+
+
+9340  PFA-LABEL_nfa: defb 0x09+0x80,"PFA-LABE","L"+0x80
+934A  PFA-LABEL_lfa: defw CFA-LABEL_nfa
+934C  PFA-LABEL_cfa: defw 0x6306
+934E  PFA-LABEL_pfa: 
+934E defw NFA_cfa
+9350 defw ID.BS_cfa
+9352 defw (.")_cfa
+9354 defb 0x04,"_pfa"
+9359 defw ;S_cfa
+
+
+9323  CFA-LABEL_nfa: defb 0x09+0x80,"CFA-LABE","L"+0x80
+932D  CFA-LABEL_lfa: defw LFA-LABEL_nfa
+932F  CFA-LABEL_cfa: defw 0x6306
+9331  CFA-LABEL_pfa: 
+9331 defw 2+_cfa
+9333 defw NFA_cfa
+9335 defw ID.BS_cfa
+9337 defw (.")_cfa
+9339 defb 0x04,"_cfa"
+933E defw ;S_cfa
+
+
+9308  LFA-LABEL_nfa: defb 0x09+0x80,"LFA-LABE","L"+0x80
+9312  LFA-LABEL_lfa: defw NFA-LABEL_nfa
+9314  LFA-LABEL_cfa: defw 0x6306
+9316  LFA-LABEL_pfa: 
+9316 defw NFA_cfa
+9318 defw ID.BS_cfa
+931A defw (.")_cfa
+931C defb 0x04,"_lfa"
+9321 defw ;S_cfa
+
+
+92EF  NFA-LABEL_nfa: defb 0x09+0x80,"NFA-LABE","L"+0x80
+92F9  NFA-LABEL_lfa: defw DEF_nfa
+92FB  NFA-LABEL_cfa: defw 0x6306
+92FD  NFA-LABEL_pfa: 
+92FD defw ID.BS_cfa
+92FF defw (.")_cfa
+9301 defb 0x04,"_nfa"
+9306 defw ;S_cfa
+
+
+92E0  DEF_nfa: defb 0x03+0x80,"DE","F"+0x80
+92E4  DEF_lfa: defw NHEX._nfa
+92E6  DEF_cfa: defw 0x6306
+92E8  DEF_pfa: 
+92E8 defw (.")_cfa
+92EA defb 0x02,": "
+92ED defw ;S_cfa
+
+
+92B3  NHEX._nfa: defb 0x05+0x80,"NHEX","."+0x80
+92B9  NHEX._lfa: defw BHEX._nfa
+92BB  NHEX._cfa: defw 0x6306
+92BD  NHEX._pfa: 
+92BD defw BASE_cfa
+92BF defw @_cfa
+92C1 defw HEX_cfa
+92C3 defw SWAP_cfa
+92C5 defw S->D_cfa
+92C7 defw <#_cfa
+92C9 defw #_cfa
+92CB defw #_cfa
+92CD defw #_cfa
+92CF defw #_cfa
+92D1 defw #>_cfa
+92D3 defw (.")_cfa
+92D5 defb 0x02,"0x"
+92D8 defw TYPE_cfa
+92DA defw BASE_cfa
+92DC defw !_cfa
+92DE defw ;S_cfa
+
+
+928A  BHEX._nfa: defb 0x05+0x80,"BHEX","."+0x80
+9290  BHEX._lfa: defw ID.BS_nfa
+9292  BHEX._cfa: defw 0x6306
+9294  BHEX._pfa: 
+9294 defw BASE_cfa
+9296 defw @_cfa
+9298 defw HEX_cfa
+929A defw SWAP_cfa
+929C defw S->D_cfa
+929E defw <#_cfa
+92A0 defw #_cfa
+92A2 defw #_cfa
+92A4 defw #>_cfa
+92A6 defw (.")_cfa
+92A8 defb 0x02,"0x"
+92AB defw TYPE_cfa
+92AD defw BASE_cfa
+92AF defw !_cfa
+92B1 defw ;S_cfa
+
+
+9268  ID.BS_nfa: defb 0x05+0x80,"ID.B","S"+0x80
+926E  ID.BS_lfa: defw MARGIN_nfa
+9270  ID.BS_cfa: defw 0x6306
+9272  ID.BS_pfa: 
+9272 defw LIT_cfa,0x632F
+9276 defw LIT_cfa,0x6B72
+927A defw !_cfa
+927C defw ID._cfa
+927E defw LIT_cfa,0x65AD
+9282 defw LIT_cfa,0x6B72
+9286 defw !_cfa
+9288 defw ;S_cfa
+
+
+9249  MARGIN_nfa: defb 0x06+0x80,"MARGI","N"+0x80
+9250  MARGIN_lfa: defw ADDRESS_nfa
+9252  MARGIN_cfa: defw 0x6306
+9254  MARGIN_pfa: 
+9254 defw LIT_cfa,0x0005
+9258 defw BASE_cfa
+925A defw @_cfa
+925C defw LIT_cfa,0x000A
+9260 defw =_cfa
+9262 defw +_cfa
+9264 defw SPACES_cfa
+9266 defw ;S_cfa
+
+
+9237  ADDRESS_nfa: defb 0x07+0x80,"ADDRES","S"+0x80
+923F  ADDRESS_lfa: defw DECODE_nfa
+9241  ADDRESS_cfa: defw 0x6306
+9243  ADDRESS_pfa: 
+9243 defw CR_cfa
+9245 defw U._cfa
+9247 defw ;S_cfa
+
+
+9208  DECODE_nfa: defb 0x06+0x80,"DECOD","E"+0x80
+920F  DECODE_lfa: defw DECODE-USAGE_nfa
+9211  DECODE_cfa: defw 0x6306
+9213  DECODE_pfa: 
+9213 defw DECODE-USAGE_cfa
+9215 defw -FIND_cfa
+9217 defw 0BRANCH_cfa,0x0010; to 9229 
+921B defw DROP_cfa
+921D defw 0_cfa
+921F defw DECODE-LEVEL_cfa
+9221 defw !_cfa
+9223 defw (DECODE)_cfa
+9225 defw BRANCH_cfa,0x000E; to 9235 
+9229 defw (.")_cfa
+922B defb 0x09,"Not Found"
+9235 defw ;S_cfa
+
+
+91C7  DECODE-USAGE_nfa: defb 0x0C+0x80,"DECODE-USAG","E"+0x80
+91D4  DECODE-USAGE_lfa: defw (DECODE)_nfa
+91D6  DECODE-USAGE_cfa: defw 0x6306
+91D8  DECODE-USAGE_pfa: 
+91D8 defw CR_cfa
+91DA defw (.")_cfa
+91DC defb 0x27,"Keys: Space=more, Q=quit, other=deeper."
+9204 defw CR_cfa
+9206 defw ;S_cfa
+
+
+9115  (DECODE)_nfa: defb 0x08+0x80,"(DECODE",")"+0x80
+911E  (DECODE)_lfa: defw COLON-PFA?_nfa
+9120  (DECODE)_cfa: defw 0x6306
+9122  (DECODE)_pfa: 
+9122 defw DUP_cfa
+9124 defw COLON-PFA?_cfa
+9126 defw 0BRANCH_cfa,0x0081; to 91A9 
+912A defw DUP_cfa
+912C defw NFA_cfa
+912E defw DECODE-ADDRESS_cfa
+9130 defw !_cfa
+9132 defw INDENT_cfa
+9134 defw (.")_cfa
+9136 defb 0x02,": "
+9139 defw DUP_cfa
+913B defw NFA_cfa
+913D defw ID._cfa
+913F defw DUP_cfa
+9141 defw DECODE-ADDRESS_cfa
+9143 defw !_cfa
+9145 defw DUP_cfa
+9147 defw @_cfa
+9149 defw DUP_cfa
+914B defw DECODE-END?_cfa
+914D defw 0=_cfa
+914F defw 0BRANCH_cfa,0x004C; to 919D 
+9153 defw 2+_cfa
+9155 defw DUP_cfa
+9157 defw INDENT+_cfa
+9159 defw NFA_cfa
+915B defw ID._cfa
+915D defw KEY_cfa
+915F defw LIT_cfa,0x0051
+9163 defw OVER_cfa
+9165 defw =_cfa
+9167 defw 0BRANCH_cfa,0x000C; to 9175 
+916B defw DROP_cfa
+916D defw SP!_cfa
+916F defw QUIT_cfa
+9171 defw BRANCH_cfa,0x001A; to 918D 
+9175 defw BL_cfa
+9177 defw OVER_cfa
+9179 defw =_cfa
+917B defw 0BRANCH_cfa,0x000A; to 9187 
+917F defw DROP_cfa
+9181 defw DROP_cfa
+9183 defw BRANCH_cfa,0x0008; to 918D 
+9187 defw SWAP_cfa
+9189 defw (DECODE)_cfa
+918B defw DROP_cfa
+918D defw DECODE-SPECIAL-CASES_cfa
+918F defw 2+_cfa
+9191 defw LIT_cfa,0xFFFF
+9195 defw DECODE-LEVEL_cfa
+9197 defw +!_cfa
+9199 defw BRANCH_cfa,0xFFA4; to 913F 
+919D defw INDENT_cfa
+919F defw 2+_cfa
+91A1 defw NFA_cfa
+91A3 defw ID._cfa
+91A5 defw BRANCH_cfa,0x001C; to 91C3 
+91A9 defw (.")_cfa
+91AB defb 0x17,"Not a colon definition."
+91C3 defw DROP_cfa
+91C5 defw ;S_cfa
+
+
+90F6  COLON-PFA?_nfa: defb 0x0A+0x80,"COLON-PFA","?"+0x80
+9101  COLON-PFA?_lfa: defw DECODE-END?_nfa
+9103  COLON-PFA?_cfa: defw 0x6306
+9105  COLON-PFA?_pfa: 
+9105 defw CFA_cfa
+9107 defw @_cfa
+9109 defw LIT_cfa,0x62F4
+910D defw CFA_cfa
+910F defw @_cfa
+9111 defw =_cfa
+9113 defw ;S_cfa
+
+
+90CE  DECODE-END?_nfa: defb 0x0B+0x80,"DECODE-END","?"+0x80
+90DA  DECODE-END?_lfa: defw DECODE-SPECIAL-CASES_nfa
+90DC  DECODE-END?_cfa: defw 0x6306
+90DE  DECODE-END?_pfa: 
+90DE defw DUP_cfa
+90E0 defw LIT_cfa,0x614A
+90E4 defw CFA_cfa
+90E6 defw =_cfa
+90E8 defw SWAP_cfa
+90EA defw LIT_cfa,0x6770
+90EE defw CFA_cfa
+90F0 defw =_cfa
+90F2 defw OR_cfa
+90F4 defw ;S_cfa
+
+
+9021  DECODE-SPECIAL-CASES_nfa: defb 0x14+0x80,"DECODE-SPECIAL-CASE","S"+0x80
+9036  DECODE-SPECIAL-CASES_lfa: defw DECODE-DOT-QUOTE_nfa
+9038  DECODE-SPECIAL-CASES_cfa: defw 0x6306
+903A  DECODE-SPECIAL-CASES_pfa: 
+903A defw DUP_cfa
+903C defw @_cfa
+903E defw LIT_cfa,0x66F7
+9042 defw OVER_cfa
+9044 defw =_cfa
+9046 defw 0BRANCH_cfa,0x000A; to 9052 
+904A defw DROP_cfa
+904C defw DECODE-COMPILE_cfa
+904E defw BRANCH_cfa,0x007C; to 90CC 
+9052 defw LIT_cfa,0x5E7D
+9056 defw OVER_cfa
+9058 defw =_cfa
+905A defw 0BRANCH_cfa,0x000A; to 9066 
+905E defw DROP_cfa
+9060 defw DECODE-LITERAL_cfa
+9062 defw BRANCH_cfa,0x0068; to 90CC 
+9066 defw LIT_cfa,0x5EA1
+906A defw OVER_cfa
+906C defw =_cfa
+906E defw 0BRANCH_cfa,0x000A; to 907A 
+9072 defw DROP_cfa
+9074 defw DECODE-BRANCH_cfa
+9076 defw BRANCH_cfa,0x0054; to 90CC 
+907A defw LIT_cfa,0x5EB9
+907E defw OVER_cfa
+9080 defw =_cfa
+9082 defw 0BRANCH_cfa,0x000A; to 908E 
+9086 defw DROP_cfa
+9088 defw DECODE-BRANCH_cfa
+908A defw BRANCH_cfa,0x0040; to 90CC 
+908E defw LIT_cfa,0x5ECE
+9092 defw OVER_cfa
+9094 defw =_cfa
+9096 defw 0BRANCH_cfa,0x000A; to 90A2 
+909A defw DROP_cfa
+909C defw DECODE-BRANCH_cfa
+909E defw BRANCH_cfa,0x002C; to 90CC 
+90A2 defw LIT_cfa,0x5F08
+90A6 defw OVER_cfa
+90A8 defw =_cfa
+90AA defw 0BRANCH_cfa,0x000A; to 90B6 
+90AE defw DROP_cfa
+90B0 defw DECODE-BRANCH_cfa
+90B2 defw BRANCH_cfa,0x0018; to 90CC 
+90B6 defw LIT_cfa,0x6847
+90BA defw OVER_cfa
+90BC defw =_cfa
+90BE defw 0BRANCH_cfa,0x000A; to 90CA 
+90C2 defw DROP_cfa
+90C4 defw DECODE-DOT-QUOTE_cfa
+90C6 defw BRANCH_cfa,0x0004; to 90CC 
+90CA defw DROP_cfa
+90CC defw ;S_cfa
+
+
+8FF8  DECODE-DOT-QUOTE_nfa: defb 0x10+0x80,"DECODE-DOT-QUOT","E"+0x80
+9009  DECODE-DOT-QUOTE_lfa: defw DECODE-BRANCH_nfa
+900B  DECODE-DOT-QUOTE_cfa: defw 0x6306
+900D  DECODE-DOT-QUOTE_pfa: 
+900D defw 2+_cfa
+900F defw DUP_cfa
+9011 defw COUNT_cfa
+9013 defw TYPE_cfa
+9015 defw DUP_cfa
+9017 defw C@_cfa
+9019 defw +_cfa
+901B defw 1_cfa
+901D defw -_cfa
+901F defw ;S_cfa
+
+
+8FCF  DECODE-BRANCH_nfa: defb 0x0D+0x80,"DECODE-BRANC","H"+0x80
+8FDD  DECODE-BRANCH_lfa: defw DECODE-LITERAL_nfa
+8FDF  DECODE-BRANCH_cfa: defw 0x6306
+8FE1  DECODE-BRANCH_pfa: 
+8FE1 defw DECODE-LITERAL_cfa
+8FE3 defw (.")_cfa
+8FE5 defb 0x06," \ to "
+8FEC defw DUP_cfa
+8FEE defw DUP_cfa
+8FF0 defw @_cfa
+8FF2 defw +_cfa
+8FF4 defw U._cfa
+8FF6 defw ;S_cfa
+
+
+8FB2  DECODE-LITERAL_nfa: defb 0x0E+0x80,"DECODE-LITERA","L"+0x80
+8FC1  DECODE-LITERAL_lfa: defw DECODE-COMPILE_nfa
+8FC3  DECODE-LITERAL_cfa: defw 0x6306
+8FC5  DECODE-LITERAL_pfa: 
+8FC5 defw 2+_cfa
+8FC7 defw DUP_cfa
+8FC9 defw @_cfa
+8FCB defw ._cfa
+8FCD defw ;S_cfa
+
+
+8F91  DECODE-COMPILE_nfa: defb 0x0E+0x80,"DECODE-COMPIL","E"+0x80
+8FA0  DECODE-COMPILE_lfa: defw INDENT+_nfa
+8FA2  DECODE-COMPILE_cfa: defw 0x6306
+8FA4  DECODE-COMPILE_pfa: 
+8FA4 defw 2+_cfa
+8FA6 defw DUP_cfa
+8FA8 defw @_cfa
+8FAA defw 2+_cfa
+8FAC defw NFA_cfa
+8FAE defw ID._cfa
+8FB0 defw ;S_cfa
+
+
+8F7B  INDENT+_nfa: defb 0x07+0x80,"INDENT","+"+0x80
+8F83  INDENT+_lfa: defw INDENT_nfa
+8F85  INDENT+_cfa: defw 0x6306
+8F87  INDENT+_pfa: 
+8F87 defw 1_cfa
+8F89 defw DECODE-LEVEL_cfa
+8F8B defw +!_cfa
+8F8D defw INDENT_cfa
+8F8F defw ;S_cfa
+
+
+8F5C  INDENT_nfa: defb 0x06+0x80,"INDEN","T"+0x80
+8F63  INDENT_lfa: defw DECODE-ADDRESS_nfa
+8F65  INDENT_cfa: defw 0x6306
+8F67  INDENT_pfa: 
+8F67 defw CR_cfa
+8F69 defw DECODE-ADDRESS_cfa
+8F6B defw @_cfa
+8F6D defw U._cfa
+8F6F defw DECODE-LEVEL_cfa
+8F71 defw @_cfa
+8F73 defw 2_cfa
+8F75 defw *_cfa
+8F77 defw SPACES_cfa
+8F79 defw ;S_cfa
+
+
+8F47  DECODE-ADDRESS_nfa: defb 0x0E+0x80,"DECODE-ADDRES","S"+0x80
+8F56  DECODE-ADDRESS_lfa: defw DECODE-LEVEL_nfa
+8F58  DECODE-ADDRESS_cfa: defw 0x6362
+8F5A  DECODE-ADDRESS_pfa: 
+8F5A defw 0x0000
+
+
+8F34  DECODE-LEVEL_nfa: defb 0x0C+0x80,"DECODE-LEVE","L"+0x80
+8F41  DECODE-LEVEL_lfa: defw RECURSE_nfa
+8F43  DECODE-LEVEL_cfa: defw 0x6362
+8F45  DECODE-LEVEL_pfa: 
+8F45 defw 0x0000
+
+
+8F1E  RECURSE_nfa: defb 0x07+0x80+0x40,"RECURS","E"+0x80
+8F26  RECURSE_lfa: defw DUMP_nfa
+8F28  RECURSE_cfa: defw 0x6306
+8F2A  RECURSE_pfa: 
+8F2A defw LATEST_cfa
+8F2C defw PFA_cfa
+8F2E defw CFA_cfa
+8F30 defw ,_cfa
+8F32 defw ;S_cfa
+
+
+8EB1  DUMP_nfa: defb 0x04+0x80,"DUM","P"+0x80
+8EB6  DUMP_lfa: defw STYPE_nfa
+8EB8  DUMP_cfa: defw 0x6306
+8EBA  DUMP_pfa: 
+8EBA defw LIT_cfa,0x0007
+8EBE defw +_cfa
+8EC0 defw LIT_cfa,0xFFF8
+8EC4 defw AND_cfa
+8EC6 defw LIT_cfa,0x0008
+8ECA defw /_cfa
+8ECC defw 0_cfa
+8ECE defw 2DUP_cfa
+8ED0 defw -_cfa
+8ED2 defw 0BRANCH_cfa,0x0044; to 8F18 
+8ED6 defw (DO)_cfa
+8ED8 defw CR_cfa
+8EDA defw DUP_cfa
+8EDC defw H._cfa
+8EDE defw LIT_cfa,0x0008
+8EE2 defw 0_cfa
+8EE4 defw (DO)_cfa
+8EE6 defw I_cfa
+8EE8 defw OVER_cfa
+8EEA defw +_cfa
+8EEC defw @_cfa
+8EEE defw CSWAP_cfa
+8EF0 defw H._cfa
+8EF2 defw 2_cfa
+8EF4 defw (+LOOP)_cfa,0xFFF0; to 8EE6 
+8EF8 defw DUP_cfa
+8EFA defw BS_cfa
+8EFC defw LIT_cfa,0x0008
+8F00 defw STYPE_cfa
+8F02 defw ?TERMINAL_cfa
+8F04 defw 0BRANCH_cfa,0x0004; to 8F0A 
+8F08 defw LEAVE_cfa
+8F0A defw LIT_cfa,0x0008
+8F0E defw +_cfa
+8F10 defw (LOOP)_cfa,0xFFC6; to 8ED8 
+8F14 defw BRANCH_cfa,0x0004; to 8F1A 
+8F18 defw 2DROP_cfa
+8F1A defw DROP_cfa
+8F1C defw ;S_cfa
+
+
+8E6F  STYPE_nfa: defb 0x05+0x80,"STYP","E"+0x80
+8E75  STYPE_lfa: defw H._nfa
+8E77  STYPE_cfa: defw 0x6306
+8E79  STYPE_pfa: 
+8E79 defw 0_cfa
+8E7B defw 2DUP_cfa
+8E7D defw -_cfa
+8E7F defw 0BRANCH_cfa,0x002A; to 8EAB 
+8E83 defw (DO)_cfa
+8E85 defw DUP_cfa
+8E87 defw C@_cfa
+8E89 defw LIT_cfa,0x007F
+8E8D defw AND_cfa
+8E8F defw DUP_cfa
+8E91 defw BL_cfa
+8E93 defw <_cfa
+8E95 defw 0BRANCH_cfa,0x0008; to 8E9F 
+8E99 defw DROP_cfa
+8E9B defw LIT_cfa,0x002E
+8E9F defw EMIT_cfa
+8EA1 defw 1+_cfa
+8EA3 defw (LOOP)_cfa,0xFFE0; to 8E85 
+8EA7 defw BRANCH_cfa,0x0004; to 8EAD 
+8EAB defw 2DROP_cfa
+8EAD defw DROP_cfa
+8EAF defw ;S_cfa
+
+
+8E48  H._nfa: defb 0x02+0x80,"H","."+0x80
+8E4B  H._lfa: defw BS_nfa
+8E4D  H._cfa: defw 0x6306
+8E4F  H._pfa: 
+8E4F defw BASE_cfa
+8E51 defw @_cfa
+8E53 defw HEX_cfa
+8E55 defw SWAP_cfa
+8E57 defw S->D_cfa
+8E59 defw <#_cfa
+8E5B defw #_cfa
+8E5D defw #_cfa
+8E5F defw #_cfa
+8E61 defw #_cfa
+8E63 defw #>_cfa
+8E65 defw TYPE_cfa
+8E67 defw SPACE_cfa
+8E69 defw BASE_cfa
+8E6B defw !_cfa
+8E6D defw ;S_cfa
+
+
+8E39  BS_nfa: defb 0x02+0x80,"B","S"+0x80
+8E3C  BS_lfa: defw CSWAP_nfa
+8E3E  BS_cfa: defw 0x6306
+8E40  BS_pfa: 
+8E40 defw LIT_cfa,0x0008
+8E44 defw EMIT_cfa
+8E46 defw ;S_cfa
+
+
+8E28  CSWAP_nfa: defb 0x05+0x80,"CSWA","P"+0x80
+8E2E  CSWAP_lfa: defw STR=_nfa
+8E30  CSWAP_cfa: defw CSWAP_nfa
+8E32  CSWAP_pfa: ; Word type not implemented.
+
+
+8E01  STR=_nfa: defb 0x04+0x80,"STR","="+0x80
+8E06  STR=_lfa: defw LENGTHS_nfa
+8E08  STR=_cfa: defw 0x6306
+8E0A  STR=_pfa: 
+8E0A defw LENGTHS_cfa
+8E0C defw -_cfa
+8E0E defw 0BRANCH_cfa,0x000E; to 8E1E 
+8E12 defw 2DROP_cfa
+8E14 defw 2DROP_cfa
+8E16 defw FALSE_cfa
+8E18 defw EXIT_cfa
+8E1A defw BRANCH_cfa,0x000A; to 8E26 
+8E1E defw DROP_cfa
+8E20 defw -TEXT_cfa
+8E22 defw 0=_cfa
+8E24 defw 0=_cfa
+8E26 defw ;S_cfa
+
+
+8DED  LENGTHS_nfa: defb 0x07+0x80,"LENGTH","S"+0x80
+8DF5  LENGTHS_lfa: defw S'_nfa
+8DF7  LENGTHS_cfa: defw 0x6306
+8DF9  LENGTHS_pfa: 
+8DF9 defw 2_cfa
+8DFB defw PICK_cfa
+8DFD defw OVER_cfa
+8DFF defw ;S_cfa
+
+
+8DDE  S'_nfa: defb 0x02+0x80+0x40,"S","'"+0x80
+8DE1  S'_lfa: defw S"_nfa
+8DE3  S'_cfa: defw 0x6306
+8DE5  S'_pfa: 
+8DE5 defw LIT_cfa,0x0027
+8DE9 defw (S)_cfa
+8DEB defw ;S_cfa
+
+
+8DCF  S"_nfa: defb 0x02+0x80+0x40,"S","""+0x80
+8DD2  S"_lfa: defw (S)_nfa
+8DD4  S"_cfa: defw 0x6306
+8DD6  S"_pfa: 
+8DD6 defw LIT_cfa,0x0022
+8DDA defw (S)_cfa
+8DDC defw ;S_cfa
+
+
+8DA9  (S)_nfa: defb 0x03+0x80,"(S",")"+0x80
+8DAD  (S)_lfa: defw /STRING_nfa
+8DAF  (S)_cfa: defw 0x6306
+8DB1  (S)_pfa: 
+8DB1 defw STATE_cfa
+8DB3 defw @_cfa
+8DB5 defw 0BRANCH_cfa,0x0014; to 8DCB 
+8DB9 defw COMPILE_cfa,SLIT_cfa
+8DBD defw WORD_cfa
+8DBF defw HERE_cfa
+8DC1 defw C@_cfa
+8DC3 defw 1+_cfa
+8DC5 defw ALLOT_cfa
+8DC7 defw BRANCH_cfa,0x0004; to 8DCD 
+8DCB defw PARSE-TEXT_cfa
+8DCD defw ;S_cfa
+
+
+8D8D  /STRING_nfa: defb 0x07+0x80,"/STRIN","G"+0x80
+8D95  /STRING_lfa: defw +PLACE_nfa
+8D97  /STRING_cfa: defw 0x6306
+8D99  /STRING_pfa: 
+8D99 defw DUP_cfa
+8D9B defw >R_cfa
+8D9D defw -_cfa
+8D9F defw SWAP_cfa
+8DA1 defw R>_cfa
+8DA3 defw +_cfa
+8DA5 defw SWAP_cfa
+8DA7 defw ;S_cfa
+
+
+8D6A  +PLACE_nfa: defb 0x06+0x80,"+PLAC","E"+0x80
+8D71  +PLACE_lfa: defw PLACE_nfa
+8D73  +PLACE_cfa: defw 0x6306
+8D75  +PLACE_pfa: 
+8D75 defw 2DUP_cfa
+8D77 defw C@_cfa
+8D79 defw +_cfa
+8D7B defw OVER_cfa
+8D7D defw C!_cfa
+8D7F defw DUP_cfa
+8D81 defw C@_cfa
+8D83 defw 1+_cfa
+8D85 defw +_cfa
+8D87 defw SWAP_cfa
+8D89 defw MOVE_cfa
+8D8B defw ;S_cfa
+
+
+8D54  PLACE_nfa: defb 0x05+0x80,"PLAC","E"+0x80
+8D5A  PLACE_lfa: defw SLITERAL_nfa
+8D5C  PLACE_cfa: defw 0x6306
+8D5E  PLACE_pfa: 
+8D5E defw 2DUP_cfa
+8D60 defw C!_cfa
+8D62 defw 1+_cfa
+8D64 defw SWAP_cfa
+8D66 defw MOVE_cfa
+8D68 defw ;S_cfa
+
+
+8D3F  SLITERAL_nfa: defb 0x08+0x80+0x40,"SLITERA","L"+0x80
+8D48  SLITERAL_lfa: defw S,_nfa
+8D4A  SLITERAL_cfa: defw 0x6306
+8D4C  SLITERAL_pfa: 
+8D4C defw COMPILE_cfa,SLIT_cfa
+8D50 defw S,_cfa
+8D52 defw ;S_cfa
+
+
+8D2A  S,_nfa: defb 0x02+0x80,"S",","+0x80
+8D2D  S,_lfa: defw SLIT_nfa
+8D2F  S,_cfa: defw 0x6306
+8D31  S,_pfa: 
+8D31 defw SWAP_cfa
+8D33 defw HERE_cfa
+8D35 defw ROT_cfa
+8D37 defw CMOVE_cfa
+8D39 defw 1+_cfa
+8D3B defw ALLOT_cfa
+8D3D defw ;S_cfa
+
+
+8D11  SLIT_nfa: defb 0x04+0x80,"SLI","T"+0x80
+8D16  SLIT_lfa: defw PARSE-NAME_nfa
+8D18  SLIT_cfa: defw 0x6306
+8D1A  SLIT_pfa: 
+8D1A defw R_cfa
+8D1C defw COUNT_cfa
+8D1E defw DUP_cfa
+8D20 defw 1+_cfa
+8D22 defw R>_cfa
+8D24 defw +_cfa
+8D26 defw >R_cfa
+8D28 defw ;S_cfa
+
+
+8CFC  PARSE-NAME_nfa: defb 0x0A+0x80,"PARSE-NAM","E"+0x80
+8D07  PARSE-NAME_lfa: defw PARSE-TEXT_nfa
+8D09  PARSE-NAME_cfa: defw 0x6306
+8D0B  PARSE-NAME_pfa: 
+8D0B defw BL_cfa
+8D0D defw PARSE-TEXT_cfa
+8D0F defw ;S_cfa
+
+
+8CE5  PARSE-TEXT_nfa: defb 0x0A+0x80,"PARSE-TEX","T"+0x80
+8CF0  PARSE-TEXT_lfa: defw PICK_nfa
+8CF2  PARSE-TEXT_cfa: defw 0x6306
+8CF4  PARSE-TEXT_pfa: 
+8CF4 defw TEXT_cfa
+8CF6 defw PAD_cfa
+8CF8 defw COUNT_cfa
+8CFA defw ;S_cfa
+
+
+8CD2  PICK_nfa: defb 0x04+0x80,"PIC","K"+0x80
+8CD7  PICK_lfa: defw ?EXIT_nfa
+8CD9  PICK_cfa: defw PICK_nfa
+8CDB  PICK_pfa: ; Word type not implemented.
+
+
+8CBE  ?EXIT_nfa: defb 0x05+0x80+0x40,"?EXI","T"+0x80
+8CC4  ?EXIT_lfa: defw OFF_nfa
+8CC6  ?EXIT_cfa: defw 0x6306
+8CC8  ?EXIT_pfa: 
+8CC8 defw IF_cfa
+8CCA defw COMPILE_cfa,EXIT_cfa
+8CCE defw THEN_cfa
+8CD0 defw ;S_cfa
+
+
+8CAE  OFF_nfa: defb 0x03+0x80,"OF","F"+0x80
+8CB2  OFF_lfa: defw ON_nfa
+8CB4  OFF_cfa: defw OFF_nfa
+8CB6  OFF_pfa: ; Word type not implemented.
+
+
+8C9E  ON_nfa: defb 0x02+0x80,"O","N"+0x80
+8CA1  ON_lfa: defw TRUE_nfa
+8CA3  ON_cfa: defw ON_nfa
+8CA5  ON_pfa: ; Word type not implemented.
+
+
+8C93  TRUE_nfa: defb 0x04+0x80,"TRU","E"+0x80
+8C98  TRUE_lfa: defw FALSE_nfa
+8C9A  TRUE_cfa: defw 0x6348
+8C9C  TRUE_pfa: 
+8C9C defw 0x0001
+
+
+8C87  FALSE_nfa: defb 0x05+0x80,"FALS","E"+0x80
+8C8D  FALSE_lfa: defw MOVE_nfa
+8C8F  FALSE_cfa: defw 0x6348
+8C91  FALSE_pfa: 
+8C91 defw 0x0000
+
+
+8C64  MOVE_nfa: defb 0x04+0x80,"MOV","E"+0x80
+8C69  MOVE_lfa: defw CMOVE>_nfa
+8C6B  MOVE_cfa: defw 0x6306
+8C6D  MOVE_pfa: 
+8C6D defw >R_cfa
+8C6F defw 2DUP_cfa
+8C71 defw -_cfa
+8C73 defw 0<_cfa
+8C75 defw 0BRANCH_cfa,0x000A; to 8C81 
+8C79 defw R>_cfa
+8C7B defw CMOVE>_cfa
+8C7D defw BRANCH_cfa,0x0006; to 8C85 
+8C81 defw R>_cfa
+8C83 defw CMOVE_cfa
+8C85 defw ;S_cfa
+
+
+8C45  CMOVE>_nfa: defb 0x06+0x80,"CMOVE",">"+0x80
+8C4C  CMOVE>_lfa: defw -CASEINS_nfa
+8C4E  CMOVE>_cfa: defw CMOVE>_nfa
+8C50  CMOVE>_pfa: ; Word type not implemented.
+
+
+8C2C  -CASEINS_nfa: defb 0x08+0x80,"-CASEIN","S"+0x80
+8C35  -CASEINS_lfa: defw +CASEINS_nfa
+8C37  -CASEINS_cfa: defw 0x6306
+8C39  -CASEINS_pfa: 
+8C39 defw LIT_cfa,0x69CF
+8C3D defw LIT_cfa,0x6AC7
+8C41 defw !_cfa
+8C43 defw ;S_cfa
+
+
+8C13  +CASEINS_nfa: defb 0x08+0x80,"+CASEIN","S"+0x80
+8C1C  +CASEINS_lfa: defw UPPER-WORD_nfa
+8C1E  +CASEINS_cfa: defw 0x6306
+8C20  +CASEINS_pfa: 
+8C20 defw LIT_cfa,0x8C07
+8C24 defw LIT_cfa,0x6AC7
+8C28 defw !_cfa
+8C2A defw ;S_cfa
+
+
+8BFA  UPPER-WORD_nfa: defb 0x0A+0x80,"UPPER-WOR","D"+0x80
+8C05  UPPER-WORD_lfa: defw UPPERS_nfa
+8C07  UPPER-WORD_cfa: defw 0x6306
+8C09  UPPER-WORD_pfa: 
+8C09 defw WORD_cfa
+8C0B defw HERE_cfa
+8C0D defw COUNT_cfa
+8C0F defw UPPERS_cfa
+8C11 defw ;S_cfa
+
+
+8BDB  UPPERS_nfa: defb 0x06+0x80,"UPPER","S"+0x80
+8BE2  UPPERS_lfa: defw UPPERC_nfa
+8BE4  UPPERS_cfa: defw 0x6306
+8BE6  UPPERS_pfa: 
+8BE6 defw BOUNDS_cfa
+8BE8 defw (DO)_cfa
+8BEA defw I_cfa
+8BEC defw C@_cfa
+8BEE defw UPPERC_cfa
+8BF0 defw I_cfa
+8BF2 defw C!_cfa
+8BF4 defw (LOOP)_cfa,0xFFF4; to 8BEA 
+8BF8 defw ;S_cfa
+
+
+8BC0  UPPERC_nfa: defb 0x06+0x80,"UPPER","C"+0x80
+8BC7  UPPERC_lfa: defw (BANK-TAPE)_nfa
+8BC9  UPPERC_cfa: defw UPPERC_nfa
+8BCB  UPPERC_pfa: ; Word type not implemented.
+
+
+8BA4  (BANK-TAPE)_nfa: defb 0x0B+0x80,"(BANK-TAPE",")"+0x80
+8BB0  (BANK-TAPE)_lfa: defw (INIT-DISC)_nfa
+8BB2  (BANK-TAPE)_cfa: defw 0x6306
+8BB4  (BANK-TAPE)_pfa: 
+8BB4 defw DISC-BANK_cfa
+8BB6 defw BANK_cfa
+8BB8 defw (TAPE)_cfa
+8BBA defw 0_cfa
+8BBC defw BANK_cfa
+8BBE defw ;S_cfa
+
+
+8B8C  (INIT-DISC)_nfa: defb 0x0B+0x80,"(INIT-DISC",")"+0x80
+8B98  (INIT-DISC)_lfa: defw DISC-BANK_nfa
+8B9A  (INIT-DISC)_cfa: defw 0x6306
+8B9C  (INIT-DISC)_pfa: 
+8B9C defw LO_cfa
+8B9E defw /DISC_cfa
+8BA0 defw BLANKS_cfa
+8BA2 defw ;S_cfa
+
+
+8B70  DISC-BANK_nfa: defb 0x09+0x80,"DISC-BAN","K"+0x80
+8B7A  DISC-BANK_lfa: defw DR1_nfa
+8B7C  DISC-BANK_cfa: defw 0x6306
+8B7E  DISC-BANK_pfa: 
+8B7E defw 1_cfa
+8B80 defw OFFSET_cfa
+8B82 defw @_cfa
+8B84 defw 2_cfa
+8B86 defw *_cfa
+8B88 defw +_cfa
+8B8A defw ;S_cfa
+
+
+8B5C  DR1_nfa: defb 0x03+0x80,"DR","1"+0x80
+8B60  DR1_lfa: defw BANK_nfa
+8B62  DR1_cfa: defw 0x6306
+8B64  DR1_pfa: 
+8B64 defw SCR/DR_cfa
+8B66 defw B/SCR_cfa
+8B68 defw *_cfa
+8B6A defw OFFSET_cfa
+8B6C defw !_cfa
+8B6E defw ;S_cfa
+
+
+8B37  BANK_nfa: defb 0x04+0x80,"BAN","K"+0x80
+8B3C  BANK_lfa: defw BANK1-PORT_nfa
+8B3E  BANK_cfa: defw 0x6306
+8B40  BANK_pfa: 
+8B40 defw -INTERRUPTS_cfa
+8B42 defw SYS-BANKM_cfa
+8B44 defw C@_cfa
+8B46 defw LIT_cfa,0x00F8
+8B4A defw AND_cfa
+8B4C defw OR_cfa
+8B4E defw DUP_cfa
+8B50 defw SYS-BANKM_cfa
+8B52 defw C!_cfa
+8B54 defw BANK1-PORT_cfa
+8B56 defw OUTP_cfa
+8B58 defw +INTERRUPTS_cfa
+8B5A defw ;S_cfa
+
+
+8B26  BANK1-PORT_nfa: defb 0x0A+0x80,"BANK1-POR","T"+0x80
+8B31  BANK1-PORT_lfa: defw SYS-BANKM_nfa
+8B33  BANK1-PORT_cfa: defw 0x6348
+8B35  BANK1-PORT_pfa: 
+8B35 defw 0x7FFD
+
+
+8B16  SYS-BANKM_nfa: defb 0x09+0x80,"SYS-BANK","M"+0x80
+8B20  SYS-BANKM_lfa: defw +INTERRUPTS_nfa
+8B22  SYS-BANKM_cfa: defw 0x6348
+8B24  SYS-BANKM_pfa: 
+8B24 defw 0x5B5C
+
+
+8B02  +INTERRUPTS_nfa: defb 0x0B+0x80,"+INTERRUPT","S"+0x80
+8B0E  +INTERRUPTS_lfa: defw -INTERRUPTS_nfa
+8B10  +INTERRUPTS_cfa: defw +INTERRUPTS_nfa
+8B12  +INTERRUPTS_pfa: ; Word type not implemented.
+
+
+8AEE  -INTERRUPTS_nfa: defb 0x0B+0x80,"-INTERRUPT","S"+0x80
+8AFA  -INTERRUPTS_lfa: defw TURNKEY_nfa
+8AFC  -INTERRUPTS_cfa: defw -INTERRUPTS_nfa
+8AFE  -INTERRUPTS_pfa: ; Word type not implemented.
+
+
+8568  TURNKEY_nfa: defb 0x07+0x80,"TURNKE","Y"+0x80
+8570  TURNKEY_lfa: defw SYSTEM_nfa
+8572  TURNKEY_cfa: defw 0x6306
+8574  TURNKEY_pfa: 
+8574 defw BOOT_cfa
+8576 defw !_cfa
+8578 defw SYSTEM_cfa
+857A defw ;S_cfa
+
+
+854D  SYSTEM_nfa: defb 0x06+0x80,"SYSTE","M"+0x80
+8554  SYSTEM_lfa: defw EXTEND_nfa
+8556  SYSTEM_cfa: defw 0x6306
+8558  SYSTEM_pfa: 
+8558 defw EXTEND_cfa
+855A defw 0_cfa
+855C defw +ORIGIN_cfa
+855E defw SIZE_cfa
+8560 defw LIT_cfa,0x000A
+8564 defw +_cfa
+8566 defw ;S_cfa
+
+
+850A  EXTEND_nfa: defb 0x06+0x80,"EXTEN","D"+0x80
+8511  EXTEND_lfa: defw NEEDS_nfa
+8513  EXTEND_cfa: defw 0x6306
+8515  EXTEND_pfa: 
+8515 defw LATEST_cfa
+8517 defw LIT_cfa,0x000C
+851B defw +ORIGIN_cfa
+851D defw !_cfa
+851F defw HERE_cfa
+8521 defw LIT_cfa,0x001C
+8525 defw +ORIGIN_cfa
+8527 defw !_cfa
+8529 defw HERE_cfa
+852B defw LIT_cfa,0x001E
+852F defw +ORIGIN_cfa
+8531 defw !_cfa
+8533 defw HERE_cfa
+8535 defw FENCE_cfa
+8537 defw !_cfa
+8539 defw LIT_cfa,0x6CF4
+853D defw LIT_cfa,0x0008
+8541 defw +_cfa
+8543 defw LIT_cfa,0x0020
+8547 defw +ORIGIN_cfa
+8549 defw !_cfa
+854B defw ;S_cfa
+
+
+84FA  NEEDS_nfa: defb 0x05+0x80,"NEED","S"+0x80
+8500  NEEDS_lfa: defw ?NEEDS_nfa
+8502  NEEDS_cfa: defw 0x6306
+8504  NEEDS_pfa: 
+8504 defw [UNDEFINED]_cfa
+8506 defw ?NEEDS_cfa
+8508 defw ;S_cfa
+
+
+84EB  ?NEEDS_nfa: defb 0x06+0x80,"?NEED","S"+0x80
+84F2  ?NEEDS_lfa: defw (NEEDS-TAPE)_nfa
+84F4  ?NEEDS_cfa: defw 0x6306
+84F6  ?NEEDS_pfa: 
+84F6 defw (NEEDS-TAPE)_cfa
+84F8 defw ;S_cfa
+
+
+84CE  (NEEDS-TAPE)_nfa: defb 0x0C+0x80,"(NEEDS-TAPE",")"+0x80
+84DB  (NEEDS-TAPE)_lfa: defw DISC-SCR_nfa
+84DD  (NEEDS-TAPE)_cfa: defw 0x6306
+84DF  (NEEDS-TAPE)_pfa: 
+84DF defw LIT_cfa,0x001B
+84E3 defw ?ERROR_cfa
+84E5 defw BL_cfa
+84E7 defw WORD_cfa
+84E9 defw ;S_cfa
+
+
+84A7  DISC-SCR_nfa: defb 0x08+0x80,"DISC-SC","R"+0x80
+84B0  DISC-SCR_lfa: defw SCR/DR_nfa
+84B2  DISC-SCR_cfa: defw 0x6306
+84B4  DISC-SCR_pfa: 
+84B4 defw 1-_cfa
+84B6 defw DUP_cfa
+84B8 defw SCR/DR_cfa
+84BA defw U<_cfa
+84BC defw 0=_cfa
+84BE defw LIT_cfa,0x0006
+84C2 defw ?ERROR_cfa
+84C4 defw /SCR_cfa
+84C6 defw *_cfa
+84C8 defw LO_cfa
+84CA defw +_cfa
+84CC defw ;S_cfa
+
+
+849A  SCR/DR_nfa: defb 0x06+0x80,"SCR/D","R"+0x80
+84A1  SCR/DR_lfa: defw RUNT_nfa
+84A3  SCR/DR_cfa: defw 0x6348
+84A5  SCR/DR_pfa: 
+84A5 defw 0x0010
+
+
+848B  RUNT_nfa: defb 0x04+0x80,"RUN","T"+0x80
+8490  RUNT_lfa: defw /RUNT_nfa
+8492  RUNT_cfa: defw 0x6306
+8494  RUNT_pfa: 
+8494 defw 1_cfa
+8496 defw /RUNT_cfa
+8498 defw ;S_cfa
+
+
+8477  /RUNT_nfa: defb 0x05+0x80,"/RUN","T"+0x80
+847D  /RUNT_lfa: defw +THRU_nfa
+847F  /RUNT_cfa: defw 0x6306
+8481  /RUNT_pfa: 
+8481 defw EMPTY-BUFFERS_cfa
+8483 defw INIT-DISC_cfa
+8485 defw LOADT_cfa
+8487 defw LOAD_cfa
+8489 defw ;S_cfa
+
+
+845D  +THRU_nfa: defb 0x05+0x80,"+THR","U"+0x80
+8463  +THRU_lfa: defw +LOAD_nfa
+8465  +THRU_cfa: defw 0x6306
+8467  +THRU_pfa: 
+8467 defw 1+_cfa
+8469 defw SWAP_cfa
+846B defw (DO)_cfa
+846D defw I_cfa
+846F defw +LOAD_cfa
+8471 defw (LOOP)_cfa,0xFFFA; to 846D 
+8475 defw ;S_cfa
+
+
+8445  +LOAD_nfa: defb 0x05+0x80,"+LOA","D"+0x80
+844B  +LOAD_lfa: defw THRU_nfa
+844D  +LOAD_cfa: defw 0x6306
+844F  +LOAD_pfa: 
+844F defw BLK_cfa
+8451 defw @_cfa
+8453 defw B/SCR_cfa
+8455 defw /_cfa
+8457 defw +_cfa
+8459 defw LOAD_cfa
+845B defw ;S_cfa
+
+
+842C  THRU_nfa: defb 0x04+0x80,"THR","U"+0x80
+8431  THRU_lfa: defw 0<>_nfa
+8433  THRU_cfa: defw 0x6306
+8435  THRU_pfa: 
+8435 defw 1+_cfa
+8437 defw SWAP_cfa
+8439 defw (DO)_cfa
+843B defw I_cfa
+843D defw LOAD_cfa
+843F defw (LOOP)_cfa,0xFFFA; to 843B 
+8443 defw ;S_cfa
+
+
+8417  0<>_nfa: defb 0x03+0x80,"0<",">"+0x80
+841B  0<>_lfa: defw 2*_nfa
+841D  0<>_cfa: defw 0<>_nfa
+841F  0<>_pfa: ; Word type not implemented.
+
+
+840B  2*_nfa: defb 0x02+0x80,"2","*"+0x80
+840E  2*_lfa: defw 2-_nfa
+8410  2*_cfa: defw 2*_nfa
+8412  2*_pfa: ; Word type not implemented.
+
+
+83FE  2-_nfa: defb 0x02+0x80,"2","-"+0x80
+8401  2-_lfa: defw 1-_nfa
+8403  2-_cfa: defw 2-_nfa
+8405  2-_pfa: ; Word type not implemented.
+
+
+83F2  1-_nfa: defb 0x02+0x80,"1","-"+0x80
+83F5  1-_lfa: defw BOUNDS_nfa
+83F7  1-_cfa: defw 1-_nfa
+83F9  1-_pfa: ; Word type not implemented.
+
+
+83DF  BOUNDS_nfa: defb 0x06+0x80,"BOUND","S"+0x80
+83E6  BOUNDS_lfa: defw (R/W)_nfa
+83E8  BOUNDS_cfa: defw 0x6306
+83EA  BOUNDS_pfa: 
+83EA defw OVER_cfa
+83EC defw +_cfa
+83EE defw SWAP_cfa
+83F0 defw ;S_cfa
+
+
+83C1  (R/W)_nfa: defb 0x05+0x80,"(R/W",")"+0x80
+83C7  (R/W)_lfa: defw DISC-BLOCK_nfa
+83C9  (R/W)_cfa: defw 0x6306
+83CB  (R/W)_pfa: 
+83CB defw 0BRANCH_cfa,0x0004; to 83D1 
+83CF defw SWAP_cfa
+83D1 defw B/BUF_cfa
+83D3 defw DISC-BANK_cfa
+83D5 defw BANK_cfa
+83D7 defw CMOVE_cfa
+83D9 defw 0_cfa
+83DB defw BANK_cfa
+83DD defw ;S_cfa
+
+
+8386  DISC-BLOCK_nfa: defb 0x0A+0x80,"DISC-BLOC","K"+0x80
+8391  DISC-BLOCK_lfa: defw /SCR_nfa
+8393  DISC-BLOCK_cfa: defw 0x6306
+8395  DISC-BLOCK_pfa: 
+8395 defw OFFSET_cfa
+8397 defw @_cfa
+8399 defw -_cfa
+839B defw B/BUF_cfa
+839D defw *_cfa
+839F defw DUP_cfa
+83A1 defw /SCR_cfa
+83A3 defw U<_cfa
+83A5 defw LIT_cfa,0x0006
+83A9 defw ?ERROR_cfa
+83AB defw LO_cfa
+83AD defw +_cfa
+83AF defw /SCR_cfa
+83B1 defw -_cfa
+83B3 defw DUP_cfa
+83B5 defw HI_cfa
+83B7 defw >_cfa
+83B9 defw LIT_cfa,0x0006
+83BD defw ?ERROR_cfa
+83BF defw ;S_cfa
+
+
+837B  /SCR_nfa: defb 0x04+0x80,"/SC","R"+0x80
+8380  /SCR_lfa: defw BOOT_nfa
+8382  /SCR_cfa: defw 0x6348
+8384  /SCR_pfa: 
+8384 defw 0x0400
+
+
+8370  BOOT_nfa: defb 0x04+0x80,"BOO","T"+0x80
+8375  BOOT_lfa: defw CLS0_nfa
+8377  BOOT_cfa: defw 0x6348
+8379  BOOT_pfa: 
+8379 defw 0x6D68
+
+
+8361  CLS0_nfa: defb 0x04+0x80,"CLS","0"+0x80
+8366  CLS0_lfa: defw COLORS0_nfa
+8368  CLS0_cfa: defw 0x6306
+836A  CLS0_pfa: 
+836A defw COLORS0_cfa
+836C defw CLS_cfa
+836E defw ;S_cfa
+
+
+8339  COLORS0_nfa: defb 0x07+0x80,"COLORS","0"+0x80
+8341  COLORS0_lfa: defw GREETING_nfa
+8343  COLORS0_cfa: defw 0x6306
+8345  COLORS0_pfa: 
+8345 defw 0_cfa
+8347 defw PAPER_cfa
+8349 defw LIT_cfa,0x0004
+834D defw INK_cfa
+834F defw 0_cfa
+8351 defw BRIGHT_cfa
+8353 defw 0_cfa
+8355 defw FLASH_cfa
+8357 defw 0_cfa
+8359 defw INVERSE_cfa
+835B defw 0_cfa
+835D defw BORDER_cfa
+835F defw ;S_cfa
+
+
+8322  GREETING_nfa: defb 0x08+0x80,"GREETIN","G"+0x80
+832B  GREETING_lfa: defw .SYS-AUTHOR_nfa
+832D  GREETING_cfa: defw 0x6306
+832F  GREETING_pfa: 
+832F defw .SYS_cfa
+8331 defw CR_cfa
+8333 defw .SYS-AUTHOR_cfa
+8335 defw CR_cfa
+8337 defw ;S_cfa
+
+
+82BD  .SYS-AUTHOR_nfa: defb 0x0B+0x80,".SYS-AUTHO","R"+0x80
+82C9  .SYS-AUTHOR_lfa: defw .SYS_nfa
+82CB  .SYS-AUTHOR_cfa: defw 0x6306
+82CD  .SYS-AUTHOR_pfa: 
+82CD defw (.")_cfa
+82CF defb 0x15,"v1.1A ? 1983 Abersoft"
+82E5 defw CR_cfa
+82E7 defw (.")_cfa
+82E9 defb 0x1E,"v1.1C+Afera ? 2015 Marcos Cruz"
+8308 defw CR_cfa
+830A defw (.")_cfa
+830C defb 0x13,"(programandala.net)"
+8320 defw ;S_cfa
+
+
+829D  .SYS_nfa: defb 0x04+0x80,".SY","S"+0x80
+82A2  .SYS_lfa: defw ?\_nfa
+82A4  .SYS_cfa: defw 0x6306
+82A6  .SYS_pfa: 
+82A6 defw (.")_cfa
+82A8 defb 0x12,"Spectrum fig-Forth"
+82BB defw ;S_cfa
+
+
+828E  ?\_nfa: defb 0x02+0x80+0x40,"?","\"+0x80
+8291  ?\_lfa: defw ?-->_nfa
+8293  ?\_cfa: defw 0x6306
+8295  ?\_pfa: 
+8295 defw 0BRANCH_cfa,0x0004; to 829B 
+8299 defw \_cfa
+829B defw ;S_cfa
+
+
+827D  ?-->_nfa: defb 0x04+0x80+0x40,"?--",">"+0x80
+8282  ?-->_lfa: defw [UNDEFINED]_nfa
+8284  ?-->_cfa: defw 0x6306
+8286  ?-->_pfa: 
+8286 defw 0BRANCH_cfa,0x0004; to 828C 
+828A defw -->_cfa
+828C defw ;S_cfa
+
+
+8267  [UNDEFINED]_nfa: defb 0x0B+0x80+0x40,"[UNDEFINED","]"+0x80
+8273  [UNDEFINED]_lfa: defw [DEFINED]_nfa
+8275  [UNDEFINED]_cfa: defw 0x6306
+8277  [UNDEFINED]_pfa: 
+8277 defw [DEFINED]_cfa
+8279 defw 0=_cfa
+827B defw ;S_cfa
+
+
+824B  [DEFINED]_nfa: defb 0x09+0x80+0x40,"[DEFINED","]"+0x80
+8255  [DEFINED]_lfa: defw DEPTH_nfa
+8257  [DEFINED]_cfa: defw 0x6306
+8259  [DEFINED]_pfa: 
+8259 defw -FIND_cfa
+825B defw DUP_cfa
+825D defw 0BRANCH_cfa,0x0006; to 8265 
+8261 defw NIP_cfa
+8263 defw NIP_cfa
+8265 defw ;S_cfa
+
+
+8231  DEPTH_nfa: defb 0x05+0x80,"DEPT","H"+0x80
+8237  DEPTH_lfa: defw TUCK_nfa
+8239  DEPTH_cfa: defw 0x6306
+823B  DEPTH_pfa: 
+823B defw SP@_cfa
+823D defw S0_cfa
+823F defw @_cfa
+8241 defw -_cfa
+8243 defw LIT_cfa,0xFFFE
+8247 defw /_cfa
+8249 defw ;S_cfa
+
+
+8222  TUCK_nfa: defb 0x04+0x80,"TUC","K"+0x80
+8227  TUCK_lfa: defw NIP_nfa
+8229  TUCK_cfa: defw TUCK_nfa
+822B  TUCK_pfa: ; Word type not implemented.
+
+
+8215  NIP_nfa: defb 0x03+0x80,"NI","P"+0x80
+8219  NIP_lfa: defw /DISC_nfa
+821B  NIP_cfa: defw NIP_nfa
+821D  NIP_pfa: ; Word type not implemented.
+
+
+8209  /DISC_nfa: defb 0x05+0x80,"/DIS","C"+0x80
+820F  /DISC_lfa: defw .(_nfa
+8211  /DISC_cfa: defw 0x6348
+8213  /DISC_pfa: 
+8213 defw 0x4000
+
+
+81F4  .(_nfa: defb 0x02+0x80+0x40,".","("+0x80
+81F7  .(_lfa: defw \_nfa
+81F9  .(_cfa: defw 0x6306
+81FB  .(_pfa: 
+81FB defw LIT_cfa,0x0029
+81FF defw TEXT_cfa
+8201 defw PAD_cfa
+8203 defw COUNT_cfa
+8205 defw TYPE_cfa
+8207 defw ;S_cfa
+
+
+81DA  \_nfa: defb 0x01+0x80+0x40,"","\"+0x80
+81DC  \_lfa: defw [CHAR]_nfa
+81DE  \_cfa: defw 0x6306
+81E0  \_pfa: 
+81E0 defw IN_cfa
+81E2 defw @_cfa
+81E4 defw C/L_cfa
+81E6 defw MOD_cfa
+81E8 defw C/L_cfa
+81EA defw SWAP_cfa
+81EC defw -_cfa
+81EE defw IN_cfa
+81F0 defw +!_cfa
+81F2 defw ;S_cfa
+
+
+81C9  [CHAR]_nfa: defb 0x06+0x80+0x40,"[CHAR","]"+0x80
+81D0  [CHAR]_lfa: defw CHAR_nfa
+81D2  [CHAR]_cfa: defw 0x6306
+81D4  [CHAR]_pfa: 
+81D4 defw CHAR_cfa
+81D6 defw LITERAL_cfa
+81D8 defw ;S_cfa
+
+
+81B4  CHAR_nfa: defb 0x04+0x80,"CHA","R"+0x80
+81B9  CHAR_lfa: defw LOADER_nfa
+81BB  CHAR_cfa: defw 0x6306
+81BD  CHAR_pfa: 
+81BD defw BL_cfa
+81BF defw WORD_cfa
+81C1 defw HERE_cfa
+81C3 defw 1+_cfa
+81C5 defw C@_cfa
+81C7 defw ;S_cfa
+
+
+8167  LOADER_nfa: defb 0x06+0x80,"LOADE","R"+0x80
+816E  LOADER_lfa: defw LOADED?_nfa
+8170  LOADER_cfa: defw 0x6306
+8172  LOADER_pfa: 
+8172 defw 0_cfa
+8174 defw LOADED?_cfa
+8176 defw !_cfa
+8178 defw LOADED?_cfa
+817A defw @_cfa
+817C defw 0=_cfa
+817E defw 0BRANCH_cfa,0x001A; to 819A 
+8182 defw LIT_cfa,0x00FF
+8186 defw LIT_cfa,0x5C8C
+818A defw C!_cfa
+818C defw EMPTY-BUFFERS_cfa
+818E defw INIT-DISC_cfa
+8190 defw LOADT_cfa
+8192 defw 1_cfa
+8194 defw LOAD_cfa
+8196 defw BRANCH_cfa,0xFFE0; to 8178 
+819A defw LOADED?_cfa
+819C defw @_cfa
+819E defw LIT_cfa,0xFFFF
+81A2 defw =_cfa
+81A4 defw 0BRANCH_cfa,0x000C; to 81B2 
+81A8 defw RP!_cfa
+81AA defw LATEST_cfa
+81AC defw PFA_cfa
+81AE defw CFA_cfa
+81B0 defw EXECUTE_cfa
+81B2 defw ;S_cfa
+
+
+8159  LOADED?_nfa: defb 0x07+0x80,"LOADED","?"+0x80
+8161  LOADED?_lfa: defw UDG_nfa
+8163  LOADED?_cfa: defw 0x6362
+8165  LOADED?_pfa: 
+8165 defw 0x0001
+
+
+8149  UDG_nfa: defb 0x03+0x80,"UD","G"+0x80
+814D  UDG_lfa: defw INIT-DISC_nfa
+814F  UDG_cfa: defw 0x6306
+8151  UDG_pfa: 
+8151 defw LIT_cfa,0x5C7B
+8155 defw @_cfa
+8157 defw ;S_cfa
+
+
+812F  INIT-DISC_nfa: defb 0x09+0x80,"INIT-DIS","C"+0x80
+8139  INIT-DISC_lfa: defw INKEY_nfa
+813B  INIT-DISC_cfa: defw 0x6306
+813D  INIT-DISC_pfa: 
+813D defw DISC-BANK_cfa
+813F defw BANK_cfa
+8141 defw (INIT-DISC)_cfa
+8143 defw 0_cfa
+8145 defw BANK_cfa
+8147 defw ;S_cfa
+
+
+810C  INKEY_nfa: defb 0x05+0x80,"INKE","Y"+0x80
+8112  INKEY_lfa: defw ENDCASE_nfa
+8114  INKEY_cfa: defw INKEY_nfa
+8116  INKEY_pfa: ; Word type not implemented.
+
+
+80DA  ENDCASE_nfa: defb 0x07+0x80+0x40,"ENDCAS","E"+0x80
+80E2  ENDCASE_lfa: defw ENDOF_nfa
+80E4  ENDCASE_cfa: defw 0x6306
+80E6  ENDCASE_pfa: 
+80E6 defw LIT_cfa,0x0004
+80EA defw ?PAIRS_cfa
+80EC defw COMPILE_cfa,DROP_cfa
+80F0 defw SP@_cfa
+80F2 defw CSP_cfa
+80F4 defw @_cfa
+80F6 defw =_cfa
+80F8 defw 0=_cfa
+80FA defw 0BRANCH_cfa,0x000A; to 8106 
+80FE defw 2_cfa
+8100 defw ENDIF_cfa
+8102 defw BRANCH_cfa,0xFFEC; to 80F0 
+8106 defw CSP_cfa
+8108 defw !_cfa
+810A defw ;S_cfa
+
+
+80B4  ENDOF_nfa: defb 0x05+0x80+0x40,"ENDO","F"+0x80
+80BA  ENDOF_lfa: defw OF_nfa
+80BC  ENDOF_cfa: defw 0x6306
+80BE  ENDOF_pfa: 
+80BE defw LIT_cfa,0x0005
+80C2 defw ?PAIRS_cfa
+80C4 defw COMPILE_cfa,BRANCH_cfa
+80C8 defw HERE_cfa
+80CA defw 0_cfa
+80CC defw ,_cfa
+80CE defw SWAP_cfa
+80D0 defw 2_cfa
+80D2 defw ENDIF_cfa
+80D4 defw LIT_cfa,0x0004
+80D8 defw ;S_cfa
+
+
+808B  OF_nfa: defb 0x02+0x80+0x40,"O","F"+0x80
+808E  OF_lfa: defw CASE_nfa
+8090  OF_cfa: defw 0x6306
+8092  OF_pfa: 
+8092 defw LIT_cfa,0x0004
+8096 defw ?PAIRS_cfa
+8098 defw COMPILE_cfa,OVER_cfa
+809C defw COMPILE_cfa,=_cfa
+80A0 defw COMPILE_cfa,0BRANCH_cfa
+80A4 defw HERE_cfa
+80A6 defw 0_cfa
+80A8 defw ,_cfa
+80AA defw COMPILE_cfa,DROP_cfa
+80AE defw LIT_cfa,0x0005
+80B2 defw ;S_cfa
+
+
+8074  CASE_nfa: defb 0x04+0x80+0x40,"CAS","E"+0x80
+8079  CASE_lfa: defw DRAW_nfa
+807B  CASE_cfa: defw 0x6306
+807D  CASE_pfa: 
+807D defw ?COMP_cfa
+807F defw CSP_cfa
+8081 defw @_cfa
+8083 defw !CSP_cfa
+8085 defw LIT_cfa,0x0004
+8089 defw ;S_cfa
+
+
+7FB7  DRAW_nfa: defb 0x04+0x80,"DRA","W"+0x80
+7FBC  DRAW_lfa: defw INCY_nfa
+7FBE  DRAW_cfa: defw 0x6306
+7FC0  DRAW_pfa: 
+7FC0 defw LIT_cfa,0x5C7E
+7FC4 defw C@_cfa
+7FC6 defw DUP_cfa
+7FC8 defw 0_cfa
+7FCA defw SWAP_cfa
+7FCC defw Y1_cfa
+7FCE defw 2!_cfa
+7FD0 defw -_cfa
+7FD2 defw DUP_cfa
+7FD4 defw ABS_cfa
+7FD6 defw ROT_cfa
+7FD8 defw LIT_cfa,0x5C7D
+7FDC defw C@_cfa
+7FDE defw DUP_cfa
+7FE0 defw 0_cfa
+7FE2 defw SWAP_cfa
+7FE4 defw X1_cfa
+7FE6 defw 2!_cfa
+7FE8 defw -_cfa
+7FEA defw DUP_cfa
+7FEC defw ABS_cfa
+7FEE defw ROT_cfa
+7FF0 defw MAX_cfa
+7FF2 defw >R_cfa
+7FF4 defw DUP_cfa
+7FF6 defw 0<_cfa
+7FF8 defw 0BRANCH_cfa,0x0012; to 800C 
+7FFC defw ABS_cfa
+7FFE defw 0_cfa
+8000 defw SWAP_cfa
+8002 defw R_cfa
+8004 defw M/MOD_cfa
+8006 defw DMINUS_cfa
+8008 defw BRANCH_cfa,0x000A; to 8014 
+800C defw 0_cfa
+800E defw SWAP_cfa
+8010 defw R_cfa
+8012 defw M/MOD_cfa
+8014 defw INCX_cfa
+8016 defw 2!_cfa
+8018 defw DROP_cfa
+801A defw DUP_cfa
+801C defw 0<_cfa
+801E defw 0BRANCH_cfa,0x0012; to 8032 
+8022 defw ABS_cfa
+8024 defw 0_cfa
+8026 defw SWAP_cfa
+8028 defw R_cfa
+802A defw M/MOD_cfa
+802C defw DMINUS_cfa
+802E defw BRANCH_cfa,0x000A; to 803A 
+8032 defw 0_cfa
+8034 defw SWAP_cfa
+8036 defw R_cfa
+8038 defw M/MOD_cfa
+803A defw INCY_cfa
+803C defw 2!_cfa
+803E defw DROP_cfa
+8040 defw R>_cfa
+8042 defw 1+_cfa
+8044 defw 0_cfa
+8046 defw (DO)_cfa
+8048 defw X1_cfa
+804A defw @_cfa
+804C defw Y1_cfa
+804E defw @_cfa
+8050 defw PLOT_cfa
+8052 defw X1_cfa
+8054 defw 2@_cfa
+8056 defw INCX_cfa
+8058 defw 2@_cfa
+805A defw D+_cfa
+805C defw X1_cfa
+805E defw 2!_cfa
+8060 defw Y1_cfa
+8062 defw 2@_cfa
+8064 defw INCY_cfa
+8066 defw 2@_cfa
+8068 defw D+_cfa
+806A defw Y1_cfa
+806C defw 2!_cfa
+806E defw (LOOP)_cfa,0xFFD8; to 8048 
+8072 defw ;S_cfa
+
+
+7FAA  INCY_nfa: defb 0x04+0x80,"INC","Y"+0x80
+7FAF  INCY_lfa: defw INCX_nfa
+7FB1  INCY_cfa: defw 0x7F23
+7FB3  INCY_pfa: ; Word type not implemented.
+
+
+7F9D  INCX_nfa: defb 0x04+0x80,"INC","X"+0x80
+7FA2  INCX_lfa: defw Y1_nfa
+7FA4  INCX_cfa: defw 0x7F23
+7FA6  INCX_pfa: ; Word type not implemented.
+
+
+7F92  Y1_nfa: defb 0x02+0x80,"Y","1"+0x80
+7F95  Y1_lfa: defw X1_nfa
+7F97  Y1_cfa: defw 0x7F23
+7F99  Y1_pfa: ; Word type not implemented.
+
+
+7F87  X1_nfa: defb 0x02+0x80,"X","1"+0x80
+7F8A  X1_lfa: defw PLOT_nfa
+7F8C  X1_cfa: defw 0x7F23
+7F8E  X1_pfa: ; Word type not implemented.
+
+
+7F65  PLOT_nfa: defb 0x04+0x80,"PLO","T"+0x80
+7F6A  PLOT_lfa: defw EXIT_nfa
+7F6C  PLOT_cfa: defw PLOT_nfa
+7F6E  PLOT_pfa: ; Word type not implemented.
+
+
+7F54  EXIT_nfa: defb 0x04+0x80,"EXI","T"+0x80
+7F59  EXIT_lfa: defw 2OVER_nfa
+7F5B  EXIT_cfa: defw 0x6306
+7F5D  EXIT_pfa: 
+7F5D defw R>_cfa
+7F5F defw DROP_cfa
+7F61 defw ;S_cfa
+
+
+7F3A  2OVER_nfa: defb 0x05+0x80,"2OVE","R"+0x80
+7F40  2OVER_lfa: defw U.R_nfa
+7F42  2OVER_cfa: defw 0x6306
+7F44  2OVER_pfa: 
+7F44 defw 2SWAP_cfa
+7F46 defw 2DUP_cfa
+7F48 defw >R_cfa
+7F4A defw >R_cfa
+7F4C defw 2SWAP_cfa
+7F4E defw R>_cfa
+7F50 defw R>_cfa
+7F52 defw ;S_cfa
+
+
+7F28  U.R_nfa: defb 0x03+0x80,"U.","R"+0x80
+7F2C  U.R_lfa: defw 2VARIABLE_nfa
+7F2E  U.R_cfa: defw 0x6306
+7F30  U.R_pfa: 
+7F30 defw >R_cfa
+7F32 defw 0_cfa
+7F34 defw R>_cfa
+7F36 defw D.R_cfa
+7F38 defw ;S_cfa
+
+
+7F11  2VARIABLE_nfa: defb 0x09+0x80,"2VARIABL","E"+0x80
+7F1B  2VARIABLE_lfa: defw 2CONSTANT_nfa
+7F1D  2VARIABLE_cfa: defw 0x6306
+7F1F  2VARIABLE_pfa: 
+7F1F defw 2CONSTANT_cfa
+7F21 defw (;CODE)_cfa
+
+
+7EE2  2CONSTANT_nfa: defb 0x09+0x80,"2CONSTAN","T"+0x80
+7EEC  2CONSTANT_lfa: defw J_nfa
+7EEE  2CONSTANT_cfa: defw 0x6306
+7EF0  2CONSTANT_pfa: 
+7EF0 defw CREATE_cfa
+7EF2 defw SMUDGE_cfa
+7EF4 defw HERE_cfa
+7EF6 defw 2!_cfa
+7EF8 defw LIT_cfa,0x0004
+7EFC defw ALLOT_cfa
+7EFE defw (;CODE)_cfa
+
+
+7ECE  J_nfa: defb 0x01+0x80,"","J"+0x80
+7ED0  J_lfa: defw I'_nfa
+7ED2  J_cfa: defw J_nfa
+7ED4  J_pfa: ; Word type not implemented.
+
+
+7EBB  I'_nfa: defb 0x02+0x80,"I","'"+0x80
+7EBE  I'_lfa: defw NOT_nfa
+7EC0  I'_cfa: defw I'_nfa
+7EC2  I'_pfa: ; Word type not implemented.
+
+
+7EAF  NOT_nfa: defb 0x03+0x80,"NO","T"+0x80
+7EB3  NOT_lfa: defw INVERSE_nfa
+7EB5  NOT_cfa: defw 0x6306
+7EB7  NOT_pfa: 
+7EB7 defw 0=_cfa
+7EB9 defw ;S_cfa
+
+
+7E75  INVERSE_nfa: defb 0x07+0x80,"INVERS","E"+0x80
+7E7D  INVERSE_lfa: defw GOVER_nfa
+7E7F  INVERSE_cfa: defw 0x6306
+7E81  INVERSE_pfa: 
+7E81 defw 0BRANCH_cfa,0x0018; to 7E9B 
+7E85 defw LIT_cfa,0x5C91
+7E89 defw C@_cfa
+7E8B defw LIT_cfa,0x0008
+7E8F defw OR_cfa
+7E91 defw LIT_cfa,0x5C91
+7E95 defw !_cfa
+7E97 defw BRANCH_cfa,0x0014; to 7EAD 
+7E9B defw LIT_cfa,0x5C91
+7E9F defw C@_cfa
+7EA1 defw LIT_cfa,0x00F7
+7EA5 defw AND_cfa
+7EA7 defw LIT_cfa,0x5C91
+7EAB defw !_cfa
+7EAD defw ;S_cfa
+
+
+7E3F  GOVER_nfa: defb 0x05+0x80,"GOVE","R"+0x80
+7E45  GOVER_lfa: defw BRIGHT_nfa
+7E47  GOVER_cfa: defw 0x6306
+7E49  GOVER_pfa: 
+7E49 defw 0BRANCH_cfa,0x0016; to 7E61 
+7E4D defw LIT_cfa,0x5C91
+7E51 defw C@_cfa
+7E53 defw 2_cfa
+7E55 defw OR_cfa
+7E57 defw LIT_cfa,0x5C91
+7E5B defw !_cfa
+7E5D defw BRANCH_cfa,0x0014; to 7E73 
+7E61 defw LIT_cfa,0x5C91
+7E65 defw C@_cfa
+7E67 defw LIT_cfa,0x00FD
+7E6B defw AND_cfa
+7E6D defw LIT_cfa,0x5C91
+7E71 defw !_cfa
+7E73 defw ;S_cfa
+
+
+7E06  BRIGHT_nfa: defb 0x06+0x80,"BRIGH","T"+0x80
+7E0D  BRIGHT_lfa: defw FLASH_nfa
+7E0F  BRIGHT_cfa: defw 0x6306
+7E11  BRIGHT_pfa: 
+7E11 defw 0BRANCH_cfa,0x0018; to 7E2B 
+7E15 defw LIT_cfa,0x5C8D
+7E19 defw C@_cfa
+7E1B defw LIT_cfa,0x0040
+7E1F defw OR_cfa
+7E21 defw LIT_cfa,0x5C8D
+7E25 defw !_cfa
+7E27 defw BRANCH_cfa,0x0014; to 7E3D 
+7E2B defw LIT_cfa,0x5C8D
+7E2F defw C@_cfa
+7E31 defw LIT_cfa,0x00BF
+7E35 defw AND_cfa
+7E37 defw LIT_cfa,0x5C8D
+7E3B defw !_cfa
+7E3D defw ;S_cfa
+
+
+7DCE  FLASH_nfa: defb 0x05+0x80,"FLAS","H"+0x80
+7DD4  FLASH_lfa: defw INK_nfa
+7DD6  FLASH_cfa: defw 0x6306
+7DD8  FLASH_pfa: 
+7DD8 defw 0BRANCH_cfa,0x0018; to 7DF2 
+7DDC defw LIT_cfa,0x5C8D
+7DE0 defw C@_cfa
+7DE2 defw LIT_cfa,0x0080
+7DE6 defw OR_cfa
+7DE8 defw LIT_cfa,0x5C8D
+7DEC defw !_cfa
+7DEE defw BRANCH_cfa,0x0014; to 7E04 
+7DF2 defw LIT_cfa,0x5C8D
+7DF6 defw C@_cfa
+7DF8 defw LIT_cfa,0x007F
+7DFC defw AND_cfa
+7DFE defw LIT_cfa,0x5C8D
+7E02 defw !_cfa
+7E04 defw ;S_cfa
+
+
+7D30  INK_nfa: defb 0x03+0x80,"IN","K"+0x80
+7D34  INK_lfa: defw POINT_nfa
+7D36  INK_cfa: defw 0x6306
+7D38  INK_pfa: 
+7D38 defw ABS_cfa
+7D3A defw DUP_cfa
+7D3C defw LIT_cfa,0x0009
+7D40 defw >_cfa
+7D42 defw 0BRANCH_cfa,0x0008; to 7D4C 
+7D46 defw DROP_cfa
+7D48 defw BRANCH_cfa,0x0082; to 7DCC 
+7D4C defw DUP_cfa
+7D4E defw LIT_cfa,0x0009
+7D52 defw =_cfa
+7D54 defw 0BRANCH_cfa,0x001A; to 7D70 
+7D58 defw LIT_cfa,0x5C91
+7D5C defw C@_cfa
+7D5E defw LIT_cfa,0x0020
+7D62 defw OR_cfa
+7D64 defw LIT_cfa,0x5C91
+7D68 defw C!_cfa
+7D6A defw DROP_cfa
+7D6C defw BRANCH_cfa,0x005E; to 7DCC 
+7D70 defw DUP_cfa
+7D72 defw LIT_cfa,0x0008
+7D76 defw =_cfa
+7D78 defw 0BRANCH_cfa,0x001A; to 7D94 
+7D7C defw LIT_cfa,0x5C8E
+7D80 defw C@_cfa
+7D82 defw LIT_cfa,0x0007
+7D86 defw OR_cfa
+7D88 defw LIT_cfa,0x5C8E
+7D8C defw C!_cfa
+7D8E defw DROP_cfa
+7D90 defw BRANCH_cfa,0x003A; to 7DCC 
+7D94 defw LIT_cfa,0x5C8D
+7D98 defw C@_cfa
+7D9A defw LIT_cfa,0x00F8
+7D9E defw AND_cfa
+7DA0 defw OR_cfa
+7DA2 defw LIT_cfa,0x5C8D
+7DA6 defw C!_cfa
+7DA8 defw LIT_cfa,0x5C91
+7DAC defw C@_cfa
+7DAE defw LIT_cfa,0x00DF
+7DB2 defw AND_cfa
+7DB4 defw LIT_cfa,0x5C91
+7DB8 defw !_cfa
+7DBA defw LIT_cfa,0x5C8E
+7DBE defw C@_cfa
+7DC0 defw LIT_cfa,0x00F8
+7DC4 defw AND_cfa
+7DC6 defw LIT_cfa,0x5C8E
+7DCA defw !_cfa
+7DCC defw ;S_cfa
+
+
+7D07  POINT_nfa: defb 0x05+0x80,"POIN","T"+0x80
+7D0D  POINT_lfa: defw ATTR_nfa
+7D0F  POINT_cfa: defw POINT_nfa
+7D11  POINT_pfa: ; Word type not implemented.
+
+
+7CE7  ATTR_nfa: defb 0x04+0x80,"ATT","R"+0x80
+7CEC  ATTR_lfa: defw PAPER_nfa
+7CEE  ATTR_cfa: defw ATTR_nfa
+7CF0  ATTR_pfa: ; Word type not implemented.
+
+
+7C41  PAPER_nfa: defb 0x05+0x80,"PAPE","R"+0x80
+7C47  PAPER_lfa: defw BLEEP_nfa
+7C49  PAPER_cfa: defw 0x6306
+7C4B  PAPER_pfa: 
+7C4B defw ABS_cfa
+7C4D defw DUP_cfa
+7C4F defw LIT_cfa,0x0009
+7C53 defw >_cfa
+7C55 defw 0BRANCH_cfa,0x0008; to 7C5F 
+7C59 defw DROP_cfa
+7C5B defw BRANCH_cfa,0x0088; to 7CE5 
+7C5F defw DUP_cfa
+7C61 defw LIT_cfa,0x0009
+7C65 defw =_cfa
+7C67 defw 0BRANCH_cfa,0x001A; to 7C83 
+7C6B defw LIT_cfa,0x5C91
+7C6F defw C@_cfa
+7C71 defw LIT_cfa,0x0080
+7C75 defw OR_cfa
+7C77 defw LIT_cfa,0x5C91
+7C7B defw C!_cfa
+7C7D defw DROP_cfa
+7C7F defw BRANCH_cfa,0x0064; to 7CE5 
+7C83 defw DUP_cfa
+7C85 defw LIT_cfa,0x0008
+7C89 defw =_cfa
+7C8B defw 0BRANCH_cfa,0x001A; to 7CA7 
+7C8F defw LIT_cfa,0x5C8E
+7C93 defw C@_cfa
+7C95 defw LIT_cfa,0x0038
+7C99 defw OR_cfa
+7C9B defw LIT_cfa,0x5C8E
+7C9F defw C!_cfa
+7CA1 defw DROP_cfa
+7CA3 defw BRANCH_cfa,0x0040; to 7CE5 
+7CA7 defw LIT_cfa,0x0008
+7CAB defw *_cfa
+7CAD defw LIT_cfa,0x5C8D
+7CB1 defw C@_cfa
+7CB3 defw LIT_cfa,0x00C7
+7CB7 defw AND_cfa
+7CB9 defw OR_cfa
+7CBB defw LIT_cfa,0x5C8D
+7CBF defw C!_cfa
+7CC1 defw LIT_cfa,0x5C91
+7CC5 defw C@_cfa
+7CC7 defw LIT_cfa,0x007F
+7CCB defw AND_cfa
+7CCD defw LIT_cfa,0x5C91
+7CD1 defw !_cfa
+7CD3 defw LIT_cfa,0x5C8E
+7CD7 defw C@_cfa
+7CD9 defw LIT_cfa,0x00C7
+7CDD defw AND_cfa
+7CDF defw LIT_cfa,0x5C8E
+7CE3 defw !_cfa
+7CE5 defw ;S_cfa
+
+
+7C29  BLEEP_nfa: defb 0x05+0x80,"BLEE","P"+0x80
+7C2F  BLEEP_lfa: defw BORDER_nfa
+7C31  BLEEP_cfa: defw BLEEP_nfa
+7C33  BLEEP_pfa: ; Word type not implemented.
+
+
+7C14  BORDER_nfa: defb 0x06+0x80,"BORDE","R"+0x80
+7C1B  BORDER_lfa: defw AT_nfa
+7C1D  BORDER_cfa: defw BORDER_nfa
+7C1F  BORDER_pfa: ; Word type not implemented.
+
+
+7BD7  AT_nfa: defb 0x02+0x80,"A","T"+0x80
+7BDA  AT_lfa: defw SCREEN_nfa
+7BDC  AT_cfa: defw 0x6306
+7BDE  AT_pfa: 
+7BDE defw ABS_cfa
+7BE0 defw DUP_cfa
+7BE2 defw LIT_cfa,0x001F
+7BE6 defw >_cfa
+7BE8 defw 0BRANCH_cfa,0x0008; to 7BF2 
+7BEC defw 2DROP_cfa
+7BEE defw BRANCH_cfa,0x0022; to 7C12 
+7BF2 defw SWAP_cfa
+7BF4 defw ABS_cfa
+7BF6 defw DUP_cfa
+7BF8 defw LIT_cfa,0x0015
+7BFC defw >_cfa
+7BFE defw 0BRANCH_cfa,0x0008; to 7C08 
+7C02 defw 2DROP_cfa
+7C04 defw BRANCH_cfa,0x000C; to 7C12 
+7C08 defw LIT_cfa,0x0016
+7C0C defw EMIT_cfa
+7C0E defw EMIT_cfa
+7C10 defw EMIT_cfa
+7C12 defw ;S_cfa
+
+
+7BB4  SCREEN_nfa: defb 0x06+0x80,"SCREE","N"+0x80
+7BBB  SCREEN_lfa: defw OUTP_nfa
+7BBD  SCREEN_cfa: defw SCREEN_nfa
+7BBF  SCREEN_pfa: ; Word type not implemented.
+
+
+7B9F  OUTP_nfa: defb 0x04+0x80,"OUT","P"+0x80
+7BA4  OUTP_lfa: defw INP_nfa
+7BA6  OUTP_cfa: defw OUTP_nfa
+7BA8  OUTP_pfa: ; Word type not implemented.
+
+
+7B89  INP_nfa: defb 0x03+0x80,"IN","P"+0x80
+7B8D  INP_lfa: defw PUSHDE_nfa
+7B8F  INP_cfa: defw INP_nfa
+7B91  INP_pfa: ; Word type not implemented.
+
+
+7B7C  PUSHDE_nfa: defb 0x06+0x80,"PUSHD","E"+0x80
+7B83  PUSHDE_lfa: defw PUSHHL_nfa
+7B85  PUSHDE_cfa: defw 0x6348
+7B87  PUSHDE_pfa: 
+7B87 defw 0x5E6A
+
+
+7B6F  PUSHHL_nfa: defb 0x06+0x80,"PUSHH","L"+0x80
+7B76  PUSHHL_lfa: defw NEXT_nfa
+7B78  PUSHHL_cfa: defw 0x6348
+7B7A  PUSHHL_pfa: 
+7B7A defw 0x5E6B
+
+
+7B64  NEXT_nfa: defb 0x04+0x80,"NEX","T"+0x80
+7B69  NEXT_lfa: defw WHERE_nfa
+7B6B  NEXT_cfa: defw 0x6348
+7B6D  NEXT_pfa: 
+7B6D defw 0x5E6C
+
+
+77AE  WHERE_nfa: defb 0x05+0x80,"WHER","E"+0x80
+77B4  WHERE_lfa: defw EDITOR_nfa
+77B6  WHERE_cfa: defw 0x6306
+77B8  WHERE_pfa: 
+77B8 defw DUP_cfa
+77BA defw B/SCR_cfa
+77BC defw /_cfa
+77BE defw DUP_cfa
+77C0 defw SCR_cfa
+77C2 defw !_cfa
+77C4 defw (.")_cfa
+77C6 defb 0x06,"SCR # "
+77CD defw DECIMAL_cfa
+77CF defw ._cfa
+77D1 defw SWAP_cfa
+77D3 defw C/L_cfa
+77D5 defw /MOD_cfa
+77D7 defw C/L_cfa
+77D9 defw *_cfa
+77DB defw ROT_cfa
+77DD defw BLOCK_cfa
+77DF defw +_cfa
+77E1 defw CR_cfa
+77E3 defw C/L_cfa
+77E5 defw TYPE_cfa
+77E7 defw CR_cfa
+77E9 defw HERE_cfa
+77EB defw C@_cfa
+77ED defw -_cfa
+77EF defw SPACES_cfa
+77F1 defw LIT_cfa,0x005E
+77F5 defw EMIT_cfa
+77F7 defw EDITOR_cfa
+77F9 defw QUIT_cfa
+77FB defw ;S_cfa
+
+
+779B  EDITOR_nfa: defb 0x06+0x80+0x40,"EDITO","R"+0x80
+77A2  EDITOR_lfa: defw TRIAD_nfa
+77A4  EDITOR_cfa: defw 0x67B8
+77A6  EDITOR_pfa: ; Word type not implemented.
+
+
+7769  TRIAD_nfa: defb 0x05+0x80,"TRIA","D"+0x80
+776F  TRIAD_lfa: defw INDEX_nfa
+7771  TRIAD_cfa: defw 0x6306
+7773  TRIAD_pfa: 
+7773 defw CLS_cfa
+7775 defw 3_cfa
+7777 defw /_cfa
+7779 defw 3_cfa
+777B defw *_cfa
+777D defw 3_cfa
+777F defw OVER_cfa
+7781 defw +_cfa
+7783 defw SWAP_cfa
+7785 defw (DO)_cfa
+7787 defw CR_cfa
+7789 defw I_cfa
+778B defw LIST_cfa
+778D defw ?TERMINAL_cfa
+778F defw 0BRANCH_cfa,0x0004; to 7795 
+7793 defw LEAVE_cfa
+7795 defw (LOOP)_cfa,0xFFF0; to 7787 
+7799 defw ;S_cfa
+
+
+7739  INDEX_nfa: defb 0x05+0x80,"INDE","X"+0x80
+773F  INDEX_lfa: defw FORGET_nfa
+7741  INDEX_cfa: defw 0x6306
+7743  INDEX_pfa: 
+7743 defw NOOP_cfa
+7745 defw 1+_cfa
+7747 defw SWAP_cfa
+7749 defw (DO)_cfa
+774B defw CR_cfa
+774D defw I_cfa
+774F defw 3_cfa
+7751 defw .R_cfa
+7753 defw SPACE_cfa
+7755 defw 0_cfa
+7757 defw I_cfa
+7759 defw .LINE_cfa
+775B defw ?TERMINAL_cfa
+775D defw 0BRANCH_cfa,0x0004; to 7763 
+7761 defw LEAVE_cfa
+7763 defw (LOOP)_cfa,0xFFE6; to 774B 
+7767 defw ;S_cfa
+
+
+76FA  FORGET_nfa: defb 0x06+0x80,"FORGE","T"+0x80
+7701  FORGET_lfa: defw FREE_nfa
+7703  FORGET_cfa: defw 0x6306
+7705  FORGET_pfa: 
+7705 defw CURRENT_cfa
+7707 defw @_cfa
+7709 defw CONTEXT_cfa
+770B defw @_cfa
+770D defw -_cfa
+770F defw LIT_cfa,0x0018
+7713 defw ?ERROR_cfa
+7715 defw '_cfa
+7717 defw DUP_cfa
+7719 defw FENCE_cfa
+771B defw @_cfa
+771D defw U<_cfa
+771F defw LIT_cfa,0x0015
+7723 defw ?ERROR_cfa
+7725 defw DUP_cfa
+7727 defw NFA_cfa
+7729 defw DP_cfa
+772B defw !_cfa
+772D defw LFA_cfa
+772F defw @_cfa
+7731 defw CURRENT_cfa
+7733 defw @_cfa
+7735 defw !_cfa
+7737 defw ;S_cfa
+
+
+76E9  FREE_nfa: defb 0x04+0x80,"FRE","E"+0x80
+76EE  FREE_lfa: defw SIZE_nfa
+76F0  FREE_cfa: defw 0x6306
+76F2  FREE_pfa: 
+76F2 defw 0_cfa
+76F4 defw HERE_cfa
+76F6 defw -_cfa
+76F8 defw ;S_cfa
+
+
+76D6  SIZE_nfa: defb 0x04+0x80,"SIZ","E"+0x80
+76DB  SIZE_lfa: defw 2SWAP_nfa
+76DD  SIZE_cfa: defw 0x6306
+76DF  SIZE_pfa: 
+76DF defw HERE_cfa
+76E1 defw 0_cfa
+76E3 defw +ORIGIN_cfa
+76E5 defw -_cfa
+76E7 defw ;S_cfa
+
+
+76C2  2SWAP_nfa: defb 0x05+0x80,"2SWA","P"+0x80
+76C8  2SWAP_lfa: defw 2DROP_nfa
+76CA  2SWAP_cfa: defw 0x6306
+76CC  2SWAP_pfa: 
+76CC defw ROT_cfa
+76CE defw >R_cfa
+76D0 defw ROT_cfa
+76D2 defw R>_cfa
+76D4 defw ;S_cfa
+
+
+76B2  2DROP_nfa: defb 0x05+0x80,"2DRO","P"+0x80
+76B8  2DROP_lfa: defw VERIFY_nfa
+76BA  2DROP_cfa: defw 0x6306
+76BC  2DROP_pfa: 
+76BC defw DROP_cfa
+76BE defw DROP_cfa
+76C0 defw ;S_cfa
+
+
+76A1  VERIFY_nfa: defb 0x06+0x80,"VERIF","Y"+0x80
+76A8  VERIFY_lfa: defw SAVET_nfa
+76AA  VERIFY_cfa: defw 0x6306
+76AC  VERIFY_pfa: 
+76AC defw 2_cfa
+76AE defw (BANK-TAPE)_cfa
+76B0 defw ;S_cfa
+
+
+768F  SAVET_nfa: defb 0x05+0x80,"SAVE","T"+0x80
+7695  SAVET_lfa: defw LOADT_nfa
+7697  SAVET_cfa: defw 0x6306
+7699  SAVET_pfa: 
+7699 defw FLUSH_cfa
+769B defw 0_cfa
+769D defw (BANK-TAPE)_cfa
+769F defw ;S_cfa
+
+
+767F  LOADT_nfa: defb 0x05+0x80,"LOAD","T"+0x80
+7685  LOADT_lfa: defw LINE_nfa
+7687  LOADT_cfa: defw 0x6306
+7689  LOADT_pfa: 
+7689 defw 1_cfa
+768B defw (BANK-TAPE)_cfa
+768D defw ;S_cfa
+
+
+765E  LINE_nfa: defb 0x04+0x80,"LIN","E"+0x80
+7663  LINE_lfa: defw TEXT_nfa
+7665  LINE_cfa: defw 0x6306
+7667  LINE_pfa: 
+7667 defw DUP_cfa
+7669 defw LIT_cfa,0xFFF0
+766D defw AND_cfa
+766F defw LIT_cfa,0x0017
+7673 defw ?ERROR_cfa
+7675 defw SCR_cfa
+7677 defw @_cfa
+7679 defw (LINE)_cfa
+767B defw DROP_cfa
+767D defw ;S_cfa
+
+
+763F  TEXT_nfa: defb 0x04+0x80,"TEX","T"+0x80
+7644  TEXT_lfa: defw MON_nfa
+7646  TEXT_cfa: defw 0x6306
+7648  TEXT_pfa: 
+7648 defw HERE_cfa
+764A defw C/L_cfa
+764C defw 1+_cfa
+764E defw BLANKS_cfa
+7650 defw WORD_cfa
+7652 defw HERE_cfa
+7654 defw PAD_cfa
+7656 defw C/L_cfa
+7658 defw 1+_cfa
+765A defw CMOVE_cfa
+765C defw ;S_cfa
+
+
+762B  MON_nfa: defb 0x03+0x80,"MO","N"+0x80
+762F  MON_lfa: defw (TAPE)_nfa
+7631  MON_cfa: defw 0x763D
+7633  MON_pfa: ; Word type not implemented.
+
+
+7608  (TAPE)_nfa: defb 0x06+0x80,"(TAPE",")"+0x80
+760F  (TAPE)_lfa: defw .CPU_nfa
+7611  (TAPE)_cfa: defw (TAPE)_nfa
+7613  (TAPE)_pfa: ; Word type not implemented.
+
+
+75CB  .CPU_nfa: defb 0x04+0x80,".CP","U"+0x80
+75D0  .CPU_lfa: defw CLS_nfa
+75D2  .CPU_cfa: defw 0x6306
+75D4  .CPU_pfa: 
+75D4 defw (.")_cfa
+75D6 defb 0x0B,"ZX Spectrum"
+75E2 defw NOOP_cfa
+75E4 defw ;S_cfa
+
+
+75B1  CLS_nfa: defb 0x03+0x80,"CL","S"+0x80
+75B5  CLS_lfa: defw LINK_nfa
+75B7  CLS_cfa: defw CLS_nfa
+75B9  CLS_pfa: ; Word type not implemented.
+
+
+759B  LINK_nfa: defb 0x04+0x80,"LIN","K"+0x80
+75A0  LINK_lfa: defw LIST_nfa
+75A2  LINK_cfa: defw LINK_nfa
+75A4  LINK_pfa: ; Word type not implemented.
+
+
+7551  LIST_nfa: defb 0x04+0x80,"LIS","T"+0x80
+7556  LIST_lfa: defw VLIST_nfa
+7558  LIST_cfa: defw 0x6306
+755A  LIST_pfa: 
+755A defw NOOP_cfa
+755C defw CR_cfa
+755E defw DUP_cfa
+7560 defw SCR_cfa
+7562 defw !_cfa
+7564 defw (.")_cfa
+7566 defb 0x06,"SCR # "
+756D defw ._cfa
+756F defw LIT_cfa,0x0010
+7573 defw 0_cfa
+7575 defw (DO)_cfa
+7577 defw CR_cfa
+7579 defw I_cfa
+757B defw LIT_cfa,0x0002
+757F defw .R_cfa
+7581 defw SPACE_cfa
+7583 defw I_cfa
+7585 defw SCR_cfa
+7587 defw @_cfa
+7589 defw .LINE_cfa
+758B defw ?TERMINAL_cfa
+758D defw 0BRANCH_cfa,0x0004; to 7593 
+7591 defw LEAVE_cfa
+7593 defw (LOOP)_cfa,0xFFE2; to 7577 
+7597 defw CR_cfa
+7599 defw ;S_cfa
+
+
+7503  VLIST_nfa: defb 0x05+0x80,"VLIS","T"+0x80
+7509  VLIST_lfa: defw U._nfa
+750B  VLIST_cfa: defw 0x6306
+750D  VLIST_pfa: 
+750D defw LIT_cfa,0x0080
+7511 defw OUT_cfa
+7513 defw !_cfa
+7515 defw CONTEXT_cfa
+7517 defw @_cfa
+7519 defw @_cfa
+751B defw OUT_cfa
+751D defw @_cfa
+751F defw LIT_cfa,0x001F
+7523 defw LIT_cfa,0x0008
+7527 defw -_cfa
+7529 defw >_cfa
+752B defw 0BRANCH_cfa,0x000A; to 7537 
+752F defw CR_cfa
+7531 defw 0_cfa
+7533 defw OUT_cfa
+7535 defw !_cfa
+7537 defw DUP_cfa
+7539 defw ID._cfa
+753B defw PFA_cfa
+753D defw LFA_cfa
+753F defw @_cfa
+7541 defw DUP_cfa
+7543 defw 0=_cfa
+7545 defw ?TERMINAL_cfa
+7547 defw OR_cfa
+7549 defw 0BRANCH_cfa,0xFFD0; to 751B 
+754D defw DROP_cfa
+754F defw ;S_cfa
+
+
+74F6  U._nfa: defb 0x02+0x80,"U","."+0x80
+74F9  U._lfa: defw ?_nfa
+74FB  U._cfa: defw 0x6306
+74FD  U._pfa: 
+74FD defw 0_cfa
+74FF defw D._cfa
+7501 defw ;S_cfa
+
+
+74EA  ?_nfa: defb 0x01+0x80,"","?"+0x80
+74EC  ?_lfa: defw ._nfa
+74EE  ?_cfa: defw 0x6306
+74F0  ?_pfa: 
+74F0 defw @_cfa
+74F2 defw ._cfa
+74F4 defw ;S_cfa
+
+
+74DE  ._nfa: defb 0x01+0x80,"","."+0x80
+74E0  ._lfa: defw D._nfa
+74E2  ._cfa: defw 0x6306
+74E4  ._pfa: 
+74E4 defw S->D_cfa
+74E6 defw D._cfa
+74E8 defw ;S_cfa
+
+
+74CF  D._nfa: defb 0x02+0x80,"D","."+0x80
+74D2  D._lfa: defw .R_nfa
+74D4  D._cfa: defw 0x6306
+74D6  D._pfa: 
+74D6 defw 0_cfa
+74D8 defw D.R_cfa
+74DA defw SPACE_cfa
+74DC defw ;S_cfa
+
+
+74BE  .R_nfa: defb 0x02+0x80,".","R"+0x80
+74C1  .R_lfa: defw D.R_nfa
+74C3  .R_cfa: defw 0x6306
+74C5  .R_pfa: 
+74C5 defw >R_cfa
+74C7 defw S->D_cfa
+74C9 defw R>_cfa
+74CB defw D.R_cfa
+74CD defw ;S_cfa
+
+
+749A  D.R_nfa: defb 0x03+0x80,"D.","R"+0x80
+749E  D.R_lfa: defw #S_nfa
+74A0  D.R_cfa: defw 0x6306
+74A2  D.R_pfa: 
+74A2 defw >R_cfa
+74A4 defw SWAP_cfa
+74A6 defw OVER_cfa
+74A8 defw DABS_cfa
+74AA defw <#_cfa
+74AC defw #S_cfa
+74AE defw SIGN_cfa
+74B0 defw #>_cfa
+74B2 defw R>_cfa
+74B4 defw OVER_cfa
+74B6 defw -_cfa
+74B8 defw SPACES_cfa
+74BA defw TYPE_cfa
+74BC defw ;S_cfa
+
+
+7483  #S_nfa: defb 0x02+0x80,"#","S"+0x80
+7486  #S_lfa: defw #_nfa
+7488  #S_cfa: defw 0x6306
+748A  #S_pfa: 
+748A defw #_cfa
+748C defw OVER_cfa
+748E defw OVER_cfa
+7490 defw OR_cfa
+7492 defw 0=_cfa
+7494 defw 0BRANCH_cfa,0xFFF4; to 748A 
+7498 defw ;S_cfa
+
+
+7459  #_nfa: defb 0x01+0x80,"","#"+0x80
+745B  #_lfa: defw SIGN_nfa
+745D  #_cfa: defw 0x6306
+745F  #_pfa: 
+745F defw BASE_cfa
+7461 defw @_cfa
+7463 defw M/MOD_cfa
+7465 defw ROT_cfa
+7467 defw LIT_cfa,0x0009
+746B defw OVER_cfa
+746D defw <_cfa
+746F defw 0BRANCH_cfa,0x0008; to 7479 
+7473 defw LIT_cfa,0x0007
+7477 defw +_cfa
+7479 defw LIT_cfa,0x0030
+747D defw +_cfa
+747F defw HOLD_cfa
+7481 defw ;S_cfa
+
+
+7440  SIGN_nfa: defb 0x04+0x80,"SIG","N"+0x80
+7445  SIGN_lfa: defw #>_nfa
+7447  SIGN_cfa: defw 0x6306
+7449  SIGN_pfa: 
+7449 defw ROT_cfa
+744B defw 0<_cfa
+744D defw 0BRANCH_cfa,0x0008; to 7457 
+7451 defw LIT_cfa,0x002D
+7455 defw HOLD_cfa
+7457 defw ;S_cfa
+
+
+7429  #>_nfa: defb 0x02+0x80,"#",">"+0x80
+742C  #>_lfa: defw <#_nfa
+742E  #>_cfa: defw 0x6306
+7430  #>_pfa: 
+7430 defw DROP_cfa
+7432 defw DROP_cfa
+7434 defw HLD_cfa
+7436 defw @_cfa
+7438 defw PAD_cfa
+743A defw OVER_cfa
+743C defw -_cfa
+743E defw ;S_cfa
+
+
+741A  <#_nfa: defb 0x02+0x80,"<","#"+0x80
+741D  <#_lfa: defw SPACES_nfa
+741F  <#_cfa: defw 0x6306
+7421  <#_pfa: 
+7421 defw PAD_cfa
+7423 defw HLD_cfa
+7425 defw !_cfa
+7427 defw ;S_cfa
+
+
+73F9  SPACES_nfa: defb 0x06+0x80,"SPACE","S"+0x80
+7400  SPACES_lfa: defw WHILE_nfa
+7402  SPACES_cfa: defw 0x6306
+7404  SPACES_pfa: 
+7404 defw 0_cfa
+7406 defw MAX_cfa
+7408 defw -DUP_cfa
+740A defw 0BRANCH_cfa,0x000C; to 7418 
+740E defw 0_cfa
+7410 defw (DO)_cfa
+7412 defw SPACE_cfa
+7414 defw (LOOP)_cfa,0xFFFC; to 7412 
+7418 defw ;S_cfa
+
+
+73E9  WHILE_nfa: defb 0x05+0x80+0x40,"WHIL","E"+0x80
+73EF  WHILE_lfa: defw ELSE_nfa
+73F1  WHILE_cfa: defw 0x6306
+73F3  WHILE_pfa: 
+73F3 defw IF_cfa
+73F5 defw 2+_cfa
+73F7 defw ;S_cfa
+
+
+73C8  ELSE_nfa: defb 0x04+0x80+0x40,"ELS","E"+0x80
+73CD  ELSE_lfa: defw IF_nfa
+73CF  ELSE_cfa: defw 0x6306
+73D1  ELSE_pfa: 
+73D1 defw 2_cfa
+73D3 defw ?PAIRS_cfa
+73D5 defw COMPILE_cfa,BRANCH_cfa
+73D9 defw HERE_cfa
+73DB defw 0_cfa
+73DD defw ,_cfa
+73DF defw SWAP_cfa
+73E1 defw 2_cfa
+73E3 defw ENDIF_cfa
+73E5 defw 2_cfa
+73E7 defw ;S_cfa
+
+
+73B3  IF_nfa: defb 0x02+0x80+0x40,"I","F"+0x80
+73B6  IF_lfa: defw REPEAT_nfa
+73B8  IF_cfa: defw 0x6306
+73BA  IF_pfa: 
+73BA defw COMPILE_cfa,0BRANCH_cfa
+73BE defw HERE_cfa
+73C0 defw 0_cfa
+73C2 defw ,_cfa
+73C4 defw 2_cfa
+73C6 defw ;S_cfa
+
+
+7396  REPEAT_nfa: defb 0x06+0x80+0x40,"REPEA","T"+0x80
+739D  REPEAT_lfa: defw AGAIN_nfa
+739F  REPEAT_cfa: defw 0x6306
+73A1  REPEAT_pfa: 
+73A1 defw >R_cfa
+73A3 defw >R_cfa
+73A5 defw AGAIN_cfa
+73A7 defw R>_cfa
+73A9 defw R>_cfa
+73AB defw 2_cfa
+73AD defw -_cfa
+73AF defw ENDIF_cfa
+73B1 defw ;S_cfa
+
+
+7380  AGAIN_nfa: defb 0x05+0x80+0x40,"AGAI","N"+0x80
+7386  AGAIN_lfa: defw END_nfa
+7388  AGAIN_cfa: defw 0x6306
+738A  AGAIN_pfa: 
+738A defw 1_cfa
+738C defw ?PAIRS_cfa
+738E defw COMPILE_cfa,BRANCH_cfa
+7392 defw BACK_cfa
+7394 defw ;S_cfa
+
+
+7374  END_nfa: defb 0x03+0x80+0x40,"EN","D"+0x80
+7378  END_lfa: defw UNTIL_nfa
+737A  END_cfa: defw 0x6306
+737C  END_pfa: 
+737C defw UNTIL_cfa
+737E defw ;S_cfa
+
+
+735E  UNTIL_nfa: defb 0x05+0x80+0x40,"UNTI","L"+0x80
+7364  UNTIL_lfa: defw +LOOP_nfa
+7366  UNTIL_cfa: defw 0x6306
+7368  UNTIL_pfa: 
+7368 defw 1_cfa
+736A defw ?PAIRS_cfa
+736C defw COMPILE_cfa,0BRANCH_cfa
+7370 defw BACK_cfa
+7372 defw ;S_cfa
+
+
+7348  +LOOP_nfa: defb 0x05+0x80+0x40,"+LOO","P"+0x80
+734E  +LOOP_lfa: defw LOOP_nfa
+7350  +LOOP_cfa: defw 0x6306
+7352  +LOOP_pfa: 
+7352 defw 3_cfa
+7354 defw ?PAIRS_cfa
+7356 defw COMPILE_cfa,(+LOOP)_cfa
+735A defw BACK_cfa
+735C defw ;S_cfa
+
+
+7333  LOOP_nfa: defb 0x04+0x80+0x40,"LOO","P"+0x80
+7338  LOOP_lfa: defw DO_nfa
+733A  LOOP_cfa: defw 0x6306
+733C  LOOP_pfa: 
+733C defw 3_cfa
+733E defw ?PAIRS_cfa
+7340 defw COMPILE_cfa,(LOOP)_cfa
+7344 defw BACK_cfa
+7346 defw ;S_cfa
+
+
+7322  DO_nfa: defb 0x02+0x80+0x40,"D","O"+0x80
+7325  DO_lfa: defw THEN_nfa
+7327  DO_cfa: defw 0x6306
+7329  DO_pfa: 
+7329 defw COMPILE_cfa,(DO)_cfa
+732D defw HERE_cfa
+732F defw 3_cfa
+7331 defw ;S_cfa
+
+
+7315  THEN_nfa: defb 0x04+0x80+0x40,"THE","N"+0x80
+731A  THEN_lfa: defw ENDIF_nfa
+731C  THEN_cfa: defw 0x6306
+731E  THEN_pfa: 
+731E defw ENDIF_cfa
+7320 defw ;S_cfa
+
+
+72F9  ENDIF_nfa: defb 0x05+0x80+0x40,"ENDI","F"+0x80
+72FF  ENDIF_lfa: defw BEGIN_nfa
+7301  ENDIF_cfa: defw 0x6306
+7303  ENDIF_pfa: 
+7303 defw ?COMP_cfa
+7305 defw 2_cfa
+7307 defw ?PAIRS_cfa
+7309 defw HERE_cfa
+730B defw OVER_cfa
+730D defw -_cfa
+730F defw SWAP_cfa
+7311 defw !_cfa
+7313 defw ;S_cfa
+
+
+72E7  BEGIN_nfa: defb 0x05+0x80+0x40,"BEGI","N"+0x80
+72ED  BEGIN_lfa: defw BACK_nfa
+72EF  BEGIN_cfa: defw 0x6306
+72F1  BEGIN_pfa: 
+72F1 defw ?COMP_cfa
+72F3 defw HERE_cfa
+72F5 defw 1_cfa
+72F7 defw ;S_cfa
+
+
+72D6  BACK_nfa: defb 0x04+0x80,"BAC","K"+0x80
+72DB  BACK_lfa: defw '_nfa
+72DD  BACK_cfa: defw 0x6306
+72DF  BACK_pfa: 
+72DF defw HERE_cfa
+72E1 defw -_cfa
+72E3 defw ,_cfa
+72E5 defw ;S_cfa
+
+
+72C2  '_nfa: defb 0x01+0x80+0x40,"","'"+0x80
+72C4  '_lfa: defw -->_nfa
+72C6  '_cfa: defw 0x6306
+72C8  '_pfa: 
+72C8 defw -FIND_cfa
+72CA defw 0=_cfa
+72CC defw 0_cfa
+72CE defw ?ERROR_cfa
+72D0 defw DROP_cfa
+72D2 defw LITERAL_cfa
+72D4 defw ;S_cfa
+
+
+72A0  -->_nfa: defb 0x03+0x80+0x40,"--",">"+0x80
+72A4  -->_lfa: defw LOAD_nfa
+72A6  -->_cfa: defw 0x6306
+72A8  -->_pfa: 
+72A8 defw ?LOADING_cfa
+72AA defw 0_cfa
+72AC defw IN_cfa
+72AE defw !_cfa
+72B0 defw B/SCR_cfa
+72B2 defw BLK_cfa
+72B4 defw @_cfa
+72B6 defw OVER_cfa
+72B8 defw MOD_cfa
+72BA defw -_cfa
+72BC defw BLK_cfa
+72BE defw +!_cfa
+72C0 defw ;S_cfa
+
+
+7261  LOAD_nfa: defb 0x04+0x80,"LOA","D"+0x80
+7266  LOAD_lfa: defw FLUSH_nfa
+7268  LOAD_cfa: defw 0x6306
+726A  LOAD_pfa: 
+726A defw DUP_cfa
+726C defw 0_cfa
+726E defw =_cfa
+7270 defw LIT_cfa,0x0006
+7274 defw ?ERROR_cfa
+7276 defw BLK_cfa
+7278 defw @_cfa
+727A defw >R_cfa
+727C defw IN_cfa
+727E defw @_cfa
+7280 defw >R_cfa
+7282 defw 0_cfa
+7284 defw IN_cfa
+7286 defw !_cfa
+7288 defw B/SCR_cfa
+728A defw *_cfa
+728C defw BLK_cfa
+728E defw !_cfa
+7290 defw INTERPRET_cfa
+7292 defw R>_cfa
+7294 defw IN_cfa
+7296 defw !_cfa
+7298 defw R>_cfa
+729A defw BLK_cfa
+729C defw !_cfa
+729E defw ;S_cfa
+
+
+7243  FLUSH_nfa: defb 0x05+0x80,"FLUS","H"+0x80
+7249  FLUSH_lfa: defw R/W_nfa
+724B  FLUSH_cfa: defw 0x6306
+724D  FLUSH_pfa: 
+724D defw #BUFF_cfa
+724F defw 1+_cfa
+7251 defw 0_cfa
+7253 defw (DO)_cfa
+7255 defw 0_cfa
+7257 defw BUFFER_cfa
+7259 defw DROP_cfa
+725B defw (LOOP)_cfa,0xFFF8; to 7255 
+725F defw ;S_cfa
+
+
+7217  R/W_nfa: defb 0x03+0x80,"R/","W"+0x80
+721B  R/W_lfa: defw HI_nfa
+721D  R/W_cfa: defw 0x6306
+721F  R/W_pfa: 
+721F defw >R_cfa
+7221 defw DISC-BLOCK_cfa
+7223 defw R>_cfa
+7225 defw (R/W)_cfa
+7227 defw ;S_cfa
+
+
+720E  HI_nfa: defb 0x02+0x80,"H","I"+0x80
+7211  HI_lfa: defw LO_nfa
+7213  HI_cfa: defw 0x6348
+7215  HI_pfa: 
+7215 defw 0xFFFF
+
+
+7205  LO_nfa: defb 0x02+0x80,"L","O"+0x80
+7208  LO_lfa: defw BLOCK_nfa
+720A  LO_cfa: defw 0x6348
+720C  LO_pfa: 
+720C defw 0xC000
+
+
+71A5  BLOCK_nfa: defb 0x05+0x80,"BLOC","K"+0x80
+71AB  BLOCK_lfa: defw BUFFER_nfa
+71AD  BLOCK_cfa: defw 0x6306
+71AF  BLOCK_pfa: 
+71AF defw OFFSET_cfa
+71B1 defw @_cfa
+71B3 defw +_cfa
+71B5 defw >R_cfa
+71B7 defw PREV_cfa
+71B9 defw @_cfa
+71BB defw DUP_cfa
+71BD defw @_cfa
+71BF defw R_cfa
+71C1 defw -_cfa
+71C3 defw DUP_cfa
+71C5 defw +_cfa
+71C7 defw 0BRANCH_cfa,0x0034; to 71FD 
+71CB defw +BUF_cfa
+71CD defw 0=_cfa
+71CF defw 0BRANCH_cfa,0x0014; to 71E5 
+71D3 defw DROP_cfa
+71D5 defw R_cfa
+71D7 defw BUFFER_cfa
+71D9 defw DUP_cfa
+71DB defw R_cfa
+71DD defw 1_cfa
+71DF defw R/W_cfa
+71E1 defw 2_cfa
+71E3 defw -_cfa
+71E5 defw DUP_cfa
+71E7 defw @_cfa
+71E9 defw R_cfa
+71EB defw -_cfa
+71ED defw DUP_cfa
+71EF defw +_cfa
+71F1 defw 0=_cfa
+71F3 defw 0BRANCH_cfa,0xFFD6; to 71CB 
+71F7 defw DUP_cfa
+71F9 defw PREV_cfa
+71FB defw !_cfa
+71FD defw R>_cfa
+71FF defw DROP_cfa
+7201 defw 2+_cfa
+7203 defw ;S_cfa
+
+
+715C  BUFFER_nfa: defb 0x06+0x80,"BUFFE","R"+0x80
+7163  BUFFER_lfa: defw DR0_nfa
+7165  BUFFER_cfa: defw 0x6306
+7167  BUFFER_pfa: 
+7167 defw USE_cfa
+7169 defw @_cfa
+716B defw DUP_cfa
+716D defw >R_cfa
+716F defw +BUF_cfa
+7171 defw 0BRANCH_cfa,0xFFFC; to 716F 
+7175 defw USE_cfa
+7177 defw !_cfa
+7179 defw R_cfa
+717B defw @_cfa
+717D defw 0<_cfa
+717F defw 0BRANCH_cfa,0x0014; to 7195 
+7183 defw R_cfa
+7185 defw 2+_cfa
+7187 defw R_cfa
+7189 defw @_cfa
+718B defw LIT_cfa,0x7FFF
+718F defw AND_cfa
+7191 defw 0_cfa
+7193 defw R/W_cfa
+7195 defw R_cfa
+7197 defw !_cfa
+7199 defw R_cfa
+719B defw PREV_cfa
+719D defw !_cfa
+719F defw R>_cfa
+71A1 defw 2+_cfa
+71A3 defw ;S_cfa
+
+
+714C  DR0_nfa: defb 0x03+0x80,"DR","0"+0x80
+7150  DR0_lfa: defw EMPTY-BUFFERS_nfa
+7152  DR0_cfa: defw 0x6306
+7154  DR0_pfa: 
+7154 defw 0_cfa
+7156 defw OFFSET_cfa
+7158 defw !_cfa
+715A defw ;S_cfa
+
+
+7118  EMPTY-BUFFERS_nfa: defb 0x0D+0x80,"EMPTY-BUFFER","S"+0x80
+7126  EMPTY-BUFFERS_lfa: defw UPDATE_nfa
+7128  EMPTY-BUFFERS_cfa: defw 0x6306
+712A  EMPTY-BUFFERS_pfa: 
+712A defw FIRST_cfa
+712C defw LIMIT_cfa
+712E defw OVER_cfa
+7130 defw -_cfa
+7132 defw ERASE_cfa
+7134 defw LIMIT_cfa
+7136 defw FIRST_cfa
+7138 defw (DO)_cfa
+713A defw LIT_cfa,0x7FFF
+713E defw I_cfa
+7140 defw !_cfa
+7142 defw LIT_cfa,0x0084
+7146 defw (+LOOP)_cfa,0xFFF2; to 713A 
+714A defw ;S_cfa
+
+
+70F9  UPDATE_nfa: defb 0x06+0x80,"UPDAT","E"+0x80
+7100  UPDATE_lfa: defw +BUF_nfa
+7102  UPDATE_cfa: defw 0x6306
+7104  UPDATE_pfa: 
+7104 defw PREV_cfa
+7106 defw @_cfa
+7108 defw @_cfa
+710A defw LIT_cfa,0x8000
+710E defw OR_cfa
+7110 defw PREV_cfa
+7112 defw @_cfa
+7114 defw !_cfa
+7116 defw ;S_cfa
+
+
+70D2  +BUF_nfa: defb 0x04+0x80,"+BU","F"+0x80
+70D7  +BUF_lfa: defw #BUFF_nfa
+70D9  +BUF_cfa: defw 0x6306
+70DB  +BUF_pfa: 
+70DB defw LIT_cfa,0x0084
+70DF defw +_cfa
+70E1 defw DUP_cfa
+70E3 defw LIMIT_cfa
+70E5 defw =_cfa
+70E7 defw 0BRANCH_cfa,0x0006; to 70EF 
+70EB defw DROP_cfa
+70ED defw FIRST_cfa
+70EF defw DUP_cfa
+70F1 defw PREV_cfa
+70F3 defw @_cfa
+70F5 defw -_cfa
+70F7 defw ;S_cfa
+
+
+70C6  #BUFF_nfa: defb 0x05+0x80,"#BUF","F"+0x80
+70CC  #BUFF_lfa: defw PREV_nfa
+70CE  #BUFF_cfa: defw 0x6348
+70D0  #BUFF_pfa: 
+70D0 defw 0x0008
+
+
+70BB  PREV_nfa: defb 0x04+0x80,"PRE","V"+0x80
+70C0  PREV_lfa: defw USE_nfa
+70C2  PREV_cfa: defw 0x6362
+70C4  PREV_pfa: 
+70C4 defw 0x8A6A
+
+
+70B1  USE_nfa: defb 0x03+0x80,"US","E"+0x80
+70B5  USE_lfa: defw MESSAGE_nfa
+70B7  USE_cfa: defw 0x6362
+70B9  USE_pfa: 
+70B9 defw 0x86CE
+
+
+6F83  MESSAGE_nfa: defb 0x07+0x80,"MESSAG","E"+0x80
+6F8B  MESSAGE_lfa: defw .LINE_nfa
+6F8D  MESSAGE_cfa: defw 0x6306
+6F8F  MESSAGE_pfa: 
+6F8F defw WARNING_cfa
+6F91 defw @_cfa
+6F93 defw 0BRANCH_cfa,0x001E; to 6FB3 
+6F97 defw -DUP_cfa
+6F99 defw 0BRANCH_cfa,0x0014; to 6FAF 
+6F9D defw LIT_cfa,0x0004
+6FA1 defw OFFSET_cfa
+6FA3 defw @_cfa
+6FA5 defw B/SCR_cfa
+6FA7 defw /_cfa
+6FA9 defw -_cfa
+6FAB defw .LINE_cfa
+6FAD defw SPACE_cfa
+6FAF defw BRANCH_cfa,0x000D; to 6FBE 
+6FB3 defw (.")_cfa
+6FB5 defb 0x06,"MSG # "
+6FBC defw ._cfa
+6FBE defw ;S_cfa
+
+
+6F71  .LINE_nfa: defb 0x05+0x80,".LIN","E"+0x80
+6F77  .LINE_lfa: defw (LINE)_nfa
+6F79  .LINE_cfa: defw 0x6306
+6F7B  .LINE_pfa: 
+6F7B defw (LINE)_cfa
+6F7D defw -TRAILING_cfa
+6F7F defw TYPE_cfa
+6F81 defw ;S_cfa
+
+
+6F4A  (LINE)_nfa: defb 0x06+0x80,"(LINE",")"+0x80
+6F51  (LINE)_lfa: defw M/MOD_nfa
+6F53  (LINE)_cfa: defw 0x6306
+6F55  (LINE)_pfa: 
+6F55 defw >R_cfa
+6F57 defw LIT_cfa,0x0040
+6F5B defw B/BUF_cfa
+6F5D defw */MOD_cfa
+6F5F defw R>_cfa
+6F61 defw B/SCR_cfa
+6F63 defw *_cfa
+6F65 defw +_cfa
+6F67 defw BLOCK_cfa
+6F69 defw +_cfa
+6F6B defw LIT_cfa,0x0040
+6F6F defw ;S_cfa
+
+
+6F2C  M/MOD_nfa: defb 0x05+0x80,"M/MO","D"+0x80
+6F32  M/MOD_lfa: defw */_nfa
+6F34  M/MOD_cfa: defw 0x6306
+6F36  M/MOD_pfa: 
+6F36 defw >R_cfa
+6F38 defw 0_cfa
+6F3A defw R_cfa
+6F3C defw U/MOD_cfa
+6F3E defw R>_cfa
+6F40 defw SWAP_cfa
+6F42 defw >R_cfa
+6F44 defw U/MOD_cfa
+6F46 defw R>_cfa
+6F48 defw ;S_cfa
+
+
+6F1D  */_nfa: defb 0x02+0x80,"*","/"+0x80
+6F20  */_lfa: defw */MOD_nfa
+6F22  */_cfa: defw 0x6306
+6F24  */_pfa: 
+6F24 defw */MOD_cfa
+6F26 defw SWAP_cfa
+6F28 defw DROP_cfa
+6F2A defw ;S_cfa
+
+
+6F09  */MOD_nfa: defb 0x05+0x80,"*/MO","D"+0x80
+6F0F  */MOD_lfa: defw MOD_nfa
+6F11  */MOD_cfa: defw 0x6306
+6F13  */MOD_pfa: 
+6F13 defw >R_cfa
+6F15 defw M*_cfa
+6F17 defw R>_cfa
+6F19 defw M/_cfa
+6F1B defw ;S_cfa
+
+
+6EFB  MOD_nfa: defb 0x03+0x80,"MO","D"+0x80
+6EFF  MOD_lfa: defw /_nfa
+6F01  MOD_cfa: defw 0x6306
+6F03  MOD_pfa: 
+6F03 defw /MOD_cfa
+6F05 defw DROP_cfa
+6F07 defw ;S_cfa
+
+
+6EED  /_nfa: defb 0x01+0x80,"","/"+0x80
+6EEF  /_lfa: defw /MOD_nfa
+6EF1  /_cfa: defw 0x6306
+6EF3  /_pfa: 
+6EF3 defw /MOD_cfa
+6EF5 defw SWAP_cfa
+6EF7 defw DROP_cfa
+6EF9 defw ;S_cfa
+
+
+6EDA  /MOD_nfa: defb 0x04+0x80,"/MO","D"+0x80
+6EDF  /MOD_lfa: defw *_nfa
+6EE1  /MOD_cfa: defw 0x6306
+6EE3  /MOD_pfa: 
+6EE3 defw >R_cfa
+6EE5 defw S->D_cfa
+6EE7 defw R>_cfa
+6EE9 defw M/_cfa
+6EEB defw ;S_cfa
+
+
+6ECE  *_nfa: defb 0x01+0x80,"","*"+0x80
+6ED0  *_lfa: defw M/_nfa
+6ED2  *_cfa: defw 0x6306
+6ED4  *_pfa: 
+6ED4 defw M*_cfa
+6ED6 defw DROP_cfa
+6ED8 defw ;S_cfa
+
+
+6EA7  M/_nfa: defb 0x02+0x80,"M","/"+0x80
+6EAA  M/_lfa: defw M*_nfa
+6EAC  M/_cfa: defw 0x6306
+6EAE  M/_pfa: 
+6EAE defw OVER_cfa
+6EB0 defw >R_cfa
+6EB2 defw >R_cfa
+6EB4 defw DABS_cfa
+6EB6 defw R_cfa
+6EB8 defw ABS_cfa
+6EBA defw U/MOD_cfa
+6EBC defw R>_cfa
+6EBE defw R_cfa
+6EC0 defw XOR_cfa
+6EC2 defw +-_cfa
+6EC4 defw SWAP_cfa
+6EC6 defw R>_cfa
+6EC8 defw +-_cfa
+6ECA defw SWAP_cfa
+6ECC defw ;S_cfa
+
+
+6E8C  M*_nfa: defb 0x02+0x80,"M","*"+0x80
+6E8F  M*_lfa: defw MAX_nfa
+6E91  M*_cfa: defw 0x6306
+6E93  M*_pfa: 
+6E93 defw 2DUP_cfa
+6E95 defw XOR_cfa
+6E97 defw >R_cfa
+6E99 defw ABS_cfa
+6E9B defw SWAP_cfa
+6E9D defw ABS_cfa
+6E9F defw U*_cfa
+6EA1 defw R>_cfa
+6EA3 defw D+-_cfa
+6EA5 defw ;S_cfa
+
+
+6E76  MAX_nfa: defb 0x03+0x80,"MA","X"+0x80
+6E7A  MAX_lfa: defw MIN_nfa
+6E7C  MAX_cfa: defw 0x6306
+6E7E  MAX_pfa: 
+6E7E defw 2DUP_cfa
+6E80 defw <_cfa
+6E82 defw 0BRANCH_cfa,0x0004; to 6E88 
+6E86 defw SWAP_cfa
+6E88 defw DROP_cfa
+6E8A defw ;S_cfa
+
+
+6E60  MIN_nfa: defb 0x03+0x80,"MI","N"+0x80
+6E64  MIN_lfa: defw DABS_nfa
+6E66  MIN_cfa: defw 0x6306
+6E68  MIN_pfa: 
+6E68 defw 2DUP_cfa
+6E6A defw >_cfa
+6E6C defw 0BRANCH_cfa,0x0004; to 6E72 
+6E70 defw SWAP_cfa
+6E72 defw DROP_cfa
+6E74 defw ;S_cfa
+
+
+6E51  DABS_nfa: defb 0x04+0x80,"DAB","S"+0x80
+6E56  DABS_lfa: defw ABS_nfa
+6E58  DABS_cfa: defw 0x6306
+6E5A  DABS_pfa: 
+6E5A defw DUP_cfa
+6E5C defw D+-_cfa
+6E5E defw ;S_cfa
+
+
+6E43  ABS_nfa: defb 0x03+0x80,"AB","S"+0x80
+6E47  ABS_lfa: defw D+-_nfa
+6E49  ABS_cfa: defw 0x6306
+6E4B  ABS_pfa: 
+6E4B defw DUP_cfa
+6E4D defw +-_cfa
+6E4F defw ;S_cfa
+
+
+6E31  D+-_nfa: defb 0x03+0x80,"D+","-"+0x80
+6E35  D+-_lfa: defw +-_nfa
+6E37  D+-_cfa: defw 0x6306
+6E39  D+-_pfa: 
+6E39 defw 0<_cfa
+6E3B defw 0BRANCH_cfa,0x0004; to 6E41 
+6E3F defw DMINUS_cfa
+6E41 defw ;S_cfa
+
+
+6E20  +-_nfa: defb 0x02+0x80,"+","-"+0x80
+6E23  +-_lfa: defw S->D_nfa
+6E25  +-_cfa: defw 0x6306
+6E27  +-_pfa: 
+6E27 defw 0<_cfa
+6E29 defw 0BRANCH_cfa,0x0004; to 6E2F 
+6E2D defw MINUS_cfa
+6E2F defw ;S_cfa
+
+
+6E0A  S->D_nfa: defb 0x04+0x80,"S->","D"+0x80
+6E0F  S->D_lfa: defw COLD_nfa
+6E11  S->D_cfa: defw S->D_nfa
+6E13  S->D_pfa: ; Word type not implemented.
+
+
+6DC9  COLD_nfa: defb 0x04+0x80,"COL","D"+0x80
+6DCE  COLD_lfa: defw WARM_nfa
+6DD0  COLD_cfa: defw 0x6306
+6DD2  COLD_pfa: 
+6DD2 defw EMPTY-BUFFERS_cfa
+6DD4 defw FIRST_cfa
+6DD6 defw USE_cfa
+6DD8 defw !_cfa
+6DDA defw FIRST_cfa
+6DDC defw PREV_cfa
+6DDE defw !_cfa
+6DE0 defw DR0_cfa
+6DE2 defw LIT_cfa,0x5E52
+6DE6 defw LIT_cfa,0x5E66
+6DEA defw @_cfa
+6DEC defw LIT_cfa,0x0006
+6DF0 defw +_cfa
+6DF2 defw LIT_cfa,0x0010
+6DF6 defw CMOVE_cfa
+6DF8 defw LIT_cfa,0x5E4C
+6DFC defw @_cfa
+6DFE defw LIT_cfa,0x6CF8
+6E02 defw !_cfa
+6E04 defw ABORT_cfa
+
+
+6DA3  WARM_nfa: defb 0x04+0x80,"WAR","M"+0x80
+6DA8  WARM_lfa: defw ABORT_nfa
+6DAA  WARM_cfa: defw 0x6306
+6DAC  WARM_pfa: 
+6DAC defw EMPTY-BUFFERS_cfa
+6DAE defw ABORT_cfa
+
+
+6D50  ABORT_nfa: defb 0x05+0x80,"ABOR","T"+0x80
+6D56  ABORT_lfa: defw QUIT_nfa
+6D58  ABORT_cfa: defw 0x6306
+6D5A  ABORT_pfa: 
+6D5A defw SP!_cfa
+6D5C defw DECIMAL_cfa
+6D5E defw ?STACK_cfa
+6D60 defw CLS0_cfa
+6D62 defw GREETING_cfa
+6D64 defw FORTH_cfa
+6D66 defw DEFINITIONS_cfa
+6D68 defw NOOP_cfa
+6D6A defw QUIT_cfa
+
+
+6D24  QUIT_nfa: defb 0x04+0x80,"QUI","T"+0x80
+6D29  QUIT_lfa: defw (_nfa
+6D2B  QUIT_cfa: defw 0x6306
+6D2D  QUIT_pfa: 
+6D2D defw 0_cfa
+6D2F defw BLK_cfa
+6D31 defw !_cfa
+6D33 defw [_cfa
+6D35 defw RP!_cfa
+6D37 defw CR_cfa
+6D39 defw QUERY_cfa
+6D3B defw INTERPRET_cfa
+6D3D defw STATE_cfa
+6D3F defw @_cfa
+6D41 defw 0=_cfa
+6D43 defw 0BRANCH_cfa,0x0007; to 6D4C 
+6D47 defw (.")_cfa
+6D49 defb 0x02,"ok"
+6D4C defw BRANCH_cfa,0xFFE7; to 6D35 
+6D50 defw <x<x_cfa
+6D52 defw COPY ____cfa
+6D54 defw ryl=m+  DUP 5_cfa
+6D56 defw iHa?____________cfa
+6D58 defw b?k_cfa
+6D5A defw SP!_cfa
+6D5C defw DECIMAL_cfa
+6D5E defw ?STACK_cfa
+6D60 defw CLS0_cfa
+6D62 defw GREETING_cfa
+6D64 defw FORTH_cfa
+6D66 defw DEFINITIONS_cfa
+6D68 defw NOOP_cfa
+6D6A defw QUIT_cfa
+
+
+6D16  (_nfa: defb 0x01+0x80+0x40,"","("+0x80
+6D18  (_lfa: defw DEFINITIONS_nfa
+6D1A  (_cfa: defw 0x6306
+6D1C  (_pfa: 
+6D1C defw LIT_cfa,0x0029
+6D20 defw WORD_cfa
+6D22 defw ;S_cfa
+
+
+6CFC  DEFINITIONS_nfa: defb 0x0B+0x80,"DEFINITION","S"+0x80
+6D08  DEFINITIONS_lfa: defw FORTH_nfa
+6D0A  DEFINITIONS_cfa: defw 0x6306
+6D0C  DEFINITIONS_pfa: 
+6D0C defw CONTEXT_cfa
+6D0E defw @_cfa
+6D10 defw CURRENT_cfa
+6D12 defw !_cfa
+6D14 defw ;S_cfa
+
+
+6CEA  FORTH_nfa: defb 0x05+0x80+0x40,"FORT","H"+0x80
+6CF0  FORTH_lfa: defw VOCABULARY_nfa
+6CF2  FORTH_cfa: defw 0x67B8
+6CF4  FORTH_pfa: ; Word type not implemented.
+
+
+6CB5  VOCABULARY_nfa: defb 0x0A+0x80,"VOCABULAR","Y"+0x80
+6CC0  VOCABULARY_lfa: defw IMMEDIATE_nfa
+6CC2  VOCABULARY_cfa: defw 0x6306
+6CC4  VOCABULARY_pfa: 
+6CC4 defw <BUILDS_cfa
+6CC6 defw LIT_cfa,0xA081
+6CCA defw ,_cfa
+6CCC defw CURRENT_cfa
+6CCE defw @_cfa
+6CD0 defw CFA_cfa
+6CD2 defw ,_cfa
+6CD4 defw HERE_cfa
+6CD6 defw VOC-LINK_cfa
+6CD8 defw @_cfa
+6CDA defw ,_cfa
+6CDC defw VOC-LINK_cfa
+6CDE defw !_cfa
+6CE0 defw DOES>_cfa
+6CE2 defw 2+_cfa
+6CE4 defw CONTEXT_cfa
+6CE6 defw !_cfa
+6CE8 defw ;S_cfa
+
+
+6C9D  IMMEDIATE_nfa: defb 0x09+0x80,"IMMEDIAT","E"+0x80
+6CA7  IMMEDIATE_lfa: defw INTERPRET_nfa
+6CA9  IMMEDIATE_cfa: defw 0x6306
+6CAB  IMMEDIATE_pfa: 
+6CAB defw LATEST_cfa
+6CAD defw LIT_cfa,0x0040
+6CB1 defw TOGGLE_cfa
+6CB3 defw ;S_cfa
+
+
+6C4F  INTERPRET_nfa: defb 0x09+0x80,"INTERPRE","T"+0x80
+6C59  INTERPRET_lfa: defw ?STACK_nfa
+6C5B  INTERPRET_cfa: defw 0x6306
+6C5D  INTERPRET_pfa: 
+6C5D defw -FIND_cfa
+6C5F defw 0BRANCH_cfa,0x001E; to 6C7F 
+6C63 defw STATE_cfa
+6C65 defw @_cfa
+6C67 defw <_cfa
+6C69 defw 0BRANCH_cfa,0x000A; to 6C75 
+6C6D defw CFA_cfa
+6C6F defw ,_cfa
+6C71 defw BRANCH_cfa,0x0006; to 6C79 
+6C75 defw CFA_cfa
+6C77 defw EXECUTE_cfa
+6C79 defw ?STACK_cfa
+6C7B defw BRANCH_cfa,0x001C; to 6C99 
+6C7F defw HERE_cfa
+6C81 defw NUMBER_cfa
+6C83 defw DPL_cfa
+6C85 defw @_cfa
+6C87 defw 1+_cfa
+6C89 defw 0BRANCH_cfa,0x0008; to 6C93 
+6C8D defw DLITERAL_cfa
+6C8F defw BRANCH_cfa,0x0006; to 6C97 
+6C93 defw DROP_cfa
+6C95 defw LITERAL_cfa
+6C97 defw ?STACK_cfa
+6C99 defw BRANCH_cfa
+
+
+6C22  ?STACK_nfa: defb 0x06+0x80,"?STAC","K"+0x80
+6C29  ?STACK_lfa: defw DLITERAL_nfa
+6C2B  ?STACK_cfa: defw 0x6306
+6C2D  ?STACK_pfa: 
+6C2D defw SP@_cfa
+6C2F defw S0_cfa
+6C31 defw @_cfa
+6C33 defw SWAP_cfa
+6C35 defw U<_cfa
+6C37 defw 1_cfa
+6C39 defw ?ERROR_cfa
+6C3B defw SP@_cfa
+6C3D defw LIT_cfa,0x857C
+6C41 defw <_cfa
+6C43 defw LIT_cfa,0x0007
+6C47 defw ?ERROR_cfa
+6C49 defw ;S_cfa
+
+
+6C05  DLITERAL_nfa: defb 0x08+0x80+0x40,"DLITERA","L"+0x80
+6C0E  DLITERAL_lfa: defw LITERAL_nfa
+6C10  DLITERAL_cfa: defw 0x6306
+6C12  DLITERAL_pfa: 
+6C12 defw STATE_cfa
+6C14 defw @_cfa
+6C16 defw 0BRANCH_cfa,0x0008; to 6C20 
+6C1A defw SWAP_cfa
+6C1C defw LITERAL_cfa
+6C1E defw LITERAL_cfa
+6C20 defw ;S_cfa
+
+
+6BE9  LITERAL_nfa: defb 0x07+0x80+0x40,"LITERA","L"+0x80
+6BF1  LITERAL_lfa: defw [COMPILE]_nfa
+6BF3  LITERAL_cfa: defw 0x6306
+6BF5  LITERAL_pfa: 
+6BF5 defw STATE_cfa
+6BF7 defw @_cfa
+6BF9 defw 0BRANCH_cfa,0x0008; to 6C03 
+6BFD defw COMPILE_cfa,LIT_cfa
+6C01 defw ,_cfa
+6C03 defw ;S_cfa
+
+
+6BCB  [COMPILE]_nfa: defb 0x09+0x80+0x40,"[COMPILE","]"+0x80
+6BD5  [COMPILE]_lfa: defw CREATE_nfa
+6BD7  [COMPILE]_cfa: defw 0x6306
+6BD9  [COMPILE]_pfa: 
+6BD9 defw -FIND_cfa
+6BDB defw 0=_cfa
+6BDD defw 0_cfa
+6BDF defw ?ERROR_cfa
+6BE1 defw DROP_cfa
+6BE3 defw CFA_cfa
+6BE5 defw ,_cfa
+6BE7 defw ;S_cfa
+
+
+6B76  CREATE_nfa: defb 0x06+0x80,"CREAT","E"+0x80
+6B7D  CREATE_lfa: defw ID._nfa
+6B7F  CREATE_cfa: defw 0x6306
+6B81  CREATE_pfa: 
+6B81 defw -FIND_cfa
+6B83 defw 0BRANCH_cfa,0x0010; to 6B95 
+6B87 defw DROP_cfa
+6B89 defw NFA_cfa
+6B8B defw ID._cfa
+6B8D defw LIT_cfa,0x0004
+6B91 defw MESSAGE_cfa
+6B93 defw SPACE_cfa
+6B95 defw HERE_cfa
+6B97 defw DUP_cfa
+6B99 defw C@_cfa
+6B9B defw WIDTH_cfa
+6B9D defw @_cfa
+6B9F defw MIN_cfa
+6BA1 defw 1+_cfa
+6BA3 defw ALLOT_cfa
+6BA5 defw DUP_cfa
+6BA7 defw LIT_cfa,0x00A0
+6BAB defw TOGGLE_cfa
+6BAD defw HERE_cfa
+6BAF defw 1_cfa
+6BB1 defw -_cfa
+6BB3 defw LIT_cfa,0x0080
+6BB7 defw TOGGLE_cfa
+6BB9 defw LATEST_cfa
+6BBB defw ,_cfa
+6BBD defw CURRENT_cfa
+6BBF defw @_cfa
+6BC1 defw !_cfa
+6BC3 defw HERE_cfa
+6BC5 defw 2+_cfa
+6BC7 defw ,_cfa
+6BC9 defw ;S_cfa
+
+
+6B2C  ID._nfa: defb 0x03+0x80,"ID","."+0x80
+6B30  ID._lfa: defw ERROR_nfa
+6B32  ID._cfa: defw 0x6306
+6B34  ID._pfa: 
+6B34 defw PAD_cfa
+6B36 defw LIT_cfa,0x0020
+6B3A defw LIT_cfa,0x005F
+6B3E defw FILL_cfa
+6B40 defw DUP_cfa
+6B42 defw PFA_cfa
+6B44 defw LFA_cfa
+6B46 defw OVER_cfa
+6B48 defw -_cfa
+6B4A defw PAD_cfa
+6B4C defw SWAP_cfa
+6B4E defw CMOVE_cfa
+6B50 defw PAD_cfa
+6B52 defw COUNT_cfa
+6B54 defw LIT_cfa,0x001F
+6B58 defw AND_cfa
+6B5A defw 2DUP_cfa
+6B5C defw +_cfa
+6B5E defw 1_cfa
+6B60 defw -_cfa
+6B62 defw DUP_cfa
+6B64 defw @_cfa
+6B66 defw LIT_cfa,0xFF7F
+6B6A defw AND_cfa
+6B6C defw SWAP_cfa
+6B6E defw !_cfa
+6B70 defw TYPE_cfa
+6B72 defw SPACE_cfa
+6B74 defw ;S_cfa
+
+
+6AF5  ERROR_nfa: defb 0x05+0x80,"ERRO","R"+0x80
+6AFB  ERROR_lfa: defw (ABORT)_nfa
+6AFD  ERROR_cfa: defw 0x6306
+6AFF  ERROR_pfa: 
+6AFF defw WARNING_cfa
+6B01 defw @_cfa
+6B03 defw 0<_cfa
+6B05 defw 0BRANCH_cfa,0x0004; to 6B0B 
+6B09 defw (ABORT)_cfa
+6B0B defw HERE_cfa
+6B0D defw COUNT_cfa
+6B0F defw TYPE_cfa
+6B11 defw (.")_cfa
+6B13 defb 0x02,"? "
+6B16 defw MESSAGE_cfa
+6B18 defw SP!_cfa
+6B1A defw BLK_cfa
+6B1C defw @_cfa
+6B1E defw -DUP_cfa
+6B20 defw 0BRANCH_cfa,0x0008; to 6B2A 
+6B24 defw IN_cfa
+6B26 defw @_cfa
+6B28 defw SWAP_cfa
+6B2A defw QUIT_cfa
+
+
+6AE5  (ABORT)_nfa: defb 0x07+0x80,"(ABORT",")"+0x80
+6AED  (ABORT)_lfa: defw -FIND_nfa
+6AEF  (ABORT)_cfa: defw 0x6306
+6AF1  (ABORT)_pfa: 
+6AF1 defw ABORT_cfa
+6AF3 defw ;S_cfa
+
+
+6ABB  -FIND_nfa: defb 0x05+0x80,"-FIN","D"+0x80
+6AC1  -FIND_lfa: defw NUMBER_nfa
+6AC3  -FIND_cfa: defw 0x6306
+6AC5  -FIND_pfa: 
+6AC5 defw BL_cfa
+6AC7 defw UPPER-WORD_cfa
+6AC9 defw HERE_cfa
+6ACB defw CONTEXT_cfa
+6ACD defw @_cfa
+6ACF defw @_cfa
+6AD1 defw (FIND)_cfa
+6AD3 defw DUP_cfa
+6AD5 defw 0=_cfa
+6AD7 defw 0BRANCH_cfa,0x000A; to 6AE3 
+6ADB defw DROP_cfa
+6ADD defw HERE_cfa
+6ADF defw LATEST_cfa
+6AE1 defw (FIND)_cfa
+6AE3 defw ;S_cfa
+
+
+6A62  NUMBER_nfa: defb 0x06+0x80,"NUMBE","R"+0x80
+6A69  NUMBER_lfa: defw (NUMBER)_nfa
+6A6B  NUMBER_cfa: defw 0x6306
+6A6D  NUMBER_pfa: 
+6A6D defw 0_cfa
+6A6F defw 0_cfa
+6A71 defw ROT_cfa
+6A73 defw DUP_cfa
+6A75 defw 1+_cfa
+6A77 defw C@_cfa
+6A79 defw LIT_cfa,0x002D
+6A7D defw =_cfa
+6A7F defw DUP_cfa
+6A81 defw >R_cfa
+6A83 defw +_cfa
+6A85 defw LIT_cfa,0xFFFF
+6A89 defw DPL_cfa
+6A8B defw !_cfa
+6A8D defw (NUMBER)_cfa
+6A8F defw DUP_cfa
+6A91 defw C@_cfa
+6A93 defw BL_cfa
+6A95 defw -_cfa
+6A97 defw 0BRANCH_cfa,0x0016; to 6AAF 
+6A9B defw DUP_cfa
+6A9D defw C@_cfa
+6A9F defw LIT_cfa,0x002E
+6AA3 defw -_cfa
+6AA5 defw 0_cfa
+6AA7 defw ?ERROR_cfa
+6AA9 defw 0_cfa
+6AAB defw BRANCH_cfa,0xFFDC; to 6A89 
+6AAF defw DROP_cfa
+6AB1 defw R>_cfa
+6AB3 defw 0BRANCH_cfa,0x0004; to 6AB9 
+6AB7 defw DMINUS_cfa
+6AB9 defw ;S_cfa
+
+
+6A15  (NUMBER)_nfa: defb 0x08+0x80,"(NUMBER",")"+0x80
+6A1E  (NUMBER)_lfa: defw WORD_nfa
+6A20  (NUMBER)_cfa: defw 0x6306
+6A22  (NUMBER)_pfa: 
+6A22 defw 1+_cfa
+6A24 defw DUP_cfa
+6A26 defw >R_cfa
+6A28 defw C@_cfa
+6A2A defw BASE_cfa
+6A2C defw @_cfa
+6A2E defw DIGIT_cfa
+6A30 defw 0BRANCH_cfa,0x002C; to 6A5E 
+6A34 defw SWAP_cfa
+6A36 defw BASE_cfa
+6A38 defw @_cfa
+6A3A defw U*_cfa
+6A3C defw DROP_cfa
+6A3E defw ROT_cfa
+6A40 defw BASE_cfa
+6A42 defw @_cfa
+6A44 defw U*_cfa
+6A46 defw D+_cfa
+6A48 defw DPL_cfa
+6A4A defw @_cfa
+6A4C defw 1+_cfa
+6A4E defw 0BRANCH_cfa,0x0008; to 6A58 
+6A52 defw 1_cfa
+6A54 defw DPL_cfa
+6A56 defw +!_cfa
+6A58 defw R>_cfa
+6A5A defw BRANCH_cfa,0xFFC6; to 6A22 
+6A5E defw R>_cfa
+6A60 defw ;S_cfa
+
+
+69C8  WORD_nfa: defb 0x04+0x80,"WOR","D"+0x80
+69CD  WORD_lfa: defw PAD_nfa
+69CF  WORD_cfa: defw 0x6306
+69D1  WORD_pfa: 
+69D1 defw BLK_cfa
+69D3 defw @_cfa
+69D5 defw 0BRANCH_cfa,0x000C; to 69E3 
+69D9 defw BLK_cfa
+69DB defw @_cfa
+69DD defw BLOCK_cfa
+69DF defw BRANCH_cfa,0x0006; to 69E7 
+69E3 defw TIB_cfa
+69E5 defw @_cfa
+69E7 defw IN_cfa
+69E9 defw @_cfa
+69EB defw +_cfa
+69ED defw SWAP_cfa
+69EF defw ENCLOSE_cfa
+69F1 defw HERE_cfa
+69F3 defw LIT_cfa,0x0022
+69F7 defw BLANKS_cfa
+69F9 defw IN_cfa
+69FB defw +!_cfa
+69FD defw OVER_cfa
+69FF defw -_cfa
+6A01 defw >R_cfa
+6A03 defw R_cfa
+6A05 defw HERE_cfa
+6A07 defw C!_cfa
+6A09 defw +_cfa
+6A0B defw HERE_cfa
+6A0D defw 1+_cfa
+6A0F defw R>_cfa
+6A11 defw CMOVE_cfa
+6A13 defw ;S_cfa
+
+
+69B6  PAD_nfa: defb 0x03+0x80,"PA","D"+0x80
+69BA  PAD_lfa: defw HOLD_nfa
+69BC  PAD_cfa: defw 0x6306
+69BE  PAD_pfa: 
+69BE defw HERE_cfa
+69C0 defw LIT_cfa,0x0044
+69C4 defw +_cfa
+69C6 defw ;S_cfa
+
+
+699D  HOLD_nfa: defb 0x04+0x80,"HOL","D"+0x80
+69A2  HOLD_lfa: defw BLANKS_nfa
+69A4  HOLD_cfa: defw 0x6306
+69A6  HOLD_pfa: 
+69A6 defw LIT_cfa,0xFFFF
+69AA defw HLD_cfa
+69AC defw +!_cfa
+69AE defw HLD_cfa
+69B0 defw @_cfa
+69B2 defw C!_cfa
+69B4 defw ;S_cfa
+
+
+698C  BLANKS_nfa: defb 0x06+0x80,"BLANK","S"+0x80
+6993  BLANKS_lfa: defw ERASE_nfa
+6995  BLANKS_cfa: defw 0x6306
+6997  BLANKS_pfa: 
+6997 defw BL_cfa
+6999 defw FILL_cfa
+699B defw ;S_cfa
+
+
+697C  ERASE_nfa: defb 0x05+0x80,"ERAS","E"+0x80
+6982  ERASE_lfa: defw FILL_nfa
+6984  ERASE_cfa: defw 0x6306
+6986  ERASE_pfa: 
+6986 defw 0_cfa
+6988 defw FILL_cfa
+698A defw ;S_cfa
+
+
+695F  FILL_nfa: defb 0x04+0x80,"FIL","L"+0x80
+6964  FILL_lfa: defw _nfa
+6966  FILL_cfa: defw FILL_nfa
+6968  FILL_pfa: ; Word type not implemented.
+
+
+6923  _nfa: defb 0x01+0x80+0x40,"",""+0x80
+6925  _lfa: defw QUERY_nfa
+6927  _cfa: defw 0x6306
+6929  _pfa: 
+6929 defw BLK_cfa
+692B defw @_cfa
+692D defw 0BRANCH_cfa,0x002A; to 6959 
+6931 defw 1_cfa
+6933 defw BLK_cfa
+6935 defw +!_cfa
+6937 defw 0_cfa
+6939 defw IN_cfa
+693B defw !_cfa
+693D defw BLK_cfa
+693F defw @_cfa
+6941 defw B/SCR_cfa
+6943 defw 1_cfa
+6945 defw -_cfa
+6947 defw AND_cfa
+6949 defw 0=_cfa
+694B defw 0BRANCH_cfa,0x0008; to 6955 
+694F defw ?EXEC_cfa
+6951 defw R>_cfa
+6953 defw DROP_cfa
+6955 defw BRANCH_cfa,0x0006; to 695D 
+6959 defw R>_cfa
+695B defw DROP_cfa
+695D defw ;S_cfa
+
+
+6907  QUERY_nfa: defb 0x05+0x80,"QUER","Y"+0x80
+690D  QUERY_lfa: defw EXPECT_nfa
+690F  QUERY_cfa: defw 0x6306
+6911  QUERY_pfa: 
+6911 defw TIB_cfa
+6913 defw @_cfa
+6915 defw LIT_cfa,0x0050
+6919 defw EXPECT_cfa
+691B defw 0_cfa
+691D defw IN_cfa
+691F defw !_cfa
+6921 defw ;S_cfa
+
+
+688A  EXPECT_nfa: defb 0x06+0x80,"EXPEC","T"+0x80
+6891  EXPECT_lfa: defw ."_nfa
+6893  EXPECT_cfa: defw 0x6306
+6895  EXPECT_pfa: 
+6895 defw OVER_cfa
+6897 defw +_cfa
+6899 defw OVER_cfa
+689B defw (DO)_cfa
+689D defw KEY_cfa
+689F defw DUP_cfa
+68A1 defw LIT_cfa,0x000E
+68A5 defw +ORIGIN_cfa
+68A7 defw @_cfa
+68A9 defw =_cfa
+68AB defw 0BRANCH_cfa,0x002A; to 68D7 
+68AF defw DROP_cfa
+68B1 defw DUP_cfa
+68B3 defw I_cfa
+68B5 defw =_cfa
+68B7 defw DUP_cfa
+68B9 defw R>_cfa
+68BB defw 2_cfa
+68BD defw -_cfa
+68BF defw +_cfa
+68C1 defw >R_cfa
+68C3 defw 0BRANCH_cfa,0x000A; to 68CF 
+68C7 defw NOOP_cfa
+68C9 defw NOOP_cfa
+68CB defw BRANCH_cfa,0x0032; to 68FF 
+68CF defw LIT_cfa,0x0008
+68D3 defw BRANCH_cfa,0x0028; to 68FD 
+68D7 defw DUP_cfa
+68D9 defw LIT_cfa,0x000D
+68DD defw =_cfa
+68DF defw 0BRANCH_cfa,0x000E; to 68EF 
+68E3 defw LEAVE_cfa
+68E5 defw DROP_cfa
+68E7 defw BL_cfa
+68E9 defw 0_cfa
+68EB defw BRANCH_cfa,0x0004; to 68F1 
+68EF defw DUP_cfa
+68F1 defw I_cfa
+68F3 defw C!_cfa
+68F5 defw 0_cfa
+68F7 defw I_cfa
+68F9 defw 1+_cfa
+68FB defw !_cfa
+68FD defw EMIT_cfa
+68FF defw (LOOP)_cfa,0xFF9C; to 689D 
+6903 defw DROP_cfa
+6905 defw ;S_cfa
+
+
+685B  ."_nfa: defb 0x02+0x80+0x40,".","""+0x80
+685E  ."_lfa: defw (.")_nfa
+6860  ."_cfa: defw 0x6306
+6862  ."_pfa: 
+6862 defw LIT_cfa,0x0022
+6866 defw STATE_cfa
+6868 defw @_cfa
+686A defw 0BRANCH_cfa,0x0014; to 6880 
+686E defw COMPILE_cfa,(.")_cfa
+6872 defw WORD_cfa
+6874 defw HERE_cfa
+6876 defw C@_cfa
+6878 defw 1+_cfa
+687A defw ALLOT_cfa
+687C defw BRANCH_cfa,0x000A; to 6888 
+6880 defw WORD_cfa
+6882 defw HERE_cfa
+6884 defw COUNT_cfa
+6886 defw TYPE_cfa
+6888 defw ;S_cfa
+
+
+6840  (.")_nfa: defb 0x04+0x80,"(."",")"+0x80
+6845  (.")_lfa: defw -TRAILING_nfa
+6847  (.")_cfa: defw 0x6306
+6849  (.")_pfa: 
+6849 defw R_cfa
+684B defw COUNT_cfa
+684D defw DUP_cfa
+684F defw 1+_cfa
+6851 defw R>_cfa
+6853 defw +_cfa
+6855 defw >R_cfa
+6857 defw TYPE_cfa
+6859 defw ;S_cfa
+
+
+6808  -TRAILING_nfa: defb 0x09+0x80,"-TRAILIN","G"+0x80
+6812  -TRAILING_lfa: defw TYPE_nfa
+6814  -TRAILING_cfa: defw 0x6306
+6816  -TRAILING_pfa: 
+6816 defw DUP_cfa
+6818 defw 0_cfa
+681A defw (DO)_cfa
+681C defw OVER_cfa
+681E defw OVER_cfa
+6820 defw +_cfa
+6822 defw 1_cfa
+6824 defw -_cfa
+6826 defw C@_cfa
+6828 defw BL_cfa
+682A defw -_cfa
+682C defw 0BRANCH_cfa,0x0008; to 6836 
+6830 defw LEAVE_cfa
+6832 defw BRANCH_cfa,0x0006; to 683A 
+6836 defw 1_cfa
+6838 defw -_cfa
+683A defw (LOOP)_cfa,0xFFE0; to 681C 
+683E defw ;S_cfa
+
+
+67DF  TYPE_nfa: defb 0x04+0x80,"TYP","E"+0x80
+67E4  TYPE_lfa: defw COUNT_nfa
+67E6  TYPE_cfa: defw 0x6306
+67E8  TYPE_pfa: 
+67E8 defw -DUP_cfa
+67EA defw 0BRANCH_cfa,0x0018; to 6804 
+67EE defw OVER_cfa
+67F0 defw +_cfa
+67F2 defw SWAP_cfa
+67F4 defw (DO)_cfa
+67F6 defw I_cfa
+67F8 defw C@_cfa
+67FA defw EMIT_cfa
+67FC defw (LOOP)_cfa,0xFFF8; to 67F6 
+6800 defw BRANCH_cfa,0x0004; to 6806 
+6804 defw DROP_cfa
+6806 defw ;S_cfa
+
+
+67CB  COUNT_nfa: defb 0x05+0x80,"COUN","T"+0x80
+67D1  COUNT_lfa: defw DOES>_nfa
+67D3  COUNT_cfa: defw 0x6306
+67D5  COUNT_pfa: 
+67D5 defw DUP_cfa
+67D7 defw 1+_cfa
+67D9 defw SWAP_cfa
+67DB defw C@_cfa
+67DD defw ;S_cfa
+
+
+67A4  DOES>_nfa: defb 0x05+0x80,"DOES",">"+0x80
+67AA  DOES>_lfa: defw <BUILDS_nfa
+67AC  DOES>_cfa: defw 0x6306
+67AE  DOES>_pfa: 
+67AE defw R>_cfa
+67B0 defw LATEST_cfa
+67B2 defw PFA_cfa
+67B4 defw !_cfa
+67B6 defw (;CODE)_cfa
+
+
+6792  <BUILDS_nfa: defb 0x07+0x80,"<BUILD","S"+0x80
+679A  <BUILDS_lfa: defw ;CODE_nfa
+679C  <BUILDS_cfa: defw 0x6306
+679E  <BUILDS_pfa: 
+679E defw 0_cfa
+67A0 defw CONSTANT_cfa
+67A2 defw ;S_cfa
+
+
+677C  ;CODE_nfa: defb 0x05+0x80+0x40,";COD","E"+0x80
+6782  ;CODE_lfa: defw (;CODE)_nfa
+6784  ;CODE_cfa: defw 0x6306
+6786  ;CODE_pfa: 
+6786 defw ?CSP_cfa
+6788 defw COMPILE_cfa,(;CODE)_cfa
+678C defw [_cfa
+678E defw SMUDGE_cfa
+6790 defw ;S_cfa
+
+
+6764  (;CODE)_nfa: defb 0x07+0x80,"(;CODE",")"+0x80
+676C  (;CODE)_lfa: defw DECIMAL_nfa
+676E  (;CODE)_cfa: defw 0x6306
+6770  (;CODE)_pfa: 
+6770 defw R>_cfa
+6772 defw LATEST_cfa
+6774 defw PFA_cfa
+6776 defw CFA_cfa
+6778 defw !_cfa
+677A defw ;S_cfa
+
+
+674E  DECIMAL_nfa: defb 0x07+0x80,"DECIMA","L"+0x80
+6756  DECIMAL_lfa: defw HEX_nfa
+6758  DECIMAL_cfa: defw 0x6306
+675A  DECIMAL_pfa: 
+675A defw LIT_cfa,0x000A
+675E defw BASE_cfa
+6760 defw !_cfa
+6762 defw ;S_cfa
+
+
+673C  HEX_nfa: defb 0x03+0x80,"HE","X"+0x80
+6740  HEX_lfa: defw SMUDGE_nfa
+6742  HEX_cfa: defw 0x6306
+6744  HEX_pfa: 
+6744 defw LIT_cfa,0x0010
+6748 defw BASE_cfa
+674A defw !_cfa
+674C defw ;S_cfa
+
+
+6727  SMUDGE_nfa: defb 0x06+0x80,"SMUDG","E"+0x80
+672E  SMUDGE_lfa: defw ]_nfa
+6730  SMUDGE_cfa: defw 0x6306
+6732  SMUDGE_pfa: 
+6732 defw LATEST_cfa
+6734 defw LIT_cfa,0x0020
+6738 defw TOGGLE_cfa
+673A defw ;S_cfa
+
+
+6717  ]_nfa: defb 0x01+0x80,"","]"+0x80
+6719  ]_lfa: defw [_nfa
+671B  ]_cfa: defw 0x6306
+671D  ]_pfa: 
+671D defw LIT_cfa,0x00C0
+6721 defw STATE_cfa
+6723 defw !_cfa
+6725 defw ;S_cfa
+
+
+6709  [_nfa: defb 0x01+0x80+0x40,"","["+0x80
+670B  [_lfa: defw COMPILE_nfa
+670D  [_cfa: defw 0x6306
+670F  [_pfa: 
+670F defw 0_cfa
+6711 defw STATE_cfa
+6713 defw !_cfa
+6715 defw ;S_cfa
+
+
+66ED  COMPILE_nfa: defb 0x07+0x80,"COMPIL","E"+0x80
+66F5  COMPILE_lfa: defw ?LOADING_nfa
+66F7  COMPILE_cfa: defw 0x6306
+66F9  COMPILE_pfa: 
+66F9 defw ?COMP_cfa
+66FB defw R>_cfa
+66FD defw DUP_cfa
+66FF defw 2+_cfa
+6701 defw >R_cfa
+6703 defw @_cfa
+6705 defw ,_cfa
+6707 defw ;S_cfa
+
+
+66D2  ?LOADING_nfa: defb 0x08+0x80,"?LOADIN","G"+0x80
+66DB  ?LOADING_lfa: defw ?CSP_nfa
+66DD  ?LOADING_cfa: defw 0x6306
+66DF  ?LOADING_pfa: 
+66DF defw BLK_cfa
+66E1 defw @_cfa
+66E3 defw 0=_cfa
+66E5 defw LIT_cfa,0x0016
+66E9 defw ?ERROR_cfa
+66EB defw ;S_cfa
+
+
+66B9  ?CSP_nfa: defb 0x04+0x80,"?CS","P"+0x80
+66BE  ?CSP_lfa: defw ?PAIRS_nfa
+66C0  ?CSP_cfa: defw 0x6306
+66C2  ?CSP_pfa: 
+66C2 defw SP@_cfa
+66C4 defw CSP_cfa
+66C6 defw @_cfa
+66C8 defw -_cfa
+66CA defw LIT_cfa,0x0014
+66CE defw ?ERROR_cfa
+66D0 defw ;S_cfa
+
+
+66A4  ?PAIRS_nfa: defb 0x06+0x80,"?PAIR","S"+0x80
+66AB  ?PAIRS_lfa: defw ?EXEC_nfa
+66AD  ?PAIRS_cfa: defw 0x6306
+66AF  ?PAIRS_pfa: 
+66AF defw -_cfa
+66B1 defw LIT_cfa,0x0013
+66B5 defw ?ERROR_cfa
+66B7 defw ;S_cfa
+
+
+668E  ?EXEC_nfa: defb 0x05+0x80,"?EXE","C"+0x80
+6694  ?EXEC_lfa: defw ?COMP_nfa
+6696  ?EXEC_cfa: defw 0x6306
+6698  ?EXEC_pfa: 
+6698 defw STATE_cfa
+669A defw @_cfa
+669C defw LIT_cfa,0x0012
+66A0 defw ?ERROR_cfa
+66A2 defw ;S_cfa
+
+
+6676  ?COMP_nfa: defb 0x05+0x80,"?COM","P"+0x80
+667C  ?COMP_lfa: defw ?ERROR_nfa
+667E  ?COMP_cfa: defw 0x6306
+6680  ?COMP_pfa: 
+6680 defw STATE_cfa
+6682 defw @_cfa
+6684 defw 0=_cfa
+6686 defw LIT_cfa,0x0011
+668A defw ?ERROR_cfa
+668C defw ;S_cfa
+
+
+665B  ?ERROR_nfa: defb 0x06+0x80,"?ERRO","R"+0x80
+6662  ?ERROR_lfa: defw !CSP_nfa
+6664  ?ERROR_cfa: defw 0x6306
+6666  ?ERROR_pfa: 
+6666 defw SWAP_cfa
+6668 defw 0BRANCH_cfa,0x0008; to 6672 
+666C defw ERROR_cfa
+666E defw BRANCH_cfa,0x0004; to 6674 
+6672 defw DROP_cfa
+6674 defw ;S_cfa
+
+
+664A  !CSP_nfa: defb 0x04+0x80,"!CS","P"+0x80
+664F  !CSP_lfa: defw PFA_nfa
+6651  !CSP_cfa: defw 0x6306
+6653  !CSP_pfa: 
+6653 defw SP@_cfa
+6655 defw CSP_cfa
+6657 defw !_cfa
+6659 defw ;S_cfa
+
+
+6636  PFA_nfa: defb 0x03+0x80,"PF","A"+0x80
+663A  PFA_lfa: defw NFA_nfa
+663C  PFA_cfa: defw 0x6306
+663E  PFA_pfa: 
+663E defw 1_cfa
+6640 defw TRAVERSE_cfa
+6642 defw LIT_cfa,0x0005
+6646 defw +_cfa
+6648 defw ;S_cfa
+
+
+6620  NFA_nfa: defb 0x03+0x80,"NF","A"+0x80
+6624  NFA_lfa: defw CFA_nfa
+6626  NFA_cfa: defw 0x6306
+6628  NFA_pfa: 
+6628 defw LIT_cfa,0x0005
+662C defw -_cfa
+662E defw LIT_cfa,0xFFFF
+6632 defw TRAVERSE_cfa
+6634 defw ;S_cfa
+
+
+6612  CFA_nfa: defb 0x03+0x80,"CF","A"+0x80
+6616  CFA_lfa: defw LFA_nfa
+6618  CFA_cfa: defw 0x8405
+661A  CFA_pfa: ; Word type not implemented.
+
+
+6602  LFA_nfa: defb 0x03+0x80,"LF","A"+0x80
+6606  LFA_lfa: defw LATEST_nfa
+6608  LFA_cfa: defw 0x6306
+660A  LFA_pfa: 
+660A defw LIT_cfa,0x0004
+660E defw -_cfa
+6610 defw ;S_cfa
+
+
+65EF  LATEST_nfa: defb 0x06+0x80,"LATES","T"+0x80
+65F6  LATEST_lfa: defw TRAVERSE_nfa
+65F8  LATEST_cfa: defw 0x6306
+65FA  LATEST_pfa: 
+65FA defw CURRENT_cfa
+65FC defw @_cfa
+65FE defw @_cfa
+6600 defw ;S_cfa
+
+
+65C8  TRAVERSE_nfa: defb 0x08+0x80,"TRAVERS","E"+0x80
+65D1  TRAVERSE_lfa: defw -DUP_nfa
+65D3  TRAVERSE_cfa: defw 0x6306
+65D5  TRAVERSE_pfa: 
+65D5 defw SWAP_cfa
+65D7 defw OVER_cfa
+65D9 defw +_cfa
+65DB defw LIT_cfa,0x007F
+65DF defw OVER_cfa
+65E1 defw C@_cfa
+65E3 defw <_cfa
+65E5 defw 0BRANCH_cfa,0xFFF0; to 65D7 
+65E9 defw SWAP_cfa
+65EB defw DROP_cfa
+65ED defw ;S_cfa
+
+
+65B5  -DUP_nfa: defb 0x04+0x80,"-DU","P"+0x80
+65BA  -DUP_lfa: defw SPACE_nfa
+65BC  -DUP_cfa: defw 0x6306
+65BE  -DUP_pfa: 
+65BE defw DUP_cfa
+65C0 defw 0BRANCH_cfa,0x0004; to 65C6 
+65C4 defw DUP_cfa
+65C6 defw ;S_cfa
+
+
+65A5  SPACE_nfa: defb 0x05+0x80,"SPAC","E"+0x80
+65AB  SPACE_lfa: defw ROT_nfa
+65AD  SPACE_cfa: defw 0x6306
+65AF  SPACE_pfa: 
+65AF defw BL_cfa
+65B1 defw EMIT_cfa
+65B3 defw ;S_cfa
+
+
+6597  ROT_nfa: defb 0x03+0x80,"RO","T"+0x80
+659B  ROT_lfa: defw >_nfa
+659D  ROT_cfa: defw ROT_nfa
+659F  ROT_pfa: ; Word type not implemented.
+
+
+658B  >_nfa: defb 0x01+0x80,"",">"+0x80
+658D  >_lfa: defw U<_nfa
+658F  >_cfa: defw 0x6306
+6591  >_pfa: 
+6591 defw SWAP_cfa
+6593 defw <_cfa
+6595 defw ;S_cfa
+
+
+656A  U<_nfa: defb 0x02+0x80,"U","<"+0x80
+656D  U<_lfa: defw <_nfa
+656F  U<_cfa: defw 0x6306
+6571  U<_pfa: 
+6571 defw 2DUP_cfa
+6573 defw XOR_cfa
+6575 defw 0<_cfa
+6577 defw 0BRANCH_cfa,0x000C; to 6585 
+657B defw DROP_cfa
+657D defw 0<_cfa
+657F defw 0=_cfa
+6581 defw BRANCH_cfa,0x0006; to 6589 
+6585 defw -_cfa
+6587 defw 0<_cfa
+6589 defw ;S_cfa
+
+
+6549  <_nfa: defb 0x01+0x80,"","<"+0x80
+654B  <_lfa: defw =_nfa
+654D  <_cfa: defw <_nfa
+654F  <_pfa: ; Word type not implemented.
+
+
+653D  =_nfa: defb 0x01+0x80,"","="+0x80
+653F  =_lfa: defw -_nfa
+6541  =_cfa: defw 0x6306
+6543  =_pfa: 
+6543 defw -_cfa
+6545 defw 0=_cfa
+6547 defw ;S_cfa
+
+
+652F  -_nfa: defb 0x01+0x80,"","-"+0x80
+6531  -_lfa: defw C,_nfa
+6533  -_cfa: defw -_nfa
+6535  -_pfa: ; Word type not implemented.
+
+
+651E  C,_nfa: defb 0x02+0x80,"C",","+0x80
+6521  C,_lfa: defw ,_nfa
+6523  C,_cfa: defw 0x6306
+6525  C,_pfa: 
+6525 defw HERE_cfa
+6527 defw C!_cfa
+6529 defw 1_cfa
+652B defw ALLOT_cfa
+652D defw ;S_cfa
+
+
+650E  ,_nfa: defb 0x01+0x80,"",","+0x80
+6510  ,_lfa: defw ALLOT_nfa
+6512  ,_cfa: defw 0x6306
+6514  ,_pfa: 
+6514 defw HERE_cfa
+6516 defw !_cfa
+6518 defw 2_cfa
+651A defw ALLOT_cfa
+651C defw ;S_cfa
+
+
+64FE  ALLOT_nfa: defb 0x05+0x80,"ALLO","T"+0x80
+6504  ALLOT_lfa: defw HERE_nfa
+6506  ALLOT_cfa: defw 0x6306
+6508  ALLOT_pfa: 
+6508 defw DP_cfa
+650A defw +!_cfa
+650C defw ;S_cfa
+
+
+64EF  HERE_nfa: defb 0x04+0x80,"HER","E"+0x80
+64F4  HERE_lfa: defw 2+_nfa
+64F6  HERE_cfa: defw 0x6306
+64F8  HERE_pfa: 
+64F8 defw DP_cfa
+64FA defw @_cfa
+64FC defw ;S_cfa
+
+
+64E2  2+_nfa: defb 0x02+0x80,"2","+"+0x80
+64E5  2+_lfa: defw 1+_nfa
+64E7  2+_cfa: defw 2+_nfa
+64E9  2+_pfa: ; Word type not implemented.
+
+
+64D5  1+_nfa: defb 0x02+0x80,"1","+"+0x80
+64D8  1+_lfa: defw HLD_nfa
+64DA  1+_cfa: defw 1+_nfa
+64DC  1+_pfa: ; Word type not implemented.
+
+
+64CC  HLD_nfa: defb 0x03+0x80,"HL","D"+0x80
+64D0  HLD_lfa: defw R#_nfa
+64D2  HLD_cfa: defw 0x6374
+64D4  HLD_pfa: 
+64D4 defw 0x8230
+
+
+64C4  R#_nfa: defb 0x02+0x80,"R","#"+0x80
+64C7  R#_lfa: defw CSP_nfa
+64C9  R#_cfa: defw 0x6374
+64CB  R#_pfa: 
+64CB defw 0x832E
+
+
+64BB  CSP_nfa: defb 0x03+0x80,"CS","P"+0x80
+64BF  CSP_lfa: defw FLD_nfa
+64C1  CSP_cfa: defw 0x6374
+64C3  CSP_pfa: 
+64C3 defw 0x822C
+
+
+64B2  FLD_nfa: defb 0x03+0x80,"FL","D"+0x80
+64B6  FLD_lfa: defw DPL_nfa
+64B8  FLD_cfa: defw 0x6374
+64BA  FLD_pfa: 
+64BA defw 0x832A
+
+
+64A9  DPL_nfa: defb 0x03+0x80,"DP","L"+0x80
+64AD  DPL_lfa: defw BASE_nfa
+64AF  DPL_cfa: defw 0x6374
+64B1  DPL_pfa: 
+64B1 defw 0x8328
+
+
+649F  BASE_nfa: defb 0x04+0x80,"BAS","E"+0x80
+64A4  BASE_lfa: defw STATE_nfa
+64A6  BASE_cfa: defw 0x6374
+64A8  BASE_pfa: 
+64A8 defw 0x8326
+
+
+6494  STATE_nfa: defb 0x05+0x80,"STAT","E"+0x80
+649A  STATE_lfa: defw CURRENT_nfa
+649C  STATE_cfa: defw 0x6374
+649E  STATE_pfa: 
+649E defw 0x8424
+
+
+6487  CURRENT_nfa: defb 0x07+0x80,"CURREN","T"+0x80
+648F  CURRENT_lfa: defw CONTEXT_nfa
+6491  CURRENT_cfa: defw 0x6374
+6493  CURRENT_pfa: 
+6493 defw 0x8522
+
+
+647A  CONTEXT_nfa: defb 0x07+0x80,"CONTEX","T"+0x80
+6482  CONTEXT_lfa: defw OFFSET_nfa
+6484  CONTEXT_cfa: defw 0x6374
+6486  CONTEXT_pfa: 
+6486 defw 0x8720
+
+
+646E  OFFSET_nfa: defb 0x06+0x80,"OFFSE","T"+0x80
+6475  OFFSET_lfa: defw SCR_nfa
+6477  OFFSET_cfa: defw 0x6374
+6479  OFFSET_pfa: 
+6479 defw 0x871E
+
+
+6465  SCR_nfa: defb 0x03+0x80,"SC","R"+0x80
+6469  SCR_lfa: defw OUT_nfa
+646B  SCR_cfa: defw 0x6374
+646D  SCR_pfa: 
+646D defw 0x861C
+
+
+645C  OUT_nfa: defb 0x03+0x80,"OU","T"+0x80
+6460  OUT_lfa: defw IN_nfa
+6462  OUT_cfa: defw 0x6374
+6464  OUT_pfa: 
+6464 defw 0x831A
+
+
+6454  IN_nfa: defb 0x02+0x80,"I","N"+0x80
+6457  IN_lfa: defw BLK_nfa
+6459  IN_cfa: defw 0x6374
+645B  IN_pfa: 
+645B defw 0x8318
+
+
+644B  BLK_nfa: defb 0x03+0x80,"BL","K"+0x80
+644F  BLK_lfa: defw VOC-LINK_nfa
+6451  BLK_cfa: defw 0x6374
+6453  BLK_pfa: 
+6453 defw 0x8216
+
+
+643D  VOC-LINK_nfa: defb 0x08+0x80,"VOC-LIN","K"+0x80
+6446  VOC-LINK_lfa: defw DP_nfa
+6448  VOC-LINK_cfa: defw 0x6374
+644A  VOC-LINK_pfa: 
+644A defw 0x8314
+
+
+6435  DP_nfa: defb 0x02+0x80,"D","P"+0x80
+6438  DP_lfa: defw FENCE_nfa
+643A  DP_cfa: defw 0x6374
+643C  DP_pfa: 
+643C defw 0x8812
+
+
+642A  FENCE_nfa: defb 0x05+0x80,"FENC","E"+0x80
+6430  FENCE_lfa: defw WARNING_nfa
+6432  FENCE_cfa: defw 0x6374
+6434  FENCE_pfa: 
+6434 defw 0x8210
+
+
+641D  WARNING_nfa: defb 0x07+0x80,"WARNIN","G"+0x80
+6425  WARNING_lfa: defw WIDTH_nfa
+6427  WARNING_cfa: defw 0x6374
+6429  WARNING_pfa: 
+6429 defw 0x850E
+
+
+6412  WIDTH_nfa: defb 0x05+0x80,"WIDT","H"+0x80
+6418  WIDTH_lfa: defw TIB_nfa
+641A  WIDTH_cfa: defw 0x6374
+641C  WIDTH_pfa: 
+641C defw 0x870C
+
+
+6409  TIB_nfa: defb 0x03+0x80,"TI","B"+0x80
+640D  TIB_lfa: defw R0_nfa
+640F  TIB_cfa: defw 0x6374
+6411  TIB_pfa: 
+6411 defw 0x850A
+
+
+6400  R0_nfa: defb 0x02+0x80,"R","0"+0x80
+6403  R0_lfa: defw S0_nfa
+6405  R0_cfa: defw 0x6374
+6407  R0_pfa: 
+6407 defw 0x0008
+
+
+63F7  S0_nfa: defb 0x02+0x80,"S","0"+0x80
+63FA  S0_lfa: defw +ORIGIN_nfa
+63FC  S0_cfa: defw 0x6374
+63FE  S0_pfa: 
+63FE defw 0x0006
+
+
+63E3  +ORIGIN_nfa: defb 0x07+0x80,"+ORIGI","N"+0x80
+63EB  +ORIGIN_lfa: defw B/SCR_nfa
+63ED  +ORIGIN_cfa: defw 0x6306
+63EF  +ORIGIN_pfa: 
+63EF defw LIT_cfa,0x5E40
+63F3 defw +_cfa
+63F5 defw ;S_cfa
+
+
+63D7  B/SCR_nfa: defb 0x05+0x80,"B/SC","R"+0x80
+63DD  B/SCR_lfa: defw B/BUF_nfa
+63DF  B/SCR_cfa: defw 0x6348
+63E1  B/SCR_pfa: 
+63E1 defw 0x0008
+
+
+63CB  B/BUF_nfa: defb 0x05+0x80,"B/BU","F"+0x80
+63D1  B/BUF_lfa: defw LIMIT_nfa
+63D3  B/BUF_cfa: defw 0x6348
+63D5  B/BUF_pfa: 
+63D5 defw 0x0080
+
+
+63BF  LIMIT_nfa: defb 0x05+0x80,"LIMI","T"+0x80
+63C5  LIMIT_lfa: defw FIRST_nfa
+63C7  LIMIT_cfa: defw 0x6348
+63C9  LIMIT_pfa: 
+63C9 defw 0x8AEE
+
+
+63B3  FIRST_nfa: defb 0x05+0x80,"FIRS","T"+0x80
+63B9  FIRST_lfa: defw C/L_nfa
+63BB  FIRST_cfa: defw 0x6348
+63BD  FIRST_pfa: 
+63BD defw 0x86CE
+
+
+63A9  C/L_nfa: defb 0x03+0x80,"C/","L"+0x80
+63AD  C/L_lfa: defw BL_nfa
+63AF  C/L_cfa: defw 0x6348
+63B1  C/L_pfa: 
+63B1 defw 0x0040
+
+
+63A0  BL_nfa: defb 0x02+0x80,"B","L"+0x80
+63A3  BL_lfa: defw 3_nfa
+63A5  BL_cfa: defw 0x6348
+63A7  BL_pfa: 
+63A7 defw 0x0020
+
+
+6398  3_nfa: defb 0x01+0x80,"","3"+0x80
+639A  3_lfa: defw 2_nfa
+639C  3_cfa: defw 0x6348
+639E  3_pfa: 
+639E defw 0x0003
+
+
+6390  2_nfa: defb 0x01+0x80,"","2"+0x80
+6392  2_lfa: defw 1_nfa
+6394  2_cfa: defw 0x6348
+6396  2_pfa: 
+6396 defw 0x0002
+
+
+6388  1_nfa: defb 0x01+0x80,"","1"+0x80
+638A  1_lfa: defw 0_nfa
+638C  1_cfa: defw 0x6348
+638E  1_pfa: 
+638E defw 0x0001
+
+
+6380  0_nfa: defb 0x01+0x80,"","0"+0x80
+6382  0_lfa: defw USER_nfa
+6384  0_cfa: defw 0x6348
+6386  0_pfa: 
+6386 defw 0x0000
+
+
+6367  USER_nfa: defb 0x04+0x80,"USE","R"+0x80
+636C  USER_lfa: defw VARIABLE_nfa
+636E  USER_cfa: defw 0x6306
+6370  USER_pfa: 
+6370 defw CONSTANT_cfa
+6372 defw (;CODE)_cfa
+
+
+6351  VARIABLE_nfa: defb 0x08+0x80,"VARIABL","E"+0x80
+635A  VARIABLE_lfa: defw CONSTANT_nfa
+635C  VARIABLE_cfa: defw 0x6306
+635E  VARIABLE_pfa: 
+635E defw CONSTANT_cfa
+6360 defw (;CODE)_cfa
+
+
+6333  CONSTANT_nfa: defb 0x08+0x80,"CONSTAN","T"+0x80
+633C  CONSTANT_lfa: defw NOOP_nfa
+633E  CONSTANT_cfa: defw 0x6306
+6340  CONSTANT_pfa: 
+6340 defw CREATE_cfa
+6342 defw SMUDGE_cfa
+6344 defw ,_cfa
+6346 defw (;CODE)_cfa
+
+
+6328  NOOP_nfa: defb 0x04+0x80,"NOO","P"+0x80
+632D  NOOP_lfa: defw ;_nfa
+632F  NOOP_cfa: defw 0x6306
+6331  NOOP_pfa: 
+6331 defw ;S_cfa
+
+
+6316  ;_nfa: defb 0x01+0x80+0x40,"",";"+0x80
+6318  ;_lfa: defw :_nfa
+631A  ;_cfa: defw 0x6306
+631C  ;_pfa: 
+631C defw ?CSP_cfa
+631E defw COMPILE_cfa,;S_cfa
+6322 defw SMUDGE_cfa
+6324 defw [_cfa
+6326 defw ;S_cfa
+
+
+62EE  :_nfa: defb 0x01+0x80+0x40,"",":"+0x80
+62F0  :_lfa: defw 2!_nfa
+62F2  :_cfa: defw 0x6306
+62F4  :_pfa: 
+62F4 defw ?EXEC_cfa
+62F6 defw !CSP_cfa
+62F8 defw CURRENT_cfa
+62FA defw @_cfa
+62FC defw CONTEXT_cfa
+62FE defw !_cfa
+6300 defw CREATE_cfa
+6302 defw ]_cfa
+6304 defw (;CODE)_cfa
+
+
+62DA  2!_nfa: defb 0x02+0x80,"2","!"+0x80
+62DD  2!_lfa: defw C!_nfa
+62DF  2!_cfa: defw 2!_nfa
+62E1  2!_pfa: ; Word type not implemented.
+
+
+62CD  C!_nfa: defb 0x02+0x80,"C","!"+0x80
+62D0  C!_lfa: defw !_nfa
+62D2  C!_cfa: defw C!_nfa
+62D4  C!_pfa: ; Word type not implemented.
+
+
+62BF  !_nfa: defb 0x01+0x80,"","!"+0x80
+62C1  !_lfa: defw 2@_nfa
+62C3  !_cfa: defw !_nfa
+62C5  !_pfa: ; Word type not implemented.
+
+
+62A8  2@_nfa: defb 0x02+0x80,"2","@"+0x80
+62AB  2@_lfa: defw C@_nfa
+62AD  2@_cfa: defw 2@_nfa
+62AF  2@_pfa: ; Word type not implemented.
+
+
+629A  C@_nfa: defb 0x02+0x80,"C","@"+0x80
+629D  C@_lfa: defw @_nfa
+629F  C@_cfa: defw C@_nfa
+62A1  C@_pfa: ; Word type not implemented.
+
+
+628C  @_nfa: defb 0x01+0x80,"","@"+0x80
+628E  @_lfa: defw TOGGLE_nfa
+6290  @_cfa: defw @_nfa
+6292  @_pfa: ; Word type not implemented.
+
+
+6279  TOGGLE_nfa: defb 0x06+0x80,"TOGGL","E"+0x80
+6280  TOGGLE_lfa: defw +!_nfa
+6282  TOGGLE_cfa: defw TOGGLE_nfa
+6284  TOGGLE_pfa: ; Word type not implemented.
+
+
+6266  +!_nfa: defb 0x02+0x80,"+","!"+0x80
+6269  +!_lfa: defw 2DUP_nfa
+626B  +!_cfa: defw +!_nfa
+626D  +!_pfa: ; Word type not implemented.
+
+
+6256  2DUP_nfa: defb 0x04+0x80,"2DU","P"+0x80
+625B  2DUP_lfa: defw DUP_nfa
+625D  2DUP_cfa: defw 2DUP_nfa
+625F  2DUP_pfa: ; Word type not implemented.
+
+
+6249  DUP_nfa: defb 0x03+0x80,"DU","P"+0x80
+624D  DUP_lfa: defw SWAP_nfa
+624F  DUP_cfa: defw DUP_nfa
+6251  DUP_pfa: ; Word type not implemented.
+
+
+623B  SWAP_nfa: defb 0x04+0x80,"SWA","P"+0x80
+6240  SWAP_lfa: defw DROP_nfa
+6242  SWAP_cfa: defw SWAP_nfa
+6244  SWAP_pfa: ; Word type not implemented.
+
+
+622E  DROP_nfa: defb 0x04+0x80,"DRO","P"+0x80
+6233  DROP_lfa: defw OVER_nfa
+6235  DROP_cfa: defw DROP_nfa
+6237  DROP_pfa: ; Word type not implemented.
+
+
+621F  OVER_nfa: defb 0x04+0x80,"OVE","R"+0x80
+6224  OVER_lfa: defw DMINUS_nfa
+6226  OVER_cfa: defw OVER_nfa
+6228  OVER_pfa: ; Word type not implemented.
+
+
+61FF  DMINUS_nfa: defb 0x06+0x80,"DMINU","S"+0x80
+6206  DMINUS_lfa: defw MINUS_nfa
+6208  DMINUS_cfa: defw DMINUS_nfa
+620A  DMINUS_pfa: ; Word type not implemented.
+
+
+61EB  MINUS_nfa: defb 0x05+0x80,"MINU","S"+0x80
+61F1  MINUS_lfa: defw D+_nfa
+61F3  MINUS_cfa: defw MINUS_nfa
+61F5  MINUS_pfa: ; Word type not implemented.
+
+
+61CF  D+_nfa: defb 0x02+0x80,"D","+"+0x80
+61D2  D+_lfa: defw +_nfa
+61D4  D+_cfa: defw D+_nfa
+61D6  D+_pfa: ; Word type not implemented.
+
+
+61C3  +_nfa: defb 0x01+0x80,"","+"+0x80
+61C5  +_lfa: defw 0<_nfa
+61C7  +_cfa: defw +_nfa
+61C9  +_pfa: ; Word type not implemented.
+
+
+61B1  0<_nfa: defb 0x02+0x80,"0","<"+0x80
+61B4  0<_lfa: defw 0=_nfa
+61B6  0<_cfa: defw 0<_nfa
+61B8  0<_pfa: ; Word type not implemented.
+
+
+619E  0=_nfa: defb 0x02+0x80,"0","="+0x80
+61A1  0=_lfa: defw R_nfa
+61A3  0=_cfa: defw 0=_nfa
+61A5  0=_pfa: ; Word type not implemented.
+
+
+6198  R_nfa: defb 0x01+0x80,"","R"+0x80
+619A  R_lfa: defw R>_nfa
+619C  R_cfa: defw 0x5F32
+619E  R_pfa: ; Word type not implemented.
+
+
+6183  R>_nfa: defb 0x02+0x80,"R",">"+0x80
+6186  R>_lfa: defw >R_nfa
+6188  R>_cfa: defw R>_nfa
+618A  R>_pfa: ; Word type not implemented.
+
+
+616E  >R_nfa: defb 0x02+0x80,">","R"+0x80
+6171  >R_lfa: defw LEAVE_nfa
+6173  >R_cfa: defw >R_nfa
+6175  >R_pfa: ; Word type not implemented.
+
+
+6157  LEAVE_nfa: defb 0x05+0x80,"LEAV","E"+0x80
+615D  LEAVE_lfa: defw ;S_nfa
+615F  LEAVE_cfa: defw LEAVE_nfa
+6161  LEAVE_pfa: ; Word type not implemented.
+
+
+6143  ;S_nfa: defb 0x02+0x80,";","S"+0x80
+6146  ;S_lfa: defw RP!_nfa
+6148  ;S_cfa: defw ;S_nfa
+614A  ;S_pfa: ; Word type not implemented.
+
+
+612E  RP!_nfa: defb 0x03+0x80,"RP","!"+0x80
+6132  RP!_lfa: defw RP@_nfa
+6134  RP!_cfa: defw RP!_nfa
+6136  RP!_pfa: ; Word type not implemented.
+
+
+6120  RP@_nfa: defb 0x03+0x80,"RP","@"+0x80
+6124  RP@_lfa: defw SP!_nfa
+6126  RP@_cfa: defw RP@_nfa
+6128  RP@_pfa: ; Word type not implemented.
+
+
+610D  SP!_nfa: defb 0x03+0x80,"SP","!"+0x80
+6111  SP!_lfa: defw SP@_nfa
+6113  SP!_cfa: defw SP!_nfa
+6115  SP!_pfa: ; Word type not implemented.
+
+
+60FE  SP@_nfa: defb 0x03+0x80,"SP","@"+0x80
+6102  SP@_lfa: defw XOR_nfa
+6104  SP@_cfa: defw SP@_nfa
+6106  SP@_pfa: ; Word type not implemented.
+
+
+60EB  XOR_nfa: defb 0x03+0x80,"XO","R"+0x80
+60EF  XOR_lfa: defw OR_nfa
+60F1  XOR_cfa: defw XOR_nfa
+60F3  XOR_pfa: ; Word type not implemented.
+
+
+60D9  OR_nfa: defb 0x02+0x80,"O","R"+0x80
+60DC  OR_lfa: defw AND_nfa
+60DE  OR_cfa: defw OR_nfa
+60E0  OR_pfa: ; Word type not implemented.
+
+
+60C6  AND_nfa: defb 0x03+0x80,"AN","D"+0x80
+60CA  AND_lfa: defw U/MOD_nfa
+60CC  AND_cfa: defw AND_nfa
+60CE  AND_pfa: ; Word type not implemented.
+
+
+607D  U/MOD_nfa: defb 0x05+0x80,"U/MO","D"+0x80
+6083  U/MOD_lfa: defw U*_nfa
+6085  U/MOD_cfa: defw U/MOD_nfa
+6087  U/MOD_pfa: ; Word type not implemented.
+
+
+604A  U*_nfa: defb 0x02+0x80,"U","*"+0x80
+604D  U*_lfa: defw CMOVE_nfa
+604F  U*_cfa: defw U*_nfa
+6051  U*_pfa: ; Word type not implemented.
+
+
+6031  CMOVE_nfa: defb 0x05+0x80,"CMOV","E"+0x80
+6037  CMOVE_lfa: defw CR_nfa
+6039  CMOVE_cfa: defw CMOVE_nfa
+603B  CMOVE_pfa: ; Word type not implemented.
+
+
+6027  CR_nfa: defb 0x02+0x80,"C","R"+0x80
+602A  CR_lfa: defw ?TERMINAL_nfa
+602C  CR_cfa: defw CR_nfa
+602E  CR_pfa: ; Word type not implemented.
+
+
+6013  ?TERMINAL_nfa: defb 0x09+0x80,"?TERMINA","L"+0x80
+601D  ?TERMINAL_lfa: defw KEY_nfa
+601F  ?TERMINAL_cfa: defw ?TERMINAL_nfa
+6021  ?TERMINAL_pfa: ; Word type not implemented.
+
+
+6008  KEY_nfa: defb 0x03+0x80,"KE","Y"+0x80
+600C  KEY_lfa: defw EMIT_nfa
+600E  KEY_cfa: defw KEY_nfa
+6010  KEY_pfa: ; Word type not implemented.
+
+
+5FF5  EMIT_nfa: defb 0x04+0x80,"EMI","T"+0x80
+5FFA  EMIT_lfa: defw ENCLOSE_nfa
+5FFC  EMIT_cfa: defw 0x6306
+5FFE  EMIT_pfa: 
+5FFE defw k^_cfa
+6000 defw 1_cfa
+6002 defw OUT_cfa
+6004 defw +!_cfa
+6006 defw ;S_cfa
+
+
+5FB2  ENCLOSE_nfa: defb 0x07+0x80,"ENCLOS","E"+0x80
+5FBA  ENCLOSE_lfa: defw (FIND)_nfa
+5FBC  ENCLOSE_cfa: defw ENCLOSE_nfa
+5FBE  ENCLOSE_pfa: ; Word type not implemented.
+
+
+5F69  (FIND)_nfa: defb 0x06+0x80,"(FIND",")"+0x80
+5F70  (FIND)_lfa: defw DIGIT_nfa
+5F72  (FIND)_cfa: defw (FIND)_nfa
+5F74  (FIND)_pfa: ; Word type not implemented.
+
+
+5F3C  DIGIT_nfa: defb 0x05+0x80,"DIGI","T"+0x80
+5F42  DIGIT_lfa: defw I_nfa
+5F44  DIGIT_cfa: defw DIGIT_nfa
+5F46  DIGIT_pfa: ; Word type not implemented.
+
+
+5F2C  I_nfa: defb 0x01+0x80,"","I"+0x80
+5F2E  I_lfa: defw (DO)_nfa
+5F30  I_cfa: defw I_nfa
+5F32  I_pfa: ; Word type not implemented.
+
+
+5F0D  (DO)_nfa: defb 0x04+0x80,"(DO",")"+0x80
+5F12  (DO)_lfa: defw (+LOOP)_nfa
+5F14  (DO)_cfa: defw (DO)_nfa
+5F16  (DO)_pfa: ; Word type not implemented.
+
+
+5EFE  (+LOOP)_nfa: defb 0x07+0x80,"(+LOOP",")"+0x80
+5F06  (+LOOP)_lfa: defw (LOOP)_nfa
+5F08  (+LOOP)_cfa: defw (+LOOP)_nfa
+5F0A  (+LOOP)_pfa: ; Word type not implemented.
+
+
+5EC5  (LOOP)_nfa: defb 0x06+0x80,"(LOOP",")"+0x80
+5ECC  (LOOP)_lfa: defw 0BRANCH_nfa
+5ECE  (LOOP)_cfa: defw (LOOP)_nfa
+5ED0  (LOOP)_pfa: ; Word type not implemented.
+
+
+5EAF  0BRANCH_nfa: defb 0x07+0x80,"0BRANC","H"+0x80
+5EB7  0BRANCH_lfa: defw BRANCH_nfa
+5EB9  0BRANCH_cfa: defw 0BRANCH_nfa
+5EBB  0BRANCH_pfa: ; Word type not implemented.
+
+
+5E98  BRANCH_nfa: defb 0x06+0x80,"BRANC","H"+0x80
+5E9F  BRANCH_lfa: defw EXECUTE_nfa
+5EA1  BRANCH_cfa: defw BRANCH_nfa
+5EA3  BRANCH_pfa: ; Word type not implemented.
+
+
+5E88  EXECUTE_nfa: defb 0x07+0x80,"EXECUT","E"+0x80
+5E90  EXECUTE_lfa: defw LIT_nfa
+5E92  EXECUTE_cfa: defw EXECUTE_nfa
+5E94  EXECUTE_pfa: ; Word type not implemented.
+
+
+5E77  LIT_nfa: defb 0x03+0x80,"LI","T"+0x80
+5E7B  LIT_lfa: defw 0 
+5E7D  LIT_cfa: defw LIT_nfa
+5E7F  LIT_pfa: ; Word type not implemented.
