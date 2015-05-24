@@ -1,20 +1,27 @@
 .( dis )
 
   \ dis.fsb
-\ Forth disassembly tool for ZX Spectrum Abersoft Forth
+
+\ Self-disassembly tool for ZX Spectrum Abersoft Forth
 
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ Copying and distribution of this file, with or without
+  \ modification, are permitted in any medium without royalty
+  \ provided the copyright notice and this notice are
+  \ preserved.  This file is offered as-is, without any
+  \ warranty.
 
   \ -----------------------------------------------------------
   \ Description
 
-  \ This tool prints a partial decoding of the Forth
-  \ dictionary, in Z80 assembler format, to be used, in
-  \ combination with other tools, to recreate the original
-  \ source of Abersoft Forth.
+  \ This tool prints out a partial decoding of the Forth
+  \ dictionary, in Z80 assembler format.  The printout includes
+  \ comments with zone definitions for z80dasm.
   \
-  \ The printout contains also comments with zone definitions
-  \ for z80dasm.
+  \ The printout, processed by other tools and combined with
+  \ other files (see <README.adoc> and <Makefile>), is used to
+  \ recreate the original Z80 source of Abersoft Forth.
 
   \ -----------------------------------------------------------
   \ Requirements
@@ -22,6 +29,7 @@
   /disc 16384 = 0= ?needs 16kramdisks
   needs +caseins caseins   needs /string strings
   needs save-string csb    needs s+ s-plus
+  needs ?exit qexit
 
   \ -----------------------------------------------------------
   \ History
@@ -37,16 +45,20 @@
   \ in the printout; they have to be extracted later. New:
   \ words created by `2constant` and `2variable` are
   \ recognized.
+  \
+  \ 2015-05-24: Little fixes. Improvement: Only the words of
+  \ the original system are printed out.
 
   \ -----------------------------------------------------------
 
-forth definitions hex
+forth definitions 
+
+vocabulary dis-voc  dis-voc definitions  hex
+
 02 10 thru cls greeting cr
 \  <------------------------------>
-." dis is ready." cr cr
-." Type `dis` to print out" cr
-." a Z80 source of all words" cr
-." of the FORTH and EDITOR" cr
+." Type 'dis' to print out a Z80" cr
+." source of the FORTH and EDITOR" cr
 ." vocalularies." cr quit
 
 ( Base printing )
@@ -70,20 +82,31 @@ forth definitions hex
 
 ( id )
 
+0 constant addr  \ used as local variable
+
 : editor-prefix  ( ca len -- ca' len' )
+  \ Add the "editor_" prefix to it to the given string.
   s" editor_" 2swap s+  ;
 
-: editor-id  ( ca len --  ca len | ca' len' )
-  2dup s" R" str= if  editor-prefix exit  then
-  2dup s" I" str= if  editor-prefix exit  then  ;
+: editor-id  ( ca len --  ca len ff | ca' len' tf )
+  \ If the given string is "R" or "I",
+  \ add the "editor_" prefix to it and leave a true flag,
+  \ else return the string untouched and a false flag.
+  2dup s" R" str= if  editor-prefix true exit  then
+  2dup s" I" str= if  editor-prefix true exit  then  false  ;
+
+: special-id  ( nfa ca len -- ca len | ca' len' )
+  \ Manage special id cases.
+  rot dup ' addr !  7900 > if  editor-id ?exit  then
+  addr 6923 = if  2drop s" onezeroword" exit  then
+  addr 6CF6 = if  2drop s" onespaceword" then  ;
 
 : id  ( nfa -- ca len )
   \ Return the name of a word.
   \ The "editor_" prefix is added to the words
   \ `R` and `I` of the editor vocabulary.
-  dup >r dup 1+ swap c@ 3F and save-string
-  2dup + 1- dup c@ 7F and swap c!
-  r> 7900 > if  editor-id  then  ;
+  dup dup 1+ swap c@ 3F and save-string
+  2dup + 1- dup c@ 7F and swap c!  special-id  ;
 
 ( Labels and opcodes )
 
@@ -137,8 +160,6 @@ forth definitions hex
 
 ( Checks )
 
-0 constant addr  \ used as local variable
-
 : colon-end?  ( a -- f )
   \ Is the given address the end of a colon definition?
   ' addr !  true
@@ -169,7 +190,7 @@ forth definitions hex
 
 : z80dasm-zone  ( ca len -- )
   \ ca len = label
-  cr ." ; [DASMZ80 ZONE] " type ." : start " zone-start @ nhex.
+  cr ." ; [Z80DASM ZONE] " type ." : start " zone-start @ nhex.
   ."  end " zone-end @ nhex. ."  type " ;
 
 : bytedata-zone  ( ca len -- )  z80dasm-zone ." bytedata"  ;
@@ -200,7 +221,7 @@ forth definitions hex
 : dis-code  ( pfa -- )
   \ Print the z80dasm code zone of a low-level word.
   dup zone-start ! previous-nfa @ zone-end !
-  cfa cfa-label$ code-zone  ;
+  pfa-label$ code-zone  ;
 
 ( Name field )
 
@@ -263,34 +284,36 @@ forth definitions hex
 
 ( Partial dis )
 
-: dis-pfa  ( pfa --- )
+: (dis-pfa)  ( pfa --- )
   \ Print a word.
-  dup header
-  dup colon?     if  dis-colon  exit  then
-  dup code?      if  dis-code   exit  then
-  dup constant?  if  dis-value  exit  then
-  dup variable?  if  dis-value  exit  then
-  dup 2constant? if  dis-2value exit  then
-  dup 2variable? if  dis-2value exit  then
-  dup user?      if  dis-value  exit  then
+  dup header  dup colon?     if  dis-colon  exit  then
+              dup code?      if  dis-code   exit  then
+              dup constant?  if  dis-value  exit  then
+              dup variable?  if  dis-value  exit  then
+              dup 2constant? if  dis-2value exit  then
+              dup 2variable? if  dis-2value exit  then
+              dup user?      if  dis-value  exit  then
   drop ." ; XXX This word can not be disassembled by dis."  ;
+
+  \ Print a word, if it belongs to the original system.
+: dis-pfa  ( pfa -- )  dup [ ' udg 1+ ] literal u<
+                       if  (dis-pfa)  else  drop  then  ;
 
 : dis-from-nfa  ( nfa -- )
   \ Print starting from a word.
   begin  pfa dup dis-pfa  lfa @ dup 0= ?terminal or
   until  drop  ;
 
-: dis-context  ( -- )
   \ Print the context vocabulary,
   \ and the vocabularies it's chained to.
-  context @ @  dis-from-nfa  ;
+: dis-context  ( -- )  context @ @  dis-from-nfa  ;
 
 ( Main dis )
 
 : dis  ( -- )
   \ Print out all original words of the Forth system.
-  hex 1 link cr ." ; dis-start" cr
+  hex  1 link
   editor dis-context
-  cr ." ; dis-end" cr 0 link decimal  ;
+  0 link  decimal  ;
 
   \ vim: filetype=abersoftforthafera
