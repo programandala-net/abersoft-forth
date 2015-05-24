@@ -5,12 +5,12 @@
 
 " 2015-05-23: Start.
 
-if 0
+if 1
 
-  " Editor vocabulary. Not needed.
+  " Editor vocabulary.
   "
-  " Beside, there's a problem: `R` and `I` exist in 
-  " `EDITOR` and `FORTH` vocabularies.
+  " `R` and `I` exist also in the `FORTH` vocabulary; that's why
+  " dis added the "editor_" prefix to them.
 
   silent %s` C_\([nlpc]\)fa\>` c_\1fa`g
   silent %s` TILL_\([nlpc]\)fa\>` till_\1fa`g
@@ -26,9 +26,9 @@ if 0
   silent %s` COPY_\([nlpc]\)fa\>` copy_\1fa`g
   silent %s` CLEAR_\([nlpc]\)fa\>` clear_\1fa`g
   silent %s` TOP_\([nlpc]\)fa\>` top_\1fa`g
-  silent %s` I_\([nlpc]\)fa\>` i_\1fa`g
+  silent %s` editor_I_\([nlpc]\)fa\>` editor_i_\1fa`g
   silent %s` P_\([nlpc]\)fa\>` p_\1fa`g
-  silent %s` R_\([nlpc]\)fa\>` r_\1fa`g
+  silent %s` editor_R_\([nlpc]\)fa\>` editor_r_\1fa`g
   silent %s` L_\([nlpc]\)fa\>` l_\1fa`g
   silent %s` T_\([nlpc]\)fa\>` t_\1fa`g
   silent %s` M_\([nlpc]\)fa\>` m_\1fa`g

@@ -1,0 +1,296 @@
+.( dis )
+
+  \ dis.fsb
+\ Forth disassembly tool for ZX Spectrum Abersoft Forth
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This tool prints a partial decoding of the Forth
+  \ dictionary, in Z80 assembler format, to be used, in
+  \ combination with other tools, to recreate the original
+  \ source of Abersoft Forth.
+  \
+  \ The printout contains also comments with zone definitions
+  \ for z80dasm.
+
+  \ -----------------------------------------------------------
+  \ Requirements
+
+  /disc 16384 = 0= ?needs 16kramdisks
+  needs +caseins caseins   needs /string strings
+  needs save-string csb    needs s+ s-plus
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-05-20: Start, based on the Afera module `DECODE`.
+  \
+  \ 2015-05-21: Word header, first pfa listings.
+  \
+  \ 2015-05-22: First complete disassembling of all high-level
+  \ words, using `editor dis-all`.
+  \
+  \ 2015-05-23: New: z80dasm zones are created as Z80 comments
+  \ in the printout; they have to be extracted later. New:
+  \ words created by `2constant` and `2variable` are
+  \ recognized.
+
+  \ -----------------------------------------------------------
+
+forth definitions hex
+02 10 thru cls greeting cr
+\  <------------------------------>
+." dis is ready." cr cr
+." Type `dis` to print out" cr
+." a Z80 source of all words" cr
+." of the FORTH and EDITOR" cr
+." vocalularies." cr quit
+
+( Base printing )
+
+: address  ( a -- )  cr u.  ;
+
+: margin  ( -- )  05 base @ 0A = + spaces  ;
+
+  \ XXX OLD not used
+  \ : id.bs  ( nfa -- )
+  \   \ Version of id. without the final space.
+  \   \ This trick is used instead of printing a backspace,
+  \   \ to make sure it works on the printer.
+  \   [ ' noop  cfa ] literal 6B72 !  id.
+  \   [ ' space cfa ] literal 6B72 !  ;
+
+: bhex.  ( n -- )
+  base @ hex swap s->d <# # # #> ." 0x" type base !  ;
+: nhex.  ( n -- )
+  base @ hex swap s->d <# # # # # #> ." 0x" type base !  ;
+
+( id )
+
+: editor-prefix  ( ca len -- ca' len' )
+  s" editor_" 2swap s+  ;
+
+: editor-id  ( ca len --  ca len | ca' len' )
+  2dup s" R" str= if  editor-prefix exit  then
+  2dup s" I" str= if  editor-prefix exit  then  ;
+
+: id  ( nfa -- ca len )
+  \ Return the name of a word.
+  \ The "editor_" prefix is added to the words
+  \ `R` and `I` of the editor vocabulary.
+  dup >r dup 1+ swap c@ 3F and save-string
+  2dup + 1- dup c@ 7F and swap c!
+  r> 7900 > if  editor-id  then  ;
+
+( Labels and opcodes )
+
+0 variable current-nfa  0 variable previous-nfa
+
+: def  ( -- )  ." : " ;
+
+: nfa-label$  ( nfa -- ca len )  id s" _nfa" s+  ;
+: lfa-label$  ( pfa -- ca len )  nfa id s" _lfa" s+  ;
+: cfa-label$  ( cfa -- ca len )  2+ nfa id s" _cfa" s+  ;
+: pfa-label$  ( pfa -- ca len )  nfa id s" _pfa" s+  ;
+
+: nfa-label  ( nfa -- )  nfa-label$ type  ;
+: lfa-label  ( pfa -- )  lfa-label$ type  ;
+: cfa-label  ( cfa -- )  cfa-label$ type  ;
+: pfa-label  ( pfa -- )  pfa-label$ type  ;
+
+: defw  ( -- )  ." defw "  ;  : defb  ( -- )  ." defb "  ;
+
+( Special cases )
+
+: dis-compile  ( pfa+n -- pfa+n+2 )
+  2+ dup @ ." ," cfa-label  ;
+
+: dis-literal  ( pfa+n -- pfa+n+2 )  2+ dup @ ." ," nhex. ;
+
+: dis-branch  ( pfa+n -- pfa+n+2 )
+  \ XXX TODO Create destination label, that will
+  \ be put in place when the source is sorted.
+  dis-literal  ." ; to " dup dup @ + nhex.  ;
+
+: (dis-string)  ( ca len -- )
+  dup bhex. [char] , emit [char] " emit type [char] " emit  ;
+
+: dis-string  ( pfa+n1 -- pfa+n1+n2 )
+  2+ dup address defb dup count (dis-string) dup c@ + 1-  ;
+
+( Special cases dispatcher )
+
+: dis-special-cases  ( pfa+n1 -- pfa+n1 | pfa+n2 )
+  dup @ case
+          [ ' compile cfa ] literal of  dis-compile  endof
+          [ ' lit     cfa ] literal of  dis-literal  endof
+          [ ' branch  cfa ] literal of  dis-branch   endof
+          [ ' 0branch cfa ] literal of  dis-branch   endof
+          [ ' (loop)  cfa ] literal of  dis-branch   endof
+          [ ' (+loop) cfa ] literal of  dis-branch   endof
+          [ ' (.")    cfa ] literal of  dis-string   endof
+          [ ' slit    cfa ] literal of  dis-string   endof
+        endcase  ;
+
+( Checks )
+
+0 constant addr  \ used as local variable
+
+: colon-end?  ( a -- f )
+  \ Is the given address the end of a colon definition?
+  ' addr !  true
+  addr @ [ ' ;s cfa ] literal = ?exit
+  addr @ [ ' (;code) cfa ] literal  = ?exit
+  addr 6E04 = ?exit  \ end of COLD
+  addr 6DAE = ?exit  \ end of WARM
+  addr 6D6A = ?exit  \ end of ABORT
+  addr 6C99 = ?exit  \ end of INTERPRET
+  addr 6B2A = ?exit  \ end of ERROR
+  addr 6D4C = ?exit  \ end of QUIT
+  0= ;
+
+( Word type checks )
+
+: colon?      ( pfa -- f )  cfa @ ' : cfa @ =  ;
+: constant?   ( pfa -- f )  cfa @ 6348 =  ;
+: variable?   ( pfa -- f )  cfa @ 6362 =  ;
+: user?       ( pfa -- f )  cfa @ 6374 =  ;
+: 2constant?  ( pfa -- f )  cfa @ 7F00 =  ;
+: 2variable?  ( pfa -- f )  cfa @ 7F23 =  ;
+: code?       ( pfa -- f )  dup cfa @ =  ;
+
+( z80dasm zones )
+
+0 variable zone-start
+0 variable zone-end
+
+: z80dasm-zone  ( ca len -- )
+  \ ca len = label
+  cr ." ; [DASMZ80 ZONE] " type ." : start " zone-start @ nhex.
+  ."  end " zone-end @ nhex. ."  type " ;
+
+: bytedata-zone  ( ca len -- )  z80dasm-zone ." bytedata"  ;
+: worddata-zone  ( ca len -- )  z80dasm-zone ." worddata"  ;
+: pointers-zone  ( ca len -- )  z80dasm-zone ." pointers"  ;
+: code-zone  ( ca len -- )  z80dasm-zone ." code"  ;
+
+( Constants, colon definitions )
+
+: dis-value  ( pfa --- )
+  \ Print a value (constant, variable or user variable).
+  dup dup 2+ zone-end !  dup address defw @ nhex.
+  pfa-label$ worddata-zone ;
+
+: dis-2value  ( pfa --- )
+  \ Print a double value (constant or variable).
+  dup dup 4 + zone-end !
+  dup address defw dup @ nhex. ." ," 2+ @ nhex.
+  pfa-label$ worddata-zone ;
+
+: dis-colon  ( pfa --- )
+  \ Print a colon definition.
+  dup begin   dup address  dup colon-end? 0=
+      while   defw  dup @ cfa-label dis-special-cases 2+
+      repeat  dup defw @ cfa-label
+  2+ zone-end ! pfa-label$  pointers-zone  ;
+
+: dis-code  ( pfa -- )
+  \ Print the z80dasm code zone of a low-level word.
+  dup zone-start ! previous-nfa @ zone-end !
+  cfa cfa-label$ code-zone  ;
+
+( Name field )
+
+: (name)  ( ca len -- )
+  \ Print the main part of the name of the name field.
+  [char] " emit 2dup 1 /string type [char] " emit
+  [char] , emit  ;
+
+: name  ( ca len -- )
+  \ Print the name of the name field,
+  \ with the final letter apart with its bit 7 set.
+  dup 1 > if  (name)  then
+  [char] " emit + c@ 7F and emit [char] " emit ." +0x80"  ;
+
+: len-only  ( b1 -- b2 )  3F and  ;
+
+: count-byte  ( b -- )
+  \ Print the count byte of the name field,
+  \ showing the bound and precedence bits apart.
+  dup len-only bhex. ." +0x80" 40 and if  ." +0x40"  then  ;
+
+( Name and link fields )
+
+: name-field  ( pfa -- )
+  \ Print the name field.
+  nfa dup dup zone-start !
+      current-nfa @ previous-nfa ! dup current-nfa !
+      dup address dup space nfa-label def
+      dup address defb dup c@ count-byte
+      dup c@ len-only ." ," 2dup + 1+ zone-end !  name
+      nfa-label$ bytedata-zone ;  decimal
+
+: link-field  ( pfa -- )
+  \ Print the link field.
+  dup dup dup lfa dup zone-start ! address space lfa-label def
+  lfa dup address defw @ dup if  nfa-label  else  u.  then
+  zone-start @ 2+ zone-end ! lfa-label$ pointers-zone ;
+
+( Code field, parameter field, header )
+
+: (code-field) ( pfa -- )
+  \ Print the content of the code field.
+  dup cfa @ 2dup =
+  if  drop pfa-label else  nhex. drop  then  ;
+
+: code-field  ( pfa -- )
+  \ Print the code field.
+  dup cfa dup zone-start ! dup address space cfa-label def
+  dup cfa address defw dup (code-field)
+  cfa cfa-label$ zone-start @ 2+ zone-end ! pointers-zone  ;
+
+: parameter-field  ( pfa -- )
+  \ Print the parameter field.
+  dup zone-start !  dup address space pfa-label def  ;
+
+: header  ( pfa -- )
+  \ Print the header of a definition.
+  dup name-field  dup link-field
+  dup code-field  parameter-field  ;
+
+( Partial dis )
+
+: dis-pfa  ( pfa --- )
+  \ Print a word.
+  dup header
+  dup colon?     if  dis-colon  exit  then
+  dup code?      if  dis-code   exit  then
+  dup constant?  if  dis-value  exit  then
+  dup variable?  if  dis-value  exit  then
+  dup 2constant? if  dis-2value exit  then
+  dup 2variable? if  dis-2value exit  then
+  dup user?      if  dis-value  exit  then
+  drop ." ; XXX This word can not be disassembled by dis."  ;
+
+: dis-from-nfa  ( nfa -- )
+  \ Print starting from a word.
+  begin  pfa dup dis-pfa  lfa @ dup 0= ?terminal or
+  until  drop  ;
+
+: dis-context  ( -- )
+  \ Print the context vocabulary,
+  \ and the vocabularies it's chained to.
+  context @ @  dis-from-nfa  ;
+
+( Main dis )
+
+: dis  ( -- )
+  \ Print out all original words of the Forth system.
+  hex 1 link cr ." ; dis-start" cr
+  editor dis-context
+  cr ." ; dis-end" cr 0 link decimal  ;
+
+  \ vim: filetype=abersoftforthafera
