@@ -16,8 +16,9 @@
   \ Description
 
   \ This tool prints out a partial decoding of the Forth
-  \ dictionary, in Z80 assembler format.  The printout includes
-  \ comments with zone definitions for z80dasm.
+  \ dictionary, in Z80 assembler format.  Code written in Z80
+  \ is not included, but zone definitions for the z80dasm
+  \ disassembler are included as comments.
   \
   \ The printout, processed by other tools and combined with
   \ other files (see <README.adoc> and <Makefile>), is used to
@@ -59,7 +60,7 @@ vocabulary dis-voc  dis-voc definitions  hex
 \  <------------------------------>
 ." Type 'dis' to print out a Z80" cr
 ." source of the FORTH and EDITOR" cr
-." vocalularies." cr quit
+." vocabularies." cr quit
 
 ( Base printing )
 
@@ -126,17 +127,42 @@ vocabulary dis-voc  dis-voc definitions  hex
 
 : defw  ( -- )  ." defw "  ;  : defb  ( -- )  ." defb "  ;
 
+( z80dasm zones )
+
+0 variable zone-first
+0 variable zone-last
+
+: z80dasm-zone  ( ca len -- )
+  \ ca len = label
+  cr ." ; [Z80DASM ZONE] " type ." : first " zone-first @ nhex.
+  ."  last " zone-last @ nhex. ."  type " ;
+
+: bytedata-zone  ( ca len -- )  z80dasm-zone ." bytedata"  ;
+: worddata-zone  ( ca len -- )  z80dasm-zone ." worddata"  ;
+: pointers-zone  ( ca len -- )  z80dasm-zone ." pointers"  ;
+: code-zone  ( ca len -- )  z80dasm-zone ." code"  ;
+
+: (dis-code)  ( pfa pfa+n -- )
+  \ Print the z80dasm code zone of a low-level word
+  \ or the `;code` part of a high-level word.
+  zone-first !  previous-nfa @ 1- zone-last !
+  pfa-label$ code-zone  ;
+
+: dis-code  ( pfa -- )
+  \ Print the z80dasm code zone of a low-level word.
+  dup (dis-code)  ;
+
 ( Special cases )
 
 : dis-compile  ( pfa+n -- pfa+n+2 )
-  2+ dup @ ." ," cfa-label  ;
+  2+ dup @ ." , " cfa-label  ;
 
-: dis-literal  ( pfa+n -- pfa+n+2 )  2+ dup @ ." ," nhex. ;
+: dis-literal  ( pfa+n -- pfa+n+2 )  2+ dup @ ." , " nhex.  ;
 
 : dis-branch  ( pfa+n -- pfa+n+2 )
   \ XXX TODO Create destination label, that will
   \ be put in place when the source is sorted.
-  dis-literal  ." ; to " dup dup @ + nhex.  ;
+  dis-literal  ."  ; to " dup dup @ + nhex.  ;
 
 : (dis-string)  ( ca len -- )
   dup bhex. [char] , emit [char] " emit type [char] " emit  ;
@@ -160,11 +186,15 @@ vocabulary dis-voc  dis-voc definitions  hex
 
 ( Checks )
 
+  \ Did the colon word finished with `;code`?
+false variable semicolon-code?
+
 : colon-end?  ( a -- f )
   \ Is the given address the end of a colon definition?
-  ' addr !  true
+  ' addr !  semicolon-code? off  true
   addr @ [ ' ;s cfa ] literal = ?exit
-  addr @ [ ' (;code) cfa ] literal  = ?exit
+  addr @ [ ' (;code) cfa ] literal  = 
+    dup semicolon-code? !  ?exit
   addr 6E04 = ?exit  \ end of COLD
   addr 6DAE = ?exit  \ end of WARM
   addr 6D6A = ?exit  \ end of ABORT
@@ -173,7 +203,7 @@ vocabulary dis-voc  dis-voc definitions  hex
   addr 6D4C = ?exit  \ end of QUIT
   0= ;
 
-( Word type checks )
+( Word type checks, user variables )
 
 : colon?      ( pfa -- f )  cfa @ ' : cfa @ =  ;
 : constant?   ( pfa -- f )  cfa @ 6348 =  ;
@@ -183,45 +213,34 @@ vocabulary dis-voc  dis-voc definitions  hex
 : 2variable?  ( pfa -- f )  cfa @ 7F23 =  ;
 : code?       ( pfa -- f )  dup cfa @ =  ;
 
-( z80dasm zones )
+: dis-user  ( pfa --- )
+  \ Print a user variable.
+  dup dup zone-last !  dup address defw @ nhex.
+  pfa-label$ bytedata-zone ;
 
-0 variable zone-start
-0 variable zone-end
-
-: z80dasm-zone  ( ca len -- )
-  \ ca len = label
-  cr ." ; [Z80DASM ZONE] " type ." : start " zone-start @ nhex.
-  ."  end " zone-end @ nhex. ."  type " ;
-
-: bytedata-zone  ( ca len -- )  z80dasm-zone ." bytedata"  ;
-: worddata-zone  ( ca len -- )  z80dasm-zone ." worddata"  ;
-: pointers-zone  ( ca len -- )  z80dasm-zone ." pointers"  ;
-: code-zone  ( ca len -- )  z80dasm-zone ." code"  ;
-
-( Constants, colon definitions )
+( Constants, variables, colon definitions )
 
 : dis-value  ( pfa --- )
-  \ Print a value (constant, variable or user variable).
-  dup dup 2+ zone-end !  dup address defw @ nhex.
+  \ Print a value (constant or variable).
+  dup dup 1+ zone-last !  dup address defw @ nhex.
   pfa-label$ worddata-zone ;
 
 : dis-2value  ( pfa --- )
   \ Print a double value (constant or variable).
-  dup dup 4 + zone-end !
-  dup address defw dup @ nhex. ." ," 2+ @ nhex.
+  dup dup 3 + zone-last !
+  dup address defw dup @ nhex. ." , " 2+ @ nhex.
   pfa-label$ worddata-zone ;
 
 : dis-colon  ( pfa --- )
   \ Print a colon definition.
-  dup begin   dup address  dup colon-end? 0=
-      while   defw  dup @ cfa-label dis-special-cases 2+
-      repeat  dup defw @ cfa-label
-  2+ zone-end ! pfa-label$  pointers-zone  ;
-
-: dis-code  ( pfa -- )
-  \ Print the z80dasm code zone of a low-level word.
-  dup zone-start ! previous-nfa @ zone-end !
-  pfa-label$ code-zone  ;
+  dup dup begin   dup address  dup colon-end? 0=
+          while   defw  dup @ cfa-label dis-special-cases 2+
+          repeat  dup defw @ cfa-label
+  1+ zone-last ! pfa-label$  pointers-zone  ( pfa )
+  \ If the word was finished by `;code`, define a code zone
+  \ for z80dasm.
+  semicolon-code? @ if    zone-last @ 1 + (dis-code)
+                    else  drop  then  ;
 
 ( Name field )
 
@@ -247,18 +266,18 @@ vocabulary dis-voc  dis-voc definitions  hex
 
 : name-field  ( pfa -- )
   \ Print the name field.
-  nfa dup dup zone-start !
+  nfa dup dup zone-first !
       current-nfa @ previous-nfa ! dup current-nfa !
       dup address dup space nfa-label def
       dup address defb dup c@ count-byte
-      dup c@ len-only ." ," 2dup + 1+ zone-end !  name
-      nfa-label$ bytedata-zone ;  decimal
+      dup c@ len-only ." , " 2dup + zone-last !  name
+      nfa-label$ bytedata-zone ;
 
 : link-field  ( pfa -- )
   \ Print the link field.
-  dup dup dup lfa dup zone-start ! address space lfa-label def
+  dup dup dup lfa dup zone-first ! address space lfa-label def
   lfa dup address defw @ dup if  nfa-label  else  u.  then
-  zone-start @ 2+ zone-end ! lfa-label$ pointers-zone ;
+  zone-first @ 1+ zone-last ! lfa-label$ pointers-zone ;
 
 ( Code field, parameter field, header )
 
@@ -269,13 +288,13 @@ vocabulary dis-voc  dis-voc definitions  hex
 
 : code-field  ( pfa -- )
   \ Print the code field.
-  dup cfa dup zone-start ! dup address space cfa-label def
+  dup cfa dup zone-first ! dup address space cfa-label def
   dup cfa address defw dup (code-field)
-  cfa cfa-label$ zone-start @ 2+ zone-end ! pointers-zone  ;
+  cfa cfa-label$ zone-first @ 1+ zone-last ! pointers-zone  ;
 
 : parameter-field  ( pfa -- )
   \ Print the parameter field.
-  dup zone-start !  dup address space pfa-label def  ;
+  dup zone-first !  dup address space pfa-label def  ;
 
 : header  ( pfa -- )
   \ Print the header of a definition.
@@ -292,7 +311,7 @@ vocabulary dis-voc  dis-voc definitions  hex
               dup variable?  if  dis-value  exit  then
               dup 2constant? if  dis-2value exit  then
               dup 2variable? if  dis-2value exit  then
-              dup user?      if  dis-value  exit  then
+              dup user?      if  dis-user  exit  then
   drop ." ; XXX This word can not be disassembled by dis."  ;
 
   \ Print a word, if it belongs to the original system.
@@ -314,6 +333,6 @@ vocabulary dis-voc  dis-voc definitions  hex
   \ Print out all original words of the Forth system.
   hex  1 link
   editor dis-context
-  0 link  decimal  ;
+  0 link  decimal cr ." Done." cr  ;
 
   \ vim: filetype=abersoftforthafera
