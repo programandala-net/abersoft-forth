@@ -1,0 +1,42 @@
+; zones_manual.txt
+;
+; This file is part of
+;   Abersoft Forth disassembled
+;
+; 2015-05-24: Start.
+
+; XXX TODO
+; paren_emit: 
+
+head_not_used: first 0x5E00 last 0x5E05 type worddata
+
+user_variables: first 0x5E06 end 0x5E31 type pointers
+entry_points: first 0x5E40 end 0x5E46 type code
+fig_version: first 0x5E48 end 0x5E4C type bytedata
+
+top_most_word_in_forth_voc: first 0x5E4C last 0x5E4D type pointers
+
+backspace_char: first 0x5E4E last 0x5E4F type worddata
+
+init_up: first 0x5E50 last 0x5E51 type pointers
+
+user_variables_init: first 0x5E52 last 0x5E61 type worddata
+
+not_used: first 0x5E62 last 0x5E65 type worddata
+
+registers: first 0x5E66 last 0x5E69 type pointers
+
+; --------------------------------------------------------------
+; Strings compiled in high-level words
+
+; This does not work, because dis has already created worddata zones for the
+; pfa the strings are compiled into. Anyway, the pfa are properly disassembled
+; by dis itself.
+
+;string_6b13: first 0x6B13 end 0x6B16 type bytedata ; "? "
+;string_6d49: first 0x6D49 end 0x6D4C type bytedata ; "ok"
+;string_6d68: first 0x6D68 end 0x6D76 type bytedata ; "fig-FORTH 1.1A"
+;string_66b5: first 0x6FB5 end 0x6FBB type bytedata ; "MSG # "
+;string_7566: first 0x7566 end 0x756C type bytedata ; "SCR # "
+;string_75d6: first 0x75D6 end 0x75E4 type bytedata ; "48K SPECTRUM  "
+;string_77c6: first 0x77C6 end 0x77CC type bytedata ; "SCR # "

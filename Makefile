@@ -40,40 +40,102 @@ MAKEFLAGS = --no-print-directory
 # Main
 
 .PHONY: all
-all: dis_compiling.tap
+all: dis
+
+.PHONY: z80
+all: high low
+
+.PHONY: high
+high: abersoft_forth_high-level.z80s
+
+.PHONY: low
+low: abersoft_forth_low-level.z80s
 
 ################################################################
-# XXX TODO
+# Zones file
 
-abersoft_forth_z80dasm_block-def_dis.txt: dis_printout.txt
-	sed -e XXX dis_printout.txt | \
-	sort > /tmp/dis_printout_tidied_0.txt && \
-	grep " ; \[Z80DASM ZONE]" /tmp/dis_printout_tidied_0.txt > \
-		abersoft_forth_z80dasm_block-def_dis.txt
-	
+# Substitute the temporary labels with their definitive names in the
+# raw printout produced by dis, and sort it.
+
+# First try, bad sorting:
+#dis_printout_tidied.txt: dis_printout.txt
+#	sed --file word_labels.sed dis_printout.txt | \
+#	sort > dis_printout_tidied.txt
+
+# Second try, bad sorting:
+#dis_printout_tidied.txt: dis_printout.txt
+#	sed --file word_labels.sed dis_printout.txt > /tmp/dis.txt && \
+#	sort /tmp/dis.txt > dis_printout_tidied.txt
+
+# Third try, error 1, no clue:
+#dis_printout_tidied.txt: dis_printout.txt
+#	sed --file word_labels.sed dis_printout.txt | \
+#	vim -e -c "sort|wq dis_printout_tidied.txt" - 
+
+# 4th try, works:
+dis_printout_tidied.txt: dis_printout.txt
+	sed --file word_labels.sed dis_printout.txt > /tmp/dis.txt && \
+	vim -e -c "sort|saveas! dis_printout_tidied.txt|q" /tmp/dis.txt 
+
+# 5th try, error 1, no clue:
+#dis_printout_tidied.txt: dis_printout.txt
+#	sed --file word_labels.sed dis_printout.txt | \
+#	vim -e -c "sort|saveas dis_printout_tidied.txt|q" - 
+
+# Extract the z80dasm zones from the printout.
+
+zones_dis.txt: dis_printout_tidied.txt
+	grep "Z80DASM ZONE" dis_printout_tidied.txt | \
+	sed --expression="s/^; \[Z80DASM ZONE] //" > \
+		zones_dis.txt
+
+# Combine both zones def files into one.
+
+zones.txt: zones_dis.txt zones_manual.txt
+	cat zones_dis.txt zones_manual.txt | \
+	sort --field-separator=":" --key=2 > zones.txt
 
 ################################################################
-# XXX TODO
+# High level disassembly
 
-abersoft_forth.z80s: \
-	abersoft_forth_z80dasm_block-def_dis.txt \
-	abersoft_forth_z80dasm_block-def.txt \
-	abersoft_forth_z80dasm_sym-input.z80s
+abersoft_forth_high-level.z80s: dis_printout_tidied.txt
+	grep --invert-match "Z80DASM ZONE" dis_printout_tidied.txt > \
+		abersoft-forth_high-level.z80s
+
+################################################################
+# Low level disassembly
+
+abersoft_forth_padded.bin: abersoft_forth.bin
+	head --bytes=64 /dev/zero > abersoft_forth_padded.bin && \
+	cat abersoft_forth.bin >> abersoft_forth_padded.bin && \
+	head --bytes=1K /dev/zero >> abersoft_forth_padded.bin
+
+# This does not work, produces an identical copy:
+#	cat $$(head --bytes=6 /dev/zero) abersoft_forth.bin $$(head --bytes=1K /dev/zero) > \
+#		abersoft_forth_padded.bin
+
+abersoft_forth_low-level.z80s: \
+	abersoft_forth_padded.bin \
+	zones.txt \
+	symbols_input.z80s
 	z80dasm \
 		--origin=24064 \
 		--address \
+		--source \
 		--labels \
-		--block-def=abersoft_forth_z80dasm_block-def_dis.txt \
-		--block-def=abersoft_forth_z80dasm_block-def.txt \
-		--sym-input=abersoft_forth_z80dasm_sym-input.z80s \
-		--output=abersoft_forth.z80s \
-		abersoft_forth.bin
+		--block-def=zones.txt \
+		--sym-input=symbols_input.z80s \
+		--output=abersoft_forth_low-level.z80s \
+		abersoft_forth_padded.bin
 
 ################################################################
 # dis
 
 %.tap: %.fsb
 	fsb2abersoft16k $<
+
+.PHONY: dis
+dis: dis_compiling.tap
 
 dis_compiling.tap: dis.tap
 	cat \

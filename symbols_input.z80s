@@ -1,14 +1,14 @@
-; abersoft_forth_z80dasm_sym-input.z80s
+; symbols_input.z80s
 ;
 ; This file is part of
 ;   Abersoft Forth disassembled
 ;
 ; 2015-05-24: Start.
 
-
 include "zx_spectrum_rom_routines.z80s"
 include "zx_spectrum_system_variables.z80s"
 
+origin: equ 0x5E00
 s0_value: equ 0x5E06
 r0_value: equ 0x5E08
 tib_value: equ 0x5E0A
@@ -35,8 +35,8 @@ hld_value: equ 0x5E30
 cold_entry: equ 0x5E40
 warm_entry: equ 0x5E44
 
-fig_major_version: equ 0x5E48
-fig_minor_version: equ 0x5E49
+fig_release: equ 0x5E48
+fig_revision: equ 0x5E49
 fig_user_version: equ 0x5E4A
 fig_implementation_attributes: equ 0x5E4B
 
