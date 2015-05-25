@@ -3,46 +3,36 @@
 " This Vim program translates the temporary Z80 labels
 " used in the file created by dis.
 
-" 2015-05-23: Start.
+" 2015-05-24: Start.
 
-if 1
-
-  " Editor vocabulary.
-  "
-  " `R` and `I` exist also in the `FORTH` vocabulary; that's why
-  " dis added the "editor_" prefix to them.
-
-  silent %s` C_\([nlpc]\)fa\>` c_\1fa`g
-  silent %s` TILL_\([nlpc]\)fa\>` till_\1fa`g
-  silent %s` X_\([nlpc]\)fa\>` x_\1fa`g
-  silent %s` B_\([nlpc]\)fa\>` b_\1fa`g
-  silent %s` F_\([nlpc]\)fa\>` f_\1fa`g
-  silent %s` N_\([nlpc]\)fa\>` n_\1fa`g
-  silent %s` DELETE_\([nlpc]\)fa\>` delete_\1fa`g
-  silent %s` FIND_\([nlpc]\)fa\>` find_\1fa`g
-  silent %s` 1LINE_\([nlpc]\)fa\>` oneline_\1fa`g
-  silent %s` MATCH_\([nlpc]\)fa\>` match_\1fa`g
-  silent %s` -TEXT_\([nlpc]\)fa\>` minus_text_\1fa`g
-  silent %s` COPY_\([nlpc]\)fa\>` copy_\1fa`g
-  silent %s` CLEAR_\([nlpc]\)fa\>` clear_\1fa`g
-  silent %s` TOP_\([nlpc]\)fa\>` top_\1fa`g
-  silent %s` editor_I_\([nlpc]\)fa\>` editor_i_\1fa`g
-  silent %s` P_\([nlpc]\)fa\>` p_\1fa`g
-  silent %s` editor_R_\([nlpc]\)fa\>` editor_r_\1fa`g
-  silent %s` L_\([nlpc]\)fa\>` l_\1fa`g
-  silent %s` T_\([nlpc]\)fa\>` t_\1fa`g
-  silent %s` M_\([nlpc]\)fa\>` m_\1fa`g
-  silent %s` D_\([nlpc]\)fa\>` d_\1fa`g
-  silent %s` S_\([nlpc]\)fa\>` s_\1fa`g
-  silent %s` E_\([nlpc]\)fa\>` e_\1fa`g
-  silent %s` H_\([nlpc]\)fa\>` h_\1fa`g
-  silent %s` -MOVE_\([nlpc]\)fa\>` minus_move_\1fa`g
-  silent %s` #LAG_\([nlpc]\)fa\>` hash_lag_\1fa`g
-  silent %s` #LEAD_\([nlpc]\)fa\>` hash_lead_\1fa`g
-  silent %s` #LOCATE_\([nlpc]\)fa\>` hash_locate_\1fa`g
-
-endif
-
+silent %s` C_\([nlpc]\)fa\>` c_\1fa`g
+silent %s` TILL_\([nlpc]\)fa\>` till_\1fa`g
+silent %s` X_\([nlpc]\)fa\>` x_\1fa`g
+silent %s` B_\([nlpc]\)fa\>` b_\1fa`g
+silent %s` F_\([nlpc]\)fa\>` f_\1fa`g
+silent %s` N_\([nlpc]\)fa\>` n_\1fa`g
+silent %s` DELETE_\([nlpc]\)fa\>` delete_\1fa`g
+silent %s` FIND_\([nlpc]\)fa\>` find_\1fa`g
+silent %s` 1LINE_\([nlpc]\)fa\>` oneline_\1fa`g
+silent %s` MATCH_\([nlpc]\)fa\>` match_\1fa`g
+silent %s` -TEXT_\([nlpc]\)fa\>` minus_text_\1fa`g
+silent %s` COPY_\([nlpc]\)fa\>` copy_\1fa`g
+silent %s` CLEAR_\([nlpc]\)fa\>` clear_\1fa`g
+silent %s` TOP_\([nlpc]\)fa\>` top_\1fa`g
+silent %s` editor_I_\([nlpc]\)fa\>` editor_i_\1fa`g
+silent %s` P_\([nlpc]\)fa\>` p_\1fa`g
+silent %s` editor_R_\([nlpc]\)fa\>` editor_r_\1fa`g
+silent %s` L_\([nlpc]\)fa\>` l_\1fa`g
+silent %s` T_\([nlpc]\)fa\>` t_\1fa`g
+silent %s` M_\([nlpc]\)fa\>` m_\1fa`g
+silent %s` D_\([nlpc]\)fa\>` d_\1fa`g
+silent %s` S_\([nlpc]\)fa\>` s_\1fa`g
+silent %s` E_\([nlpc]\)fa\>` e_\1fa`g
+silent %s` H_\([nlpc]\)fa\>` h_\1fa`g
+silent %s` -MOVE_\([nlpc]\)fa\>` minus_move_\1fa`g
+silent %s` #LAG_\([nlpc]\)fa\>` hash_lag_\1fa`g
+silent %s` #LEAD_\([nlpc]\)fa\>` hash_lead_\1fa`g
+silent %s` #LOCATE_\([nlpc]\)fa\>` hash_locate_\1fa`g
 silent %s` UDG_\([nlpc]\)fa\>` udg_\1fa`g
 silent %s` INIT-DISC_\([nlpc]\)fa\>` init_disc_\1fa`g
 silent %s` INKEY_\([nlpc]\)fa\>` inkey_\1fa`g
@@ -176,7 +166,7 @@ silent %s` INTERPRET_\([nlpc]\)fa\>` interpret_\1fa`g
 silent %s` ?STACK_\([nlpc]\)fa\>` question_stack_\1fa`g
 silent %s` DLITERAL_\([nlpc]\)fa\>` dliteral_\1fa`g
 silent %s` LITERAL_\([nlpc]\)fa\>` literal_\1fa`g
-silent %s` \(\[COMPILE]_\)[nlpc]fa\>` bracket_compile_\1fa`g
+silent %s` \[COMPILE]_\([nlpc]\)fa\>` bracket_compile_\1fa`g
 silent %s` CREATE_\([nlpc]\)fa\>` create_\1fa`g
 silent %s` ID\._\([nlpc]\)fa\>` id_dot_\1fa`g
 silent %s` ERROR_\([nlpc]\)fa\>` error_\1fa`g
@@ -322,3 +312,4 @@ silent %s` 0BRANCH_\([nlpc]\)fa\>` zero_branch_\1fa`g
 silent %s` BRANCH_\([nlpc]\)fa\>` branch_\1fa`g
 silent %s` EXECUTE_\([nlpc]\)fa\>` execute_\1fa`g
 silent %s` LIT_\([nlpc]\)fa\>` lit_\1fa`g
+
