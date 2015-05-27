@@ -1,315 +1,315 @@
 " word_labels.vim
 
 " This Vim program translates the temporary Z80 labels
-" used in the file created by dis.
+" used in the printout created by <zones.fsb>.
 
-" 2015-05-24: Start.
+" 2015-05-24: Start, to be used with the ouput of <dis.fsb>.
+" 2015-05-26: Modified for the new output of <zones.fsb>.
 
-silent %s` C_\([nlpc]\)fa\>` c_\1fa`g
-silent %s` TILL_\([nlpc]\)fa\>` till_\1fa`g
-silent %s` X_\([nlpc]\)fa\>` x_\1fa`g
-silent %s` B_\([nlpc]\)fa\>` b_\1fa`g
-silent %s` F_\([nlpc]\)fa\>` f_\1fa`g
-silent %s` N_\([nlpc]\)fa\>` n_\1fa`g
-silent %s` DELETE_\([nlpc]\)fa\>` delete_\1fa`g
-silent %s` FIND_\([nlpc]\)fa\>` find_\1fa`g
-silent %s` 1LINE_\([nlpc]\)fa\>` oneline_\1fa`g
-silent %s` MATCH_\([nlpc]\)fa\>` match_\1fa`g
-silent %s` -TEXT_\([nlpc]\)fa\>` minus_text_\1fa`g
-silent %s` COPY_\([nlpc]\)fa\>` copy_\1fa`g
-silent %s` CLEAR_\([nlpc]\)fa\>` clear_\1fa`g
-silent %s` TOP_\([nlpc]\)fa\>` top_\1fa`g
-silent %s` editor_I_\([nlpc]\)fa\>` editor_i_\1fa`g
-silent %s` P_\([nlpc]\)fa\>` p_\1fa`g
-silent %s` editor_R_\([nlpc]\)fa\>` editor_r_\1fa`g
-silent %s` L_\([nlpc]\)fa\>` l_\1fa`g
-silent %s` T_\([nlpc]\)fa\>` t_\1fa`g
-silent %s` M_\([nlpc]\)fa\>` m_\1fa`g
-silent %s` D_\([nlpc]\)fa\>` d_\1fa`g
-silent %s` S_\([nlpc]\)fa\>` s_\1fa`g
-silent %s` E_\([nlpc]\)fa\>` e_\1fa`g
-silent %s` H_\([nlpc]\)fa\>` h_\1fa`g
-silent %s` -MOVE_\([nlpc]\)fa\>` minus_move_\1fa`g
-silent %s` #LAG_\([nlpc]\)fa\>` hash_lag_\1fa`g
-silent %s` #LEAD_\([nlpc]\)fa\>` hash_lead_\1fa`g
-silent %s` #LOCATE_\([nlpc]\)fa\>` hash_locate_\1fa`g
-silent %s` UDG_\([nlpc]\)fa\>` udg_\1fa`g
-silent %s` INIT-DISC_\([nlpc]\)fa\>` init_disc_\1fa`g
-silent %s` INKEY_\([nlpc]\)fa\>` inkey_\1fa`g
-silent %s` ENDCASE_\([nlpc]\)fa\>` endcase_\1fa`g
-silent %s` ENDOF_\([nlpc]\)fa\>` endof_\1fa`g
-silent %s` OF_\([nlpc]\)fa\>` of_\1fa`g
-silent %s` CASE_\([nlpc]\)fa\>` case_\1fa`g
-silent %s` DRAW_\([nlpc]\)fa\>` draw_\1fa`g
-silent %s` INCY_\([nlpc]\)fa\>` incy_\1fa`g
-silent %s` INCX_\([nlpc]\)fa\>` incx_\1fa`g
-silent %s` Y1_\([nlpc]\)fa\>` y1_\1fa`g
-silent %s` X1_\([nlpc]\)fa\>` x1_\1fa`g
-silent %s` PLOT_\([nlpc]\)fa\>` plot_\1fa`g
-silent %s` EXIT_\([nlpc]\)fa\>` exit_\1fa`g
-silent %s` 2OVER_\([nlpc]\)fa\>` two_over_\1fa`g
-silent %s` U\.R_\([nlpc]\)fa\>` u_dot_r_\1fa`g
-silent %s` 2VARIABLE_\([nlpc]\)fa\>` two_variable_\1fa`g
-silent %s` 2CONSTANT_\([nlpc]\)fa\>` two_constant_\1fa`g
-silent %s` J_\([nlpc]\)fa\>` j_\1fa`g
-silent %s` I'_\([nlpc]\)fa\>` i_tick_\1fa`g
-silent %s` NOT_\([nlpc]\)fa\>` not_\1fa`g
-silent %s` INVERSE_\([nlpc]\)fa\>` inverse_\1fa`g
-silent %s` GOVER_\([nlpc]\)fa\>` gover_\1fa`g
-silent %s` BRIGHT_\([nlpc]\)fa\>` bright_\1fa`g
-silent %s` FLASH_\([nlpc]\)fa\>` flash_\1fa`g
-silent %s` INK_\([nlpc]\)fa\>` ink_\1fa`g
-silent %s` POINT_\([nlpc]\)fa\>` point_\1fa`g
-silent %s` ATTR_\([nlpc]\)fa\>` attr_\1fa`g
-silent %s` PAPER_\([nlpc]\)fa\>` paper_\1fa`g
-silent %s` BLEEP_\([nlpc]\)fa\>` bleep_\1fa`g
-silent %s` BORDER_\([nlpc]\)fa\>` border_\1fa`g
-silent %s` AT_\([nlpc]\)fa\>` at_\1fa`g
-silent %s` SCREEN_\([nlpc]\)fa\>` screen_\1fa`g
-silent %s` OUTP_\([nlpc]\)fa\>` outp_\1fa`g
-silent %s` INP_\([nlpc]\)fa\>` inp_\1fa`g
-silent %s` PUSHDE_\([nlpc]\)fa\>` pushde_\1fa`g
-silent %s` PUSHHL_\([nlpc]\)fa\>` pushhl_\1fa`g
-silent %s` NEXT_\([nlpc]\)fa\>` next_\1fa`g
-silent %s` WHERE_\([nlpc]\)fa\>` where_\1fa`g
-silent %s` EDITOR_\([nlpc]\)fa\>` editor_\1fa`g
-silent %s` TRIAD_\([nlpc]\)fa\>` triad_\1fa`g
-silent %s` INDEX_\([nlpc]\)fa\>` index_\1fa`g
-silent %s` FORGET_\([nlpc]\)fa\>` forget_\1fa`g
-silent %s` FREE_\([nlpc]\)fa\>` free_\1fa`g
-silent %s` SIZE_\([nlpc]\)fa\>` size_\1fa`g
-silent %s` 2SWAP_\([nlpc]\)fa\>` two_swap_\1fa`g
-silent %s` 2DROP_\([nlpc]\)fa\>` two_drop_\1fa`g
-silent %s` VERIFY_\([nlpc]\)fa\>` verify_\1fa`g
-silent %s` SAVET_\([nlpc]\)fa\>` savet_\1fa`g
-silent %s` LOADT_\([nlpc]\)fa\>` loadt_\1fa`g
-silent %s` LINE_\([nlpc]\)fa\>` line_\1fa`g
-silent %s` TEXT_\([nlpc]\)fa\>` text_\1fa`g
-silent %s` MON_\([nlpc]\)fa\>` mon_\1fa`g
-silent %s` (TAPE)_\([nlpc]\)fa\>` paren_tape_\1fa`g
-silent %s` \.CPU_\([nlpc]\)fa\>` dot_cpu_\1fa`g
-silent %s` CLS_\([nlpc]\)fa\>` cls_\1fa`g
-silent %s` LINK_\([nlpc]\)fa\>` link_\1fa`g
-silent %s` LIST_\([nlpc]\)fa\>` list_\1fa`g
-silent %s` VLIST_\([nlpc]\)fa\>` vlist_\1fa`g
-silent %s` U\._\([nlpc]\)fa\>` u_dot_\1fa`g
-silent %s` ?_\([nlpc]\)fa\>` question_\1fa`g
-silent %s` \._\([nlpc]\)fa\>` dot_\1fa`g
-silent %s` D\._\([nlpc]\)fa\>` d_dot_\1fa`g
-silent %s` \.R_\([nlpc]\)fa\>` dot_r_\1fa`g
-silent %s` D\.R_\([nlpc]\)fa\>` d_dot_r_\1fa`g
-silent %s` #S_\([nlpc]\)fa\>` hash_s_\1fa`g
-silent %s` #_\([nlpc]\)fa\>` hash_\1fa`g
-silent %s` SIGN_\([nlpc]\)fa\>` sign_\1fa`g
-silent %s` #>_\([nlpc]\)fa\>` hash_greater_\1fa`g
-silent %s` <#_\([nlpc]\)fa\>` less_hash_\1fa`g
-silent %s` SPACES_\([nlpc]\)fa\>` spaces_\1fa`g
-silent %s` WHILE_\([nlpc]\)fa\>` while_\1fa`g
-silent %s` ELSE_\([nlpc]\)fa\>` else_\1fa`g
-silent %s` IF_\([nlpc]\)fa\>` if_\1fa`g
-silent %s` REPEAT_\([nlpc]\)fa\>` repeat_\1fa`g
-silent %s` AGAIN_\([nlpc]\)fa\>` again_\1fa`g
-silent %s` END_\([nlpc]\)fa\>` end_\1fa`g
-silent %s` UNTIL_\([nlpc]\)fa\>` until_\1fa`g
-silent %s` +LOOP_\([nlpc]\)fa\>` plus_loop_\1fa`g
-silent %s` LOOP_\([nlpc]\)fa\>` loop_\1fa`g
-silent %s` DO_\([nlpc]\)fa\>` do_\1fa`g
-silent %s` THEN_\([nlpc]\)fa\>` then_\1fa`g
-silent %s` ENDIF_\([nlpc]\)fa\>` endif_\1fa`g
-silent %s` BEGIN_\([nlpc]\)fa\>` begin_\1fa`g
-silent %s` BACK_\([nlpc]\)fa\>` back_\1fa`g
-silent %s` '_\([nlpc]\)fa\>` tick_\1fa`g
-silent %s` -->_\([nlpc]\)fa\>` next_screen_\1fa`g
-silent %s` LOAD_\([nlpc]\)fa\>` load_\1fa`g
-silent %s` FLUSH_\([nlpc]\)fa\>` flush_\1fa`g
-silent %s` R/W_\([nlpc]\)fa\>` read_write_\1fa`g
-silent %s` HI_\([nlpc]\)fa\>` hi_\1fa`g
-silent %s` LO_\([nlpc]\)fa\>` lo_\1fa`g
-silent %s` BLOCK_\([nlpc]\)fa\>` block_\1fa`g
-silent %s` BUFFER_\([nlpc]\)fa\>` buffer_\1fa`g
-silent %s` DR0_\([nlpc]\)fa\>` dr0_\1fa`g
-silent %s` EMPTY-BUFFERS_\([nlpc]\)fa\>` empty_buffers_\1fa`g
-silent %s` UPDATE_\([nlpc]\)fa\>` update_\1fa`g
-silent %s` +BUF_\([nlpc]\)fa\>` plus_buf_\1fa`g
-silent %s` #BUFF_\([nlpc]\)fa\>` hash_buff_\1fa`g
-silent %s` PREV_\([nlpc]\)fa\>` prev_\1fa`g
-silent %s` USE_\([nlpc]\)fa\>` use_\1fa`g
-silent %s` MESSAGE_\([nlpc]\)fa\>` message_\1fa`g
-silent %s` \.LINE_\([nlpc]\)fa\>` dot_line_\1fa`g
-silent %s` (LINE)_\([nlpc]\)fa\>` paren_line_\1fa`g
-silent %s` M/MOD_\([nlpc]\)fa\>` m_slash_mod_\1fa`g
-silent %s` \*/_\([nlpc]\)fa\>` star_slash_\1fa`g
-silent %s` \*/MOD_\([nlpc]\)fa\>` star_slash_mod_\1fa`g
-silent %s` MOD_\([nlpc]\)fa\>` mod_\1fa`g
-silent %s` /_\([nlpc]\)fa\>` slash_\1fa`g
-silent %s` /MOD_\([nlpc]\)fa\>` slash_mod_\1fa`g
-silent %s` \*_\([nlpc]\)fa\>` star_\1fa`g
-silent %s` M/_\([nlpc]\)fa\>` m_slash_\1fa`g
-silent %s` M\*_\([nlpc]\)fa\>` m_star_\1fa`g
-silent %s` MAX_\([nlpc]\)fa\>` max_\1fa`g
-silent %s` MIN_\([nlpc]\)fa\>` min_\1fa`g
-silent %s` DABS_\([nlpc]\)fa\>` dabs_\1fa`g
-silent %s` ABS_\([nlpc]\)fa\>` abs_\1fa`g
-silent %s` D+-_\([nlpc]\)fa\>` d_plus_minus_\1fa`g
-silent %s` +-_\([nlpc]\)fa\>` plus_minus_\1fa`g
-silent %s` S->D_\([nlpc]\)fa\>` s_to_d_\1fa`g
-silent %s` COLD_\([nlpc]\)fa\>` cold_\1fa`g
-silent %s` WARM_\([nlpc]\)fa\>` warm_\1fa`g
-silent %s` ABORT_\([nlpc]\)fa\>` abort_\1fa`g
-silent %s` QUIT_\([nlpc]\)fa\>` quit_\1fa`g
-silent %s` (_\([nlpc]\)fa\>` paren_\1fa`g
-silent %s` DEFINITIONS_\([nlpc]\)fa\>` definitions_\1fa`g
-silent %s` FORTH_\([nlpc]\)fa\>` forth_\1fa`g
-silent %s` VOCABULARY_\([nlpc]\)fa\>` vocabulary_\1fa`g
-silent %s` IMMEDIATE_\([nlpc]\)fa\>` immediate_\1fa`g
-silent %s` INTERPRET_\([nlpc]\)fa\>` interpret_\1fa`g
-silent %s` ?STACK_\([nlpc]\)fa\>` question_stack_\1fa`g
-silent %s` DLITERAL_\([nlpc]\)fa\>` dliteral_\1fa`g
-silent %s` LITERAL_\([nlpc]\)fa\>` literal_\1fa`g
-silent %s` \[COMPILE]_\([nlpc]\)fa\>` bracket_compile_\1fa`g
-silent %s` CREATE_\([nlpc]\)fa\>` create_\1fa`g
-silent %s` ID\._\([nlpc]\)fa\>` id_dot_\1fa`g
-silent %s` ERROR_\([nlpc]\)fa\>` error_\1fa`g
-silent %s` (ABORT)_\([nlpc]\)fa\>` paren_abort_\1fa`g
-silent %s` -FIND_\([nlpc]\)fa\>` minus_find_\1fa`g
-silent %s` NUMBER_\([nlpc]\)fa\>` number_\1fa`g
-silent %s` (NUMBER)_\([nlpc]\)fa\>` paren_number_\1fa`g
-silent %s` WORD_\([nlpc]\)fa\>` word_\1fa`g
-silent %s` PAD_\([nlpc]\)fa\>` pad_\1fa`g
-silent %s` HOLD_\([nlpc]\)fa\>` hold_\1fa`g
-silent %s` BLANKS_\([nlpc]\)fa\>` blanks_\1fa`g
-silent %s` ERASE_\([nlpc]\)fa\>` erase_\1fa`g
-silent %s` FILL_\([nlpc]\)fa\>` fill_\1fa`g
-silent %s` QUERY_\([nlpc]\)fa\>` query_\1fa`g
-silent %s` EXPECT_\([nlpc]\)fa\>` expect_\1fa`g
-silent %s` \."_\([nlpc]\)fa\>` dot_quote_\1fa`g
-silent %s` (\.")_\([nlpc]\)fa\>` paren_dot_quote_\1fa`g
-silent %s` -TRAILING_\([nlpc]\)fa\>` minus_trailing_\1fa`g
-silent %s` TYPE_\([nlpc]\)fa\>` type_\1fa`g
-silent %s` COUNT_\([nlpc]\)fa\>` count_\1fa`g
-silent %s` DOES>_\([nlpc]\)fa\>` does_\1fa`g
-silent %s` <BUILDS_\([nlpc]\)fa\>` builds_\1fa`g
-silent %s` ;CODE_\([nlpc]\)fa\>` semicolon_code_\1fa`g
-silent %s` (;CODE)_\([nlpc]\)fa\>` paren_semicolon_code_\1fa`g
-silent %s` DECIMAL_\([nlpc]\)fa\>` decimal_\1fa`g
-silent %s` HEX_\([nlpc]\)fa\>` hex_\1fa`g
-silent %s` SMUDGE_\([nlpc]\)fa\>` smudge_\1fa`g
-silent %s` ]_\([nlpc]\)fa\>` right_bracket_\1fa`g
-silent %s` \[_\([nlpc]\)fa\>` left_bracket_\1fa`g
-silent %s` COMPILE_\([nlpc]\)fa\>` compile_\1fa`g
-silent %s` ?LOADING_\([nlpc]\)fa\>` question_loading_\1fa`g
-silent %s` ?CSP_\([nlpc]\)fa\>` question_csp_\1fa`g
-silent %s` ?PAIRS_\([nlpc]\)fa\>` question_pairs_\1fa`g
-silent %s` ?EXEC_\([nlpc]\)fa\>` question_exec_\1fa`g
-silent %s` ?COMP_\([nlpc]\)fa\>` question_comp_\1fa`g
-silent %s` ?ERROR_\([nlpc]\)fa\>` question_error_\1fa`g
-silent %s` !CSP_\([nlpc]\)fa\>` store_csp_\1fa`g
-silent %s` PFA_\([nlpc]\)fa\>` pfa_\1fa`g
-silent %s` NFA_\([nlpc]\)fa\>` nfa_\1fa`g
-silent %s` CFA_\([nlpc]\)fa\>` cfa_\1fa`g
-silent %s` LFA_\([nlpc]\)fa\>` lfa_\1fa`g
-silent %s` LATEST_\([nlpc]\)fa\>` latest_\1fa`g
-silent %s` TRAVERSE_\([nlpc]\)fa\>` traverse_\1fa`g
-silent %s` -DUP_\([nlpc]\)fa\>` minus_dup_\1fa`g
-silent %s` SPACE_\([nlpc]\)fa\>` space_\1fa`g
-silent %s` ROT_\([nlpc]\)fa\>` rot_\1fa`g
-silent %s` >_\([nlpc]\)fa\>` greater_than_\1fa`g
-silent %s` U<_\([nlpc]\)fa\>` u_less_than_\1fa`g
-silent %s` <_\([nlpc]\)fa\>` less_than_\1fa`g
-silent %s` =_\([nlpc]\)fa\>` equals_\1fa`g
-silent %s` -_\([nlpc]\)fa\>` minus_\1fa`g
-silent %s` C,_\([nlpc]\)fa\>` c_comma_\1fa`g
-silent %s` ,_\([nlpc]\)fa\>` comma_\1fa`g
-silent %s` ALLOT_\([nlpc]\)fa\>` allot_\1fa`g
-silent %s` HERE_\([nlpc]\)fa\>` here_\1fa`g
-silent %s` 2+_\([nlpc]\)fa\>` two_plus_\1fa`g
-silent %s` 1+_\([nlpc]\)fa\>` one_plus_\1fa`g
-silent %s` HLD_\([nlpc]\)fa\>` hld_\1fa`g
-silent %s` R#_\([nlpc]\)fa\>` r_hash_\1fa`g
-silent %s` CSP_\([nlpc]\)fa\>` csp_\1fa`g
-silent %s` FLD_\([nlpc]\)fa\>` fld_\1fa`g
-silent %s` DPL_\([nlpc]\)fa\>` dpl_\1fa`g
-silent %s` BASE_\([nlpc]\)fa\>` base_\1fa`g
-silent %s` STATE_\([nlpc]\)fa\>` state_\1fa`g
-silent %s` CURRENT_\([nlpc]\)fa\>` current_\1fa`g
-silent %s` CONTEXT_\([nlpc]\)fa\>` context_\1fa`g
-silent %s` OFFSET_\([nlpc]\)fa\>` offset_\1fa`g
-silent %s` SCR_\([nlpc]\)fa\>` scr_\1fa`g
-silent %s` OUT_\([nlpc]\)fa\>` out_\1fa`g
-silent %s` IN_\([nlpc]\)fa\>` in_\1fa`g
-silent %s` BLK_\([nlpc]\)fa\>` blk_\1fa`g
-silent %s` VOC-LINK_\([nlpc]\)fa\>` voc_link_\1fa`g
-silent %s` DP_\([nlpc]\)fa\>` dp_\1fa`g
-silent %s` FENCE_\([nlpc]\)fa\>` fence_\1fa`g
-silent %s` WARNING_\([nlpc]\)fa\>` warning_\1fa`g
-silent %s` WIDTH_\([nlpc]\)fa\>` width_\1fa`g
-silent %s` TIB_\([nlpc]\)fa\>` tib_\1fa`g
-silent %s` R0_\([nlpc]\)fa\>` r0_\1fa`g
-silent %s` S0_\([nlpc]\)fa\>` s0_\1fa`g
-silent %s` +ORIGIN_\([nlpc]\)fa\>` plus_origin_\1fa`g
-silent %s` B/SCR_\([nlpc]\)fa\>` b_slash_scr_\1fa`g
-silent %s` B/BUF_\([nlpc]\)fa\>` b_slash_buf_\1fa`g
-silent %s` LIMIT_\([nlpc]\)fa\>` limit_\1fa`g
-silent %s` FIRST_\([nlpc]\)fa\>` first_\1fa`g
-silent %s` C/L_\([nlpc]\)fa\>` c_slash_l_\1fa`g
-silent %s` BL_\([nlpc]\)fa\>` b_l_\1fa`g
-silent %s` 3_\([nlpc]\)fa\>` three_\1fa`g
-silent %s` 2_\([nlpc]\)fa\>` two_\1fa`g
-silent %s` 1_\([nlpc]\)fa\>` one_\1fa`g
-silent %s` 0_\([nlpc]\)fa\>` zero_\1fa`g
-silent %s` USER_\([nlpc]\)fa\>` user_\1fa`g
-silent %s` VARIABLE_\([nlpc]\)fa\>` variable_\1fa`g
-silent %s` CONSTANT_\([nlpc]\)fa\>` constant_\1fa`g
-silent %s` NOOP_\([nlpc]\)fa\>` noop_\1fa`g
-silent %s` ;_\([nlpc]\)fa\>` semicolon_\1fa`g
-silent %s` :_\([nlpc]\)fa\>` colon_\1fa`g
-silent %s` 2!_\([nlpc]\)fa\>` two_store_\1fa`g
-silent %s` C!_\([nlpc]\)fa\>` c_store_\1fa`g
-silent %s` !_\([nlpc]\)fa\>` store_\1fa`g
-silent %s` 2@_\([nlpc]\)fa\>` two_fetch_\1fa`g
-silent %s` C@_\([nlpc]\)fa\>` c_fetch_\1fa`g
-silent %s` @_\([nlpc]\)fa\>` fetch_\1fa`g
-silent %s` TOGGLE_\([nlpc]\)fa\>` toggle_\1fa`g
-silent %s` +!_\([nlpc]\)fa\>` plus_store_\1fa`g
-silent %s` 2DUP_\([nlpc]\)fa\>` two_dup_\1fa`g
-silent %s` DUP_\([nlpc]\)fa\>` dup_\1fa`g
-silent %s` SWAP_\([nlpc]\)fa\>` swap_\1fa`g
-silent %s` DROP_\([nlpc]\)fa\>` drop_\1fa`g
-silent %s` OVER_\([nlpc]\)fa\>` over_\1fa`g
-silent %s` DMINUS_\([nlpc]\)fa\>` dminus_\1fa`g
-silent %s` MINUS_\([nlpc]\)fa\>` minus_\1fa`g
-silent %s` D+_\([nlpc]\)fa\>` d_plus_\1fa`g
-silent %s` +_\([nlpc]\)fa\>` plus_\1fa`g
-silent %s` 0<_\([nlpc]\)fa\>` zero_less_than_\1fa`g
-silent %s` 0=_\([nlpc]\)fa\>` zero_equals_\1fa`g
-silent %s` R_\([nlpc]\)fa\>` r_\1fa`g
-silent %s` R>_\([nlpc]\)fa\>` from_r_\1fa`g
-silent %s` >R_\([nlpc]\)fa\>` to_r_\1fa`g
-silent %s` LEAVE_\([nlpc]\)fa\>` leave_\1fa`g
-silent %s` ;S_\([nlpc]\)fa\>` semicolon_s_\1fa`g
-silent %s` RP!_\([nlpc]\)fa\>` rp_store_\1fa`g
-silent %s` RP@_\([nlpc]\)fa\>` rp_fetch_\1fa`g
-silent %s` SP!_\([nlpc]\)fa\>` sp_store_\1fa`g
-silent %s` SP@_\([nlpc]\)fa\>` sp_fetch_\1fa`g
-silent %s` XOR_\([nlpc]\)fa\>` xor_\1fa`g
-silent %s` OR_\([nlpc]\)fa\>` or_\1fa`g
-silent %s` AND_\([nlpc]\)fa\>` and_\1fa`g
-silent %s` U/MOD_\([nlpc]\)fa\>` u_slash_mod_\1fa`g
-silent %s` U\*_\([nlpc]\)fa\>` u_star_\1fa`g
-silent %s` CMOVE_\([nlpc]\)fa\>` cmove_\1fa`g
-silent %s` CR_\([nlpc]\)fa\>` cr_\1fa`g
-silent %s` ?TERMINAL_\([nlpc]\)fa\>` question_terminal_\1fa`g
-silent %s` KEY_\([nlpc]\)fa\>` key_\1fa`g
-silent %s` EMIT_\([nlpc]\)fa\>` emit_\1fa`g
-silent %s` ENCLOSE_\([nlpc]\)fa\>` enclose_\1fa`g
-silent %s` (FIND)_\([nlpc]\)fa\>` paren_find_\1fa`g
-silent %s` DIGIT_\([nlpc]\)fa\>` digit_\1fa`g
-silent %s` I_\([nlpc]\)fa\>` i_\1fa`g
-silent %s` (DO)_\([nlpc]\)fa\>` paren_do_\1fa`g
-silent %s` (+LOOP)_\([nlpc]\)fa\>` paren_plus_loop_\1fa`g
-silent %s` (LOOP)_\([nlpc]\)fa\>` paren_loop_\1fa`g
-silent %s` 0BRANCH_\([nlpc]\)fa\>` zero_branch_\1fa`g
-silent %s` BRANCH_\([nlpc]\)fa\>` branch_\1fa`g
-silent %s` EXECUTE_\([nlpc]\)fa\>` execute_\1fa`g
-silent %s` LIT_\([nlpc]\)fa\>` lit_\1fa`g
-
+silent %s`^C_\([nlpc]\)fa\(\d\+\)\?\>`c_\1fa\2`g
+silent %s`^TILL_\([nlpc]\)fa\(\d\+\)\?\>`till_\1fa\2`g
+silent %s`^X_\([nlpc]\)fa\(\d\+\)\?\>`x_\1fa\2`g
+silent %s`^B_\([nlpc]\)fa\(\d\+\)\?\>`b_\1fa\2`g
+silent %s`^F_\([nlpc]\)fa\(\d\+\)\?\>`f_\1fa\2`g
+silent %s`^N_\([nlpc]\)fa\(\d\+\)\?\>`n_\1fa\2`g
+silent %s`^DELETE_\([nlpc]\)fa\(\d\+\)\?\>`delete_\1fa\2`g
+silent %s`^FIND_\([nlpc]\)fa\(\d\+\)\?\>`find_\1fa\2`g
+silent %s`^1LINE_\([nlpc]\)fa\(\d\+\)\?\>`oneline_\1fa\2`g
+silent %s`^MATCH_\([nlpc]\)fa\(\d\+\)\?\>`match_\1fa\2`g
+silent %s`^-TEXT_\([nlpc]\)fa\(\d\+\)\?\>`minus_text_\1fa\2`g
+silent %s`^COPY_\([nlpc]\)fa\(\d\+\)\?\>`copy_\1fa\2`g
+silent %s`^CLEAR_\([nlpc]\)fa\(\d\+\)\?\>`clear_\1fa\2`g
+silent %s`^TOP_\([nlpc]\)fa\(\d\+\)\?\>`top_\1fa\2`g
+silent %s`^editor_I_\([nlpc]\)fa\(\d\+\)\?\>`editor_i_\1fa\2`g
+silent %s`^P_\([nlpc]\)fa\(\d\+\)\?\>`p_\1fa\2`g
+silent %s`^editor_R_\([nlpc]\)fa\(\d\+\)\?\>`editor_r_\1fa\2`g
+silent %s`^L_\([nlpc]\)fa\(\d\+\)\?\>`l_\1fa\2`g
+silent %s`^T_\([nlpc]\)fa\(\d\+\)\?\>`t_\1fa\2`g
+silent %s`^M_\([nlpc]\)fa\(\d\+\)\?\>`m_\1fa\2`g
+silent %s`^D_\([nlpc]\)fa\(\d\+\)\?\>`d_\1fa\2`g
+silent %s`^S_\([nlpc]\)fa\(\d\+\)\?\>`s_\1fa\2`g
+silent %s`^E_\([nlpc]\)fa\(\d\+\)\?\>`e_\1fa\2`g
+silent %s`^H_\([nlpc]\)fa\(\d\+\)\?\>`h_\1fa\2`g
+silent %s`^-MOVE_\([nlpc]\)fa\(\d\+\)\?\>`minus_move_\1fa\2`g
+silent %s`^#LAG_\([nlpc]\)fa\(\d\+\)\?\>`hash_lag_\1fa\2`g
+silent %s`^#LEAD_\([nlpc]\)fa\(\d\+\)\?\>`hash_lead_\1fa\2`g
+silent %s`^#LOCATE_\([nlpc]\)fa\(\d\+\)\?\>`hash_locate_\1fa\2`g
+silent %s`^UDG_\([nlpc]\)fa\(\d\+\)\?\>`udg_\1fa\2`g
+silent %s`^INIT-DISC_\([nlpc]\)fa\(\d\+\)\?\>`init_disc_\1fa\2`g
+silent %s`^INKEY_\([nlpc]\)fa\(\d\+\)\?\>`inkey_\1fa\2`g
+silent %s`^ENDCASE_\([nlpc]\)fa\(\d\+\)\?\>`endcase_\1fa\2`g
+silent %s`^ENDOF_\([nlpc]\)fa\(\d\+\)\?\>`endof_\1fa\2`g
+silent %s`^OF_\([nlpc]\)fa\(\d\+\)\?\>`of_\1fa\2`g
+silent %s`^CASE_\([nlpc]\)fa\(\d\+\)\?\>`case_\1fa\2`g
+silent %s`^DRAW_\([nlpc]\)fa\(\d\+\)\?\>`draw_\1fa\2`g
+silent %s`^INCY_\([nlpc]\)fa\(\d\+\)\?\>`incy_\1fa\2`g
+silent %s`^INCX_\([nlpc]\)fa\(\d\+\)\?\>`incx_\1fa\2`g
+silent %s`^Y1_\([nlpc]\)fa\(\d\+\)\?\>`y1_\1fa\2`g
+silent %s`^X1_\([nlpc]\)fa\(\d\+\)\?\>`x1_\1fa\2`g
+silent %s`^PLOT_\([nlpc]\)fa\(\d\+\)\?\>`plot_\1fa\2`g
+silent %s`^EXIT_\([nlpc]\)fa\(\d\+\)\?\>`exit_\1fa\2`g
+silent %s`^2OVER_\([nlpc]\)fa\(\d\+\)\?\>`two_over_\1fa\2`g
+silent %s`^U\.R_\([nlpc]\)fa\(\d\+\)\?\>`u_dot_r_\1fa\2`g
+silent %s`^2VARIABLE_\([nlpc]\)fa\(\d\+\)\?\>`two_variable_\1fa\2`g
+silent %s`^2CONSTANT_\([nlpc]\)fa\(\d\+\)\?\>`two_constant_\1fa\2`g
+silent %s`^J_\([nlpc]\)fa\(\d\+\)\?\>`j_\1fa\2`g
+silent %s`^I'_\([nlpc]\)fa\(\d\+\)\?\>`i_tick_\1fa\2`g
+silent %s`^NOT_\([nlpc]\)fa\(\d\+\)\?\>`not_\1fa\2`g
+silent %s`^INVERSE_\([nlpc]\)fa\(\d\+\)\?\>`inverse_\1fa\2`g
+silent %s`^GOVER_\([nlpc]\)fa\(\d\+\)\?\>`gover_\1fa\2`g
+silent %s`^BRIGHT_\([nlpc]\)fa\(\d\+\)\?\>`bright_\1fa\2`g
+silent %s`^FLASH_\([nlpc]\)fa\(\d\+\)\?\>`flash_\1fa\2`g
+silent %s`^INK_\([nlpc]\)fa\(\d\+\)\?\>`ink_\1fa\2`g
+silent %s`^POINT_\([nlpc]\)fa\(\d\+\)\?\>`point_\1fa\2`g
+silent %s`^ATTR_\([nlpc]\)fa\(\d\+\)\?\>`attr_\1fa\2`g
+silent %s`^PAPER_\([nlpc]\)fa\(\d\+\)\?\>`paper_\1fa\2`g
+silent %s`^BLEEP_\([nlpc]\)fa\(\d\+\)\?\>`bleep_\1fa\2`g
+silent %s`^BORDER_\([nlpc]\)fa\(\d\+\)\?\>`border_\1fa\2`g
+silent %s`^AT_\([nlpc]\)fa\(\d\+\)\?\>`at_\1fa\2`g
+silent %s`^SCREEN_\([nlpc]\)fa\(\d\+\)\?\>`screen_\1fa\2`g
+silent %s`^OUTP_\([nlpc]\)fa\(\d\+\)\?\>`outp_\1fa\2`g
+silent %s`^INP_\([nlpc]\)fa\(\d\+\)\?\>`inp_\1fa\2`g
+silent %s`^PUSHDE_\([nlpc]\)fa\(\d\+\)\?\>`pushde_\1fa\2`g
+silent %s`^PUSHHL_\([nlpc]\)fa\(\d\+\)\?\>`pushhl_\1fa\2`g
+silent %s`^NEXT_\([nlpc]\)fa\(\d\+\)\?\>`next_\1fa\2`g
+silent %s`^WHERE_\([nlpc]\)fa\(\d\+\)\?\>`where_\1fa\2`g
+silent %s`^EDITOR_\([nlpc]\)fa\(\d\+\)\?\>`editor_\1fa\2`g
+silent %s`^TRIAD_\([nlpc]\)fa\(\d\+\)\?\>`triad_\1fa\2`g
+silent %s`^INDEX_\([nlpc]\)fa\(\d\+\)\?\>`index_\1fa\2`g
+silent %s`^FORGET_\([nlpc]\)fa\(\d\+\)\?\>`forget_\1fa\2`g
+silent %s`^FREE_\([nlpc]\)fa\(\d\+\)\?\>`free_\1fa\2`g
+silent %s`^SIZE_\([nlpc]\)fa\(\d\+\)\?\>`size_\1fa\2`g
+silent %s`^2SWAP_\([nlpc]\)fa\(\d\+\)\?\>`two_swap_\1fa\2`g
+silent %s`^2DROP_\([nlpc]\)fa\(\d\+\)\?\>`two_drop_\1fa\2`g
+silent %s`^VERIFY_\([nlpc]\)fa\(\d\+\)\?\>`verify_\1fa\2`g
+silent %s`^SAVET_\([nlpc]\)fa\(\d\+\)\?\>`savet_\1fa\2`g
+silent %s`^LOADT_\([nlpc]\)fa\(\d\+\)\?\>`loadt_\1fa\2`g
+silent %s`^LINE_\([nlpc]\)fa\(\d\+\)\?\>`line_\1fa\2`g
+silent %s`^TEXT_\([nlpc]\)fa\(\d\+\)\?\>`text_\1fa\2`g
+silent %s`^MON_\([nlpc]\)fa\(\d\+\)\?\>`mon_\1fa\2`g
+silent %s`^(TAPE)_\([nlpc]\)fa\(\d\+\)\?\>`paren_tape_\1fa\2`g
+silent %s`^\.CPU_\([nlpc]\)fa\(\d\+\)\?\>`dot_cpu_\1fa\2`g
+silent %s`^CLS_\([nlpc]\)fa\(\d\+\)\?\>`cls_\1fa\2`g
+silent %s`^LINK_\([nlpc]\)fa\(\d\+\)\?\>`link_\1fa\2`g
+silent %s`^LIST_\([nlpc]\)fa\(\d\+\)\?\>`list_\1fa\2`g
+silent %s`^VLIST_\([nlpc]\)fa\(\d\+\)\?\>`vlist_\1fa\2`g
+silent %s`^U\._\([nlpc]\)fa\(\d\+\)\?\>`u_dot_\1fa\2`g
+silent %s`^?_\([nlpc]\)fa\(\d\+\)\?\>`question_\1fa\2`g
+silent %s`^\._\([nlpc]\)fa\(\d\+\)\?\>`dot_\1fa\2`g
+silent %s`^D\._\([nlpc]\)fa\(\d\+\)\?\>`d_dot_\1fa\2`g
+silent %s`^\.R_\([nlpc]\)fa\(\d\+\)\?\>`dot_r_\1fa\2`g
+silent %s`^D\.R_\([nlpc]\)fa\(\d\+\)\?\>`d_dot_r_\1fa\2`g
+silent %s`^#S_\([nlpc]\)fa\(\d\+\)\?\>`hash_s_\1fa\2`g
+silent %s`^#_\([nlpc]\)fa\(\d\+\)\?\>`hash_\1fa\2`g
+silent %s`^SIGN_\([nlpc]\)fa\(\d\+\)\?\>`sign_\1fa\2`g
+silent %s`^#>_\([nlpc]\)fa\(\d\+\)\?\>`hash_greater_\1fa\2`g
+silent %s`^<#_\([nlpc]\)fa\(\d\+\)\?\>`less_hash_\1fa\2`g
+silent %s`^SPACES_\([nlpc]\)fa\(\d\+\)\?\>`spaces_\1fa\2`g
+silent %s`^WHILE_\([nlpc]\)fa\(\d\+\)\?\>`while_\1fa\2`g
+silent %s`^ELSE_\([nlpc]\)fa\(\d\+\)\?\>`else_\1fa\2`g
+silent %s`^IF_\([nlpc]\)fa\(\d\+\)\?\>`if_\1fa\2`g
+silent %s`^REPEAT_\([nlpc]\)fa\(\d\+\)\?\>`repeat_\1fa\2`g
+silent %s`^AGAIN_\([nlpc]\)fa\(\d\+\)\?\>`again_\1fa\2`g
+silent %s`^END_\([nlpc]\)fa\(\d\+\)\?\>`end_\1fa\2`g
+silent %s`^UNTIL_\([nlpc]\)fa\(\d\+\)\?\>`until_\1fa\2`g
+silent %s`^+LOOP_\([nlpc]\)fa\(\d\+\)\?\>`plus_loop_\1fa\2`g
+silent %s`^LOOP_\([nlpc]\)fa\(\d\+\)\?\>`loop_\1fa\2`g
+silent %s`^DO_\([nlpc]\)fa\(\d\+\)\?\>`do_\1fa\2`g
+silent %s`^THEN_\([nlpc]\)fa\(\d\+\)\?\>`then_\1fa\2`g
+silent %s`^ENDIF_\([nlpc]\)fa\(\d\+\)\?\>`endif_\1fa\2`g
+silent %s`^BEGIN_\([nlpc]\)fa\(\d\+\)\?\>`begin_\1fa\2`g
+silent %s`^BACK_\([nlpc]\)fa\(\d\+\)\?\>`back_\1fa\2`g
+silent %s`^'_\([nlpc]\)fa\(\d\+\)\?\>`tick_\1fa\2`g
+silent %s`^-->_\([nlpc]\)fa\(\d\+\)\?\>`next_screen_\1fa\2`g
+silent %s`^LOAD_\([nlpc]\)fa\(\d\+\)\?\>`load_\1fa\2`g
+silent %s`^FLUSH_\([nlpc]\)fa\(\d\+\)\?\>`flush_\1fa\2`g
+silent %s`^R/W_\([nlpc]\)fa\(\d\+\)\?\>`read_write_\1fa\2`g
+silent %s`^HI_\([nlpc]\)fa\(\d\+\)\?\>`hi_\1fa\2`g
+silent %s`^LO_\([nlpc]\)fa\(\d\+\)\?\>`lo_\1fa\2`g
+silent %s`^BLOCK_\([nlpc]\)fa\(\d\+\)\?\>`block_\1fa\2`g
+silent %s`^BUFFER_\([nlpc]\)fa\(\d\+\)\?\>`buffer_\1fa\2`g
+silent %s`^DR0_\([nlpc]\)fa\(\d\+\)\?\>`dr0_\1fa\2`g
+silent %s`^EMPTY-BUFFERS_\([nlpc]\)fa\(\d\+\)\?\>`empty_buffers_\1fa\2`g
+silent %s`^UPDATE_\([nlpc]\)fa\(\d\+\)\?\>`update_\1fa\2`g
+silent %s`^+BUF_\([nlpc]\)fa\(\d\+\)\?\>`plus_buf_\1fa\2`g
+silent %s`^#BUFF_\([nlpc]\)fa\(\d\+\)\?\>`hash_buff_\1fa\2`g
+silent %s`^PREV_\([nlpc]\)fa\(\d\+\)\?\>`prev_\1fa\2`g
+silent %s`^USE_\([nlpc]\)fa\(\d\+\)\?\>`use_\1fa\2`g
+silent %s`^MESSAGE_\([nlpc]\)fa\(\d\+\)\?\>`message_\1fa\2`g
+silent %s`^\.LINE_\([nlpc]\)fa\(\d\+\)\?\>`dot_line_\1fa\2`g
+silent %s`^(LINE)_\([nlpc]\)fa\(\d\+\)\?\>`paren_line_\1fa\2`g
+silent %s`^M/MOD_\([nlpc]\)fa\(\d\+\)\?\>`m_slash_mod_\1fa\2`g
+silent %s`^\*/_\([nlpc]\)fa\(\d\+\)\?\>`star_slash_\1fa\2`g
+silent %s`^\*/MOD_\([nlpc]\)fa\(\d\+\)\?\>`star_slash_mod_\1fa\2`g
+silent %s`^MOD_\([nlpc]\)fa\(\d\+\)\?\>`mod_\1fa\2`g
+silent %s`^/_\([nlpc]\)fa\(\d\+\)\?\>`slash_\1fa\2`g
+silent %s`^/MOD_\([nlpc]\)fa\(\d\+\)\?\>`slash_mod_\1fa\2`g
+silent %s`^\*_\([nlpc]\)fa\(\d\+\)\?\>`star_\1fa\2`g
+silent %s`^M/_\([nlpc]\)fa\(\d\+\)\?\>`m_slash_\1fa\2`g
+silent %s`^M\*_\([nlpc]\)fa\(\d\+\)\?\>`m_star_\1fa\2`g
+silent %s`^MAX_\([nlpc]\)fa\(\d\+\)\?\>`max_\1fa\2`g
+silent %s`^MIN_\([nlpc]\)fa\(\d\+\)\?\>`min_\1fa\2`g
+silent %s`^DABS_\([nlpc]\)fa\(\d\+\)\?\>`dabs_\1fa\2`g
+silent %s`^ABS_\([nlpc]\)fa\(\d\+\)\?\>`abs_\1fa\2`g
+silent %s`^D+-_\([nlpc]\)fa\(\d\+\)\?\>`d_plus_minus_\1fa\2`g
+silent %s`^+-_\([nlpc]\)fa\(\d\+\)\?\>`plus_minus_\1fa\2`g
+silent %s`^S->D_\([nlpc]\)fa\(\d\+\)\?\>`s_to_d_\1fa\2`g
+silent %s`^COLD_\([nlpc]\)fa\(\d\+\)\?\>`cold_\1fa\2`g
+silent %s`^WARM_\([nlpc]\)fa\(\d\+\)\?\>`warm_\1fa\2`g
+silent %s`^ABORT_\([nlpc]\)fa\(\d\+\)\?\>`abort_\1fa\2`g
+silent %s`^QUIT_\([nlpc]\)fa\(\d\+\)\?\>`quit_\1fa\2`g
+silent %s`^(_\([nlpc]\)fa\(\d\+\)\?\>`paren_\1fa\2`g
+silent %s`^DEFINITIONS_\([nlpc]\)fa\(\d\+\)\?\>`definitions_\1fa\2`g
+silent %s`^FORTH_\([nlpc]\)fa\(\d\+\)\?\>`forth_\1fa\2`g
+silent %s`^VOCABULARY_\([nlpc]\)fa\(\d\+\)\?\>`vocabulary_\1fa\2`g
+silent %s`^IMMEDIATE_\([nlpc]\)fa\(\d\+\)\?\>`immediate_\1fa\2`g
+silent %s`^INTERPRET_\([nlpc]\)fa\(\d\+\)\?\>`interpret_\1fa\2`g
+silent %s`^?STACK_\([nlpc]\)fa\(\d\+\)\?\>`question_stack_\1fa\2`g
+silent %s`^DLITERAL_\([nlpc]\)fa\(\d\+\)\?\>`dliteral_\1fa\2`g
+silent %s`^LITERAL_\([nlpc]\)fa\(\d\+\)\?\>`literal_\1fa\2`g
+silent %s`^\[COMPILE]_\([nlpc]\)fa\(\d\+\)\?\>`bracket_compile_\1fa\2`g
+silent %s`^CREATE_\([nlpc]\)fa\(\d\+\)\?\>`create_\1fa\2`g
+silent %s`^ID\._\([nlpc]\)fa\(\d\+\)\?\>`id_dot_\1fa\2`g
+silent %s`^ERROR_\([nlpc]\)fa\(\d\+\)\?\>`error_\1fa\2`g
+silent %s`^(ABORT)_\([nlpc]\)fa\(\d\+\)\?\>`paren_abort_\1fa\2`g
+silent %s`^-FIND_\([nlpc]\)fa\(\d\+\)\?\>`minus_find_\1fa\2`g
+silent %s`^NUMBER_\([nlpc]\)fa\(\d\+\)\?\>`number_\1fa\2`g
+silent %s`^(NUMBER)_\([nlpc]\)fa\(\d\+\)\?\>`paren_number_\1fa\2`g
+silent %s`^WORD_\([nlpc]\)fa\(\d\+\)\?\>`word_\1fa\2`g
+silent %s`^PAD_\([nlpc]\)fa\(\d\+\)\?\>`pad_\1fa\2`g
+silent %s`^HOLD_\([nlpc]\)fa\(\d\+\)\?\>`hold_\1fa\2`g
+silent %s`^BLANKS_\([nlpc]\)fa\(\d\+\)\?\>`blanks_\1fa\2`g
+silent %s`^ERASE_\([nlpc]\)fa\(\d\+\)\?\>`erase_\1fa\2`g
+silent %s`^FILL_\([nlpc]\)fa\(\d\+\)\?\>`fill_\1fa\2`g
+silent %s`^QUERY_\([nlpc]\)fa\(\d\+\)\?\>`query_\1fa\2`g
+silent %s`^EXPECT_\([nlpc]\)fa\(\d\+\)\?\>`expect_\1fa\2`g
+silent %s`^\."_\([nlpc]\)fa\(\d\+\)\?\>`dot_quote_\1fa\2`g
+silent %s`^(\.")_\([nlpc]\)fa\(\d\+\)\?\>`paren_dot_quote_\1fa\2`g
+silent %s`^-TRAILING_\([nlpc]\)fa\(\d\+\)\?\>`minus_trailing_\1fa\2`g
+silent %s`^TYPE_\([nlpc]\)fa\(\d\+\)\?\>`type_\1fa\2`g
+silent %s`^COUNT_\([nlpc]\)fa\(\d\+\)\?\>`count_\1fa\2`g
+silent %s`^DOES>_\([nlpc]\)fa\(\d\+\)\?\>`does_\1fa\2`g
+silent %s`^<BUILDS_\([nlpc]\)fa\(\d\+\)\?\>`builds_\1fa\2`g
+silent %s`^;CODE_\([nlpc]\)fa\(\d\+\)\?\>`semicolon_code_\1fa\2`g
+silent %s`^(;CODE)_\([nlpc]\)fa\(\d\+\)\?\>`paren_semicolon_code_\1fa\2`g
+silent %s`^DECIMAL_\([nlpc]\)fa\(\d\+\)\?\>`decimal_\1fa\2`g
+silent %s`^HEX_\([nlpc]\)fa\(\d\+\)\?\>`hex_\1fa\2`g
+silent %s`^SMUDGE_\([nlpc]\)fa\(\d\+\)\?\>`smudge_\1fa\2`g
+silent %s`^]_\([nlpc]\)fa\(\d\+\)\?\>`right_bracket_\1fa\2`g
+silent %s`^\[_\([nlpc]\)fa\(\d\+\)\?\>`left_bracket_\1fa\2`g
+silent %s`^COMPILE_\([nlpc]\)fa\(\d\+\)\?\>`compile_\1fa\2`g
+silent %s`^?LOADING_\([nlpc]\)fa\(\d\+\)\?\>`question_loading_\1fa\2`g
+silent %s`^?CSP_\([nlpc]\)fa\(\d\+\)\?\>`question_csp_\1fa\2`g
+silent %s`^?PAIRS_\([nlpc]\)fa\(\d\+\)\?\>`question_pairs_\1fa\2`g
+silent %s`^?EXEC_\([nlpc]\)fa\(\d\+\)\?\>`question_exec_\1fa\2`g
+silent %s`^?COMP_\([nlpc]\)fa\(\d\+\)\?\>`question_comp_\1fa\2`g
+silent %s`^?ERROR_\([nlpc]\)fa\(\d\+\)\?\>`question_error_\1fa\2`g
+silent %s`^!CSP_\([nlpc]\)fa\(\d\+\)\?\>`store_csp_\1fa\2`g
+silent %s`^PFA_\([nlpc]\)fa\(\d\+\)\?\>`pfa_\1fa\2`g
+silent %s`^NFA_\([nlpc]\)fa\(\d\+\)\?\>`nfa_\1fa\2`g
+silent %s`^CFA_\([nlpc]\)fa\(\d\+\)\?\>`cfa_\1fa\2`g
+silent %s`^LFA_\([nlpc]\)fa\(\d\+\)\?\>`lfa_\1fa\2`g
+silent %s`^LATEST_\([nlpc]\)fa\(\d\+\)\?\>`latest_\1fa\2`g
+silent %s`^TRAVERSE_\([nlpc]\)fa\(\d\+\)\?\>`traverse_\1fa\2`g
+silent %s`^-DUP_\([nlpc]\)fa\(\d\+\)\?\>`minus_dup_\1fa\2`g
+silent %s`^SPACE_\([nlpc]\)fa\(\d\+\)\?\>`space_\1fa\2`g
+silent %s`^ROT_\([nlpc]\)fa\(\d\+\)\?\>`rot_\1fa\2`g
+silent %s`^>_\([nlpc]\)fa\(\d\+\)\?\>`greater_than_\1fa\2`g
+silent %s`^U<_\([nlpc]\)fa\(\d\+\)\?\>`u_less_than_\1fa\2`g
+silent %s`^<_\([nlpc]\)fa\(\d\+\)\?\>`less_than_\1fa\2`g
+silent %s`^=_\([nlpc]\)fa\(\d\+\)\?\>`equals_\1fa\2`g
+silent %s`^-_\([nlpc]\)fa\(\d\+\)\?\>`minus_sign_\1fa\2`g
+silent %s`^C,_\([nlpc]\)fa\(\d\+\)\?\>`c_comma_\1fa\2`g
+silent %s`^,_\([nlpc]\)fa\(\d\+\)\?\>`comma_\1fa\2`g
+silent %s`^ALLOT_\([nlpc]\)fa\(\d\+\)\?\>`allot_\1fa\2`g
+silent %s`^HERE_\([nlpc]\)fa\(\d\+\)\?\>`here_\1fa\2`g
+silent %s`^2+_\([nlpc]\)fa\(\d\+\)\?\>`two_plus_\1fa\2`g
+silent %s`^1+_\([nlpc]\)fa\(\d\+\)\?\>`one_plus_\1fa\2`g
+silent %s`^HLD_\([nlpc]\)fa\(\d\+\)\?\>`hld_\1fa\2`g
+silent %s`^R#_\([nlpc]\)fa\(\d\+\)\?\>`r_hash_\1fa\2`g
+silent %s`^CSP_\([nlpc]\)fa\(\d\+\)\?\>`csp_\1fa\2`g
+silent %s`^FLD_\([nlpc]\)fa\(\d\+\)\?\>`fld_\1fa\2`g
+silent %s`^DPL_\([nlpc]\)fa\(\d\+\)\?\>`dpl_\1fa\2`g
+silent %s`^BASE_\([nlpc]\)fa\(\d\+\)\?\>`base_\1fa\2`g
+silent %s`^STATE_\([nlpc]\)fa\(\d\+\)\?\>`state_\1fa\2`g
+silent %s`^CURRENT_\([nlpc]\)fa\(\d\+\)\?\>`current_\1fa\2`g
+silent %s`^CONTEXT_\([nlpc]\)fa\(\d\+\)\?\>`context_\1fa\2`g
+silent %s`^OFFSET_\([nlpc]\)fa\(\d\+\)\?\>`offset_\1fa\2`g
+silent %s`^SCR_\([nlpc]\)fa\(\d\+\)\?\>`scr_\1fa\2`g
+silent %s`^OUT_\([nlpc]\)fa\(\d\+\)\?\>`out_\1fa\2`g
+silent %s`^IN_\([nlpc]\)fa\(\d\+\)\?\>`in_\1fa\2`g
+silent %s`^BLK_\([nlpc]\)fa\(\d\+\)\?\>`blk_\1fa\2`g
+silent %s`^VOC-LINK_\([nlpc]\)fa\(\d\+\)\?\>`voc_link_\1fa\2`g
+silent %s`^DP_\([nlpc]\)fa\(\d\+\)\?\>`dp_\1fa\2`g
+silent %s`^FENCE_\([nlpc]\)fa\(\d\+\)\?\>`fence_\1fa\2`g
+silent %s`^WARNING_\([nlpc]\)fa\(\d\+\)\?\>`warning_\1fa\2`g
+silent %s`^WIDTH_\([nlpc]\)fa\(\d\+\)\?\>`width_\1fa\2`g
+silent %s`^TIB_\([nlpc]\)fa\(\d\+\)\?\>`tib_\1fa\2`g
+silent %s`^R0_\([nlpc]\)fa\(\d\+\)\?\>`r0_\1fa\2`g
+silent %s`^S0_\([nlpc]\)fa\(\d\+\)\?\>`s0_\1fa\2`g
+silent %s`^+ORIGIN_\([nlpc]\)fa\(\d\+\)\?\>`plus_origin_\1fa\2`g
+silent %s`^B/SCR_\([nlpc]\)fa\(\d\+\)\?\>`b_slash_scr_\1fa\2`g
+silent %s`^B/BUF_\([nlpc]\)fa\(\d\+\)\?\>`b_slash_buf_\1fa\2`g
+silent %s`^LIMIT_\([nlpc]\)fa\(\d\+\)\?\>`limit_\1fa\2`g
+silent %s`^FIRST_\([nlpc]\)fa\(\d\+\)\?\>`first_\1fa\2`g
+silent %s`^C/L_\([nlpc]\)fa\(\d\+\)\?\>`c_slash_l_\1fa\2`g
+silent %s`^BL_\([nlpc]\)fa\(\d\+\)\?\>`b_l_\1fa\2`g
+silent %s`^3_\([nlpc]\)fa\(\d\+\)\?\>`three_\1fa\2`g
+silent %s`^2_\([nlpc]\)fa\(\d\+\)\?\>`two_\1fa\2`g
+silent %s`^1_\([nlpc]\)fa\(\d\+\)\?\>`one_\1fa\2`g
+silent %s`^0_\([nlpc]\)fa\(\d\+\)\?\>`zero_\1fa\2`g
+silent %s`^USER_\([nlpc]\)fa\(\d\+\)\?\>`user_\1fa\2`g
+silent %s`^VARIABLE_\([nlpc]\)fa\(\d\+\)\?\>`variable_\1fa\2`g
+silent %s`^CONSTANT_\([nlpc]\)fa\(\d\+\)\?\>`constant_\1fa\2`g
+silent %s`^NOOP_\([nlpc]\)fa\(\d\+\)\?\>`noop_\1fa\2`g
+silent %s`^;_\([nlpc]\)fa\(\d\+\)\?\>`semicolon_\1fa\2`g
+silent %s`^:_\([nlpc]\)fa\(\d\+\)\?\>`colon_\1fa\2`g
+silent %s`^2!_\([nlpc]\)fa\(\d\+\)\?\>`two_store_\1fa\2`g
+silent %s`^C!_\([nlpc]\)fa\(\d\+\)\?\>`c_store_\1fa\2`g
+silent %s`^!_\([nlpc]\)fa\(\d\+\)\?\>`store_\1fa\2`g
+silent %s`^2@_\([nlpc]\)fa\(\d\+\)\?\>`two_fetch_\1fa\2`g
+silent %s`^C@_\([nlpc]\)fa\(\d\+\)\?\>`c_fetch_\1fa\2`g
+silent %s`^@_\([nlpc]\)fa\(\d\+\)\?\>`fetch_\1fa\2`g
+silent %s`^TOGGLE_\([nlpc]\)fa\(\d\+\)\?\>`toggle_\1fa\2`g
+silent %s`^+!_\([nlpc]\)fa\(\d\+\)\?\>`plus_store_\1fa\2`g
+silent %s`^2DUP_\([nlpc]\)fa\(\d\+\)\?\>`two_dup_\1fa\2`g
+silent %s`^DUP_\([nlpc]\)fa\(\d\+\)\?\>`dup_\1fa\2`g
+silent %s`^SWAP_\([nlpc]\)fa\(\d\+\)\?\>`swap_\1fa\2`g
+silent %s`^DROP_\([nlpc]\)fa\(\d\+\)\?\>`drop_\1fa\2`g
+silent %s`^OVER_\([nlpc]\)fa\(\d\+\)\?\>`over_\1fa\2`g
+silent %s`^DMINUS_\([nlpc]\)fa\(\d\+\)\?\>`dminus_\1fa\2`g
+silent %s`^MINUS_\([nlpc]\)fa\(\d\+\)\?\>`minus_\1fa\2`g
+silent %s`^D+_\([nlpc]\)fa\(\d\+\)\?\>`d_plus_\1fa\2`g
+silent %s`^+_\([nlpc]\)fa\(\d\+\)\?\>`plus_\1fa\2`g
+silent %s`^0<_\([nlpc]\)fa\(\d\+\)\?\>`zero_less_than_\1fa\2`g
+silent %s`^0=_\([nlpc]\)fa\(\d\+\)\?\>`zero_equals_\1fa\2`g
+silent %s`^R_\([nlpc]\)fa\(\d\+\)\?\>`r_\1fa\2`g
+silent %s`^R>_\([nlpc]\)fa\(\d\+\)\?\>`from_r_\1fa\2`g
+silent %s`^>R_\([nlpc]\)fa\(\d\+\)\?\>`to_r_\1fa\2`g
+silent %s`^LEAVE_\([nlpc]\)fa\(\d\+\)\?\>`leave_\1fa\2`g
+silent %s`^;S_\([nlpc]\)fa\(\d\+\)\?\>`semicolon_s_\1fa\2`g
+silent %s`^RP!_\([nlpc]\)fa\(\d\+\)\?\>`rp_store_\1fa\2`g
+silent %s`^RP@_\([nlpc]\)fa\(\d\+\)\?\>`rp_fetch_\1fa\2`g
+silent %s`^SP!_\([nlpc]\)fa\(\d\+\)\?\>`sp_store_\1fa\2`g
+silent %s`^SP@_\([nlpc]\)fa\(\d\+\)\?\>`sp_fetch_\1fa\2`g
+silent %s`^XOR_\([nlpc]\)fa\(\d\+\)\?\>`xor_\1fa\2`g
+silent %s`^OR_\([nlpc]\)fa\(\d\+\)\?\>`or_\1fa\2`g
+silent %s`^AND_\([nlpc]\)fa\(\d\+\)\?\>`and_\1fa\2`g
+silent %s`^U/MOD_\([nlpc]\)fa\(\d\+\)\?\>`u_slash_mod_\1fa\2`g
+silent %s`^U\*_\([nlpc]\)fa\(\d\+\)\?\>`u_star_\1fa\2`g
+silent %s`^CMOVE_\([nlpc]\)fa\(\d\+\)\?\>`cmove_\1fa\2`g
+silent %s`^CR_\([nlpc]\)fa\(\d\+\)\?\>`cr_\1fa\2`g
+silent %s`^?TERMINAL_\([nlpc]\)fa\(\d\+\)\?\>`question_terminal_\1fa\2`g
+silent %s`^KEY_\([nlpc]\)fa\(\d\+\)\?\>`key_\1fa\2`g
+silent %s`^EMIT_\([nlpc]\)fa\(\d\+\)\?\>`emit_\1fa\2`g
+silent %s`^ENCLOSE_\([nlpc]\)fa\(\d\+\)\?\>`enclose_\1fa\2`g
+silent %s`^(FIND)_\([nlpc]\)fa\(\d\+\)\?\>`paren_find_\1fa\2`g
+silent %s`^DIGIT_\([nlpc]\)fa\(\d\+\)\?\>`digit_\1fa\2`g
+silent %s`^I_\([nlpc]\)fa\(\d\+\)\?\>`i_\1fa\2`g
+silent %s`^(DO)_\([nlpc]\)fa\(d\+\)\?\>`paren_do_\1fa\2`g
+silent %s`^(+LOOP)_\([nlpc]\)fa\(\d\+\)\?\>`paren_plus_loop_\1fa\2`g
+silent %s`^(LOOP)_\([nlpc]\)fa\(\d\+\)\?\>`paren_loop_\1fa\2`g
+silent %s`^0BRANCH_\([nlpc]\)fa\(\d\+\)\?\>`zero_branch_\1fa\2`g
+silent %s`^BRANCH_\([nlpc]\)fa\(\d\+\)\?\>`branch_\1fa\2`g
+silent %s`^EXECUTE_\([nlpc]\)fa\(\d\+\)\?\>`execute_\1fa\2`g
+silent %s`^LIT_\([nlpc]\)fa\(\d\+\)\?\>`lit_\1fa\2`g

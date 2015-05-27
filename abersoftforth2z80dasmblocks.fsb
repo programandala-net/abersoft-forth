@@ -1,0 +1,388 @@
+.( AbersoftForth2z80dasmBlocks )
+
+  \ abersoftforth2z80dasmblocks.fsb
+
+\ Self-disassembly tool for ZX Spectrum Abersoft Forth
+
+\ This file is part of
+
+\   Abersoft Forth disassembled
+\   <http://programandala.net/
+\   en.program.abersoft_forth_disassembled.html>
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ Copying and distribution of this file, with or without
+  \ modification, are permitted in any medium without royalty
+  \ provided the copyright notice and this notice are
+  \ preserved.  This file is offered as-is, without any
+  \ warranty.
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This tool prints out a list of z80dasm disassembler block
+  \ definitions (they are called "zones" here).
+  \
+  \ The printout, processed by other tools and combined with
+  \ other files (see <README.adoc> and <Makefile>), is used to
+  \ recreate the original Z80 source of Abersoft Forth.
+
+  \ -----------------------------------------------------------
+  \ Requirements
+
+  /disc 16384 = 0= ?needs 16kramdisks
+
+  needs +caseins      caseins
+  needs /string       strings
+  needs save-string   csb
+  needs s+            s-plus
+  needs ?exit         qexit
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-05-25: Start, based on the previous tool <dis.fsb>.
+  \
+  \ 2015-05-26: Fixes and improvements. Renamed (formerly
+  \ "zones"). Fix: vocabularies needed special code.
+
+  \ -----------------------------------------------------------
+
+-->
+
+( Loading, debug tools and instructions )
+
+forth definitions
+
+  \ Debug tools
+: (xxx) ( -- )  cr id. .s key drop  ;
+: xxx ( -- )  exit
+  latest [compile] literal compile (xxx)  ;  immediate
+
+vocabulary zones-voc zones-voc definitions hex  03 10 thru cls
+\  <------------------------------>
+." AbersoftForth2z80dasmBlocks" cr cr
+." Copyright (C) 2015 Marcos Cruz  (programandala.net)" cr cr
+." Type 'run' to print out the" cr
+." dz80asm blocks of all words of" cr
+." the original Abersoft Forth" cr
+." system. The printer output of" cr
+." your emulator must be redirected"
+." to a host system file." cr quit
+\  <------------------------------>
+
+( id )
+
+0 constant addr  \ used as local variable
+
+: editor-prefix  ( ca len -- ca' len' )
+  \ Add the "editor_" prefix to it to the given string.
+  s" editor_" 2swap s+  ;
+
+: editor-id  ( ca len --  ca len ff | ca' len' tf )
+  \ If the given string is "R" or "I",
+  \ add the "editor_" prefix to it and leave a true flag,
+  \ else return the string untouched and a false flag.
+  2dup s" R" s= if  editor-prefix true exit  then
+  2dup s" I" s= if  editor-prefix true exit  then  false  ;
+
+: special-id  ( nfa ca len -- ca len | ca' len' )
+  \ Manage special id cases.
+  rot dup ' addr !  7900 > if  editor-id ?exit  then
+  addr 6923 = if  2drop s" onezeroword" exit  then  ;
+
+: id  ( nfa -- ca len )
+  \ Return the name of a word.
+  \ The "editor_" prefix is added to the words
+  \ `R` and `I` of the editor vocabulary.
+  dup dup 1+ swap c@ 3F and save-string
+  2dup + 1- dup c@ 7F and swap c!  special-id  ;
+
+( Labels and opcodes )
+
+0 variable current-nfa  0 variable previous-nfa
+0 variable current-pfa  0 variable pfa-zone#
+
+  \ Labels for the definition headers.
+
+: nfa-label$  ( nfa -- ca len )  id s" _nfa" s+  ;
+: lfa-label$  ( pfa -- ca len )  nfa id s" _lfa" s+  ;
+: cfa-label$  ( cfa -- ca len )  2+ nfa id s" _cfa" s+  ;
+: pfa-label$  ( pfa -- ca len )
+  \ The pfa label is special, because there can be more than
+  \ one when the parameter field is divided into several
+  \ zones. All labels but the first one are marked with a
+  \ decimal 3-digit suffix (starting with "001"), but the label
+  \ where the Z80 code starts (e.g. after `(;CODE)`), if any,
+  \ uses "100" (see `do-code-tail-zone`).
+  nfa id s" _pfa" s+  pfa-zone# @ -dup
+  if  s->d base @ >r decimal <# # # # #> s+ r> base !  then  ;
+
+: hex.  ( n -- )
+  base @ hex swap s->d <# # # # # #> ." 0x" type base !  ;
+: addr+  ( a ca len -- )
+  s" at_0x" s+ rot s->d <# # # # # #> s+  ;
+
+( Zones )
+
+  \ Zone addresses.
+
+0 variable zone-first
+0 variable zone-last
+
+  \ z80dasm zones: bytedata, worddata, pointers and code.
+
+: zone  ( ca len -- )
+  \ ca len = label
+  cr type ." : first " zone-first @ hex.
+  ."  last " zone-last @ hex. ."  type " ;
+
+: bytedata-zone  ( ca len -- )  zone ." bytedata"  ;
+: worddata-zone  ( ca len -- )  zone ." worddata"  ;
+: pointers-zone  ( ca len -- )  zone ." pointers"  ;
+: code-zone  ( ca len -- )  zone ." code"  ;
+
+  \ Zones for special cases: literals and strings.
+
+: literal-zone  ( a -- )  s" literal_" addr+ worddata-zone  ;
+: string-zone  ( a -- )  s" string_" addr+ bytedata-zone  ;
+
+( Special zones )
+
+  \ End the current pfa zone.
+
+: end-pfa-zone  ( pfa+n -- )
+  \ pfa+n = address of the last cf of the zone.
+  1+ zone-last ! current-pfa @ pfa-label$ pointers-zone  ;
+
+  \ Start a new pfa zone. Used after a string or a literal.
+
+: new-pfa-zone  ( pfa+n -- )  zone-first ! 1 pfa-zone# +!  ;
+
+  \ The word compiled after `COMPILE` does not need a specific
+  \ zone, because the pfa is marked as "pointers zone". Only
+  \ the current address must be updated, to prevent the
+  \ compiled cfa to be checked as part of the executable
+  \ definition.
+
+: do-compile-zone  ( pfa+n -- pfa+n+2 )
+  \ pfa+n = Address of `COMPILE` in the current pfa.
+  \ pfa+n+2 = Address after the data word minus 2.
+  2+  ;
+
+  \ Do a specific zone for a compiled literal. It will be a
+  \ "wordata zone" with a unique address-based name.
+
+: (do-literal-zone)  ( pfa+n -- pfa+n+2 )
+  2+ dup zone-first ! dup 1+ zone-last ! dup literal-zone  ;
+
+: do-literal-zone  ( pfa+n -- pfa+n+2 )
+  \ pfa+n  = Address of the cf that precedes the compiled
+  \          literal.
+  \ pfa+n+2 = Address of the byte after the literal minus 2.
+  dup end-pfa-zone (do-literal-zone) dup 2+ new-pfa-zone ;
+
+  \ Do a specific zone for a compiled string. It will be a a
+  \ "bytedata zone" (z80dasm does not provide text zones) with
+  \ a unique address-based name.
+
+: do-string-zone  ( pfa+n1 -- pfa+n1+n2 )
+  \ pfa+n1 = Address of the cf that precedes the compiled
+  \          string.
+  \ pfa+n1+n2 = Address of the byte after the string minus 2.
+  dup end-pfa-zone
+  2+ dup zone-first ! dup count + 1- zone-last !
+     dup string-zone
+     count + dup new-pfa-zone  2-  ;
+
+( do-code-zone )
+
+: do-code-zone  ( pfa+n -- )
+  \ Print the z80dasm code zone of a low-level word.
+  zone-first !  previous-nfa @ 1- zone-last !
+  current-pfa @ pfa-label$ code-zone  ;
+
+: do-code-tail-zone  ( pfa+n -- )
+  \ Print the z80dasm code zone of
+  \ the `;code` part of a high-level word.
+  \ This code zones are made distinctive
+  \ with a decimal 100 suffix,
+  \ because they need special treatment later.
+  64 pfa-zone# !  \ Make this code zones distinctive.
+  do-code-zone  ;
+
+( Special cases dispatcher )
+
+: do-special-zones  ( pfa+n1 -- pfa+n1 | pfa+n2 )
+  \ Manage the compiled words that are followed by data.
+  \ The words that manage every individual case must
+  \ return the received address updated, pointing to the byte
+  \ after the data minus 2.
+  dup @
+  case
+    [ ' compile cfa ] literal of  do-compile-zone     endof
+    [ ' lit     cfa ] literal of  do-literal-zone     endof
+    [ ' branch  cfa ] literal of  do-literal-zone     endof
+    [ ' 0branch cfa ] literal of  do-literal-zone     endof
+    [ ' (loop)  cfa ] literal of  do-literal-zone     endof
+    [ ' (+loop) cfa ] literal of  do-literal-zone     endof
+    [ ' (.")    cfa ] literal of  do-string-zone      endof
+    [ ' slit    cfa ] literal of  do-string-zone      endof
+  endcase  ;
+
+( Checks )
+
+  \ Did the colon word finish with `;code`?
+false variable semicolon-code?
+
+: colon-end?  ( a -- f )
+  \ Is the given address the end of a colon definition?
+  ' addr !  semicolon-code? off  true
+  addr @ [ ' ;s cfa ] literal = ?exit
+  addr @ [ ' (;code) cfa ] literal  =
+    dup semicolon-code? !  ?exit
+  addr 6E08 = ?exit  \ end of COLD (original, not patched)
+  addr 6DAE = ?exit  \ end of WARM
+  addr 6D91 = ?exit  \ end of ABORT (original, not patched)
+  addr 6C99 = ?exit  \ end of INTERPRET
+  addr 6B2A = ?exit  \ end of ERROR
+  addr 6D4C = ?exit  \ end of QUIT
+  0=  ;
+
+( Word type checks )
+
+: colon?       ( pfa -- f )  cfa @ ' : cfa @ =  ;
+: constant?    ( pfa -- f )  cfa @ 6348 =  ;
+: variable?    ( pfa -- f )  cfa @ 6362 =  ;
+: user?        ( pfa -- f )  cfa @ 6374 =  ;
+: 2constant?   ( pfa -- f )  cfa @ 7F00 =  ;
+: 2variable?   ( pfa -- f )  cfa @ 7F23 =  ;
+: code?        ( pfa -- f )  dup cfa @ =  ;
+: vocabulary?  ( pfa -- f )  @ 6CE2 = ;
+  \ The dummy word has its name field (0xA081) in the second
+  \ cell of the parameter field of vocabularies. It is linked
+  \ from the last word defined in other vocabulary.
+: dummy?       ( pfa -- f )  cfa @ 0= ;
+
+: do-vocabulary-zone  ( pfa -- )
+  \ Print the zones of the parameter field of a vocabulary.
+  \ This is called when `FORTH` or `EDITOR` are found.
+
+  \ The first cell contains a pointer to the `DOES>` part
+  \ of `VOCABULARY`.
+  dup end-pfa-zone
+  \ The second cell contains 0xA081, a dummy name field.
+  (do-literal-zone)
+  \ The third cell contais a pointer to the nfa of the
+  \ latest word defined in the vocabulary.
+  \ The fourth cell contains a pointer to the chained
+  \ vocabulary, or zero.
+  2+ dup new-pfa-zone 2+ end-pfa-zone  ;
+
+
+( Constants, variables, user variables, colon definitions )
+
+: do-user-zone  ( pfa --- )
+  \ Print a user variable.
+  dup zone-last !  pfa-label$ bytedata-zone ;
+
+: do-value-zone  ( pfa --- )
+  \ Print a value (constant or variable).
+  dup 1+ zone-last !  pfa-label$ worddata-zone ;
+
+: do-2value-zone  ( pfa --- )
+  \ Print a double value (constant or variable).
+  dup 3 + zone-last !  pfa-label$ worddata-zone ;
+
+: do-colon-zone  ( pfa --- )
+  \ Print a colon definition.
+  dup begin   dup colon-end? 0=
+      while   do-special-zones 2+
+      repeat  1+ zone-last ! pfa-label$  pointers-zone
+  \ If the word was finished by `;code`, define a code zone
+  \ for z80dasm.
+  semicolon-code? @
+  if  zone-last @ 1 + do-code-tail-zone  then  ;
+
+( Name field, link field )
+
+: len-only  ( b1 -- b2 )  3F and  ;
+
+: name-field  ( pfa -- )
+  \ Print the name field.
+  nfa dup zone-first !
+      current-nfa @ previous-nfa ! dup current-nfa !
+      dup dup c@ len-only + zone-last !
+      nfa-label$ bytedata-zone ;
+
+: link-field  ( pfa -- )
+  \ Print the link field.
+  dup  lfa dup zone-first ! 1+ zone-last !
+  dup lfa-label$ rot lfa @
+  if  pointers-zone  else  worddata-zone  then  ;
+
+( Code field, parameter field, header )
+
+: code-field  ( pfa -- )
+  \ Print the code field zone.
+  cfa dup zone-first ! dup 1+ zone-last !
+  cfa-label$ pointers-zone  ;
+
+: parameter-field  ( pfa -- )
+  \ Print the parameter field zone(s).
+  \ When the parameter field contains strings or literals,
+  \ several zones will be needed. That's what the `pfa-zone#`
+  \ counter is used for.
+  dup current-pfa !  zone-first !  pfa-zone# off  ;
+
+: header  ( pfa -- )
+  \ Print the header of a definition.
+  dup name-field  dup link-field
+  dup code-field  parameter-field  ;
+
+( Interface )
+
+: (definition-zones)  ( pfa --- )
+  \ Print the zones of a definition.
+
+  dup dummy? if  drop exit  then  dup header
+
+  dup colon?        if  do-colon-zone       exit  then
+  dup code?         if  do-code-zone        exit  then
+  dup constant?     if  do-value-zone       exit  then
+  dup variable?     if  do-value-zone       exit  then
+  dup 2constant?    if  do-2value-zone      exit  then
+  dup 2variable?    if  do-2value-zone      exit  then
+  dup user?         if  do-user-zone        exit  then
+  dup vocabulary?   if  do-vocabulary-zone  exit  then  drop  ;
+
+: definition-zones  ( pfa -- )
+  \ Print the zones of a definition,
+  \ if it belongs to the original system
+  \ (whose latest word is `UDG`).
+  dup [ ' udg 1+ ] literal u<
+  if  (definition-zones)  else  drop  then  ;
+
+( Interface -- main )
+
+: zones-from-nfa  ( nfa -- )
+  \ Print the zones of all definitions of the original
+  \ system, starting from the given nfa.
+  begin  pfa dup definition-zones  lfa @ dup 0= ?terminal or
+  until  drop  ;
+
+: context-zones  ( -- )
+  \ Print the zones of all definitions of the original
+  \ system, starting from the context vocabulary.
+  context @ @  zones-from-nfa  ;
+
+: run  ( -- )
+  \ Print out the zones of all definitions of the original
+  \ system.
+  hex  1 link
+  editor context-zones
+  0 link  decimal cr ." Done." cr  ;
+
+  \ vim: filetype=abersoftforthafera
+

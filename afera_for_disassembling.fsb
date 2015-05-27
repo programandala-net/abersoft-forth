@@ -1,0 +1,421 @@
+\ afera_for_disassembling.fsb
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+\ This file is part of
+\ Abersoft Forth disassembled
+\ <http://programandala.net/
+\ en.program.abersoft_forth_disassembled.html>.
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This is a modifed version of <afera.fsb>, the main file of
+  \ the Afera library.
+  \
+  \ It does the same than the original one except some
+  \ modifications to the original words that would case an
+  \ output different than with the original system.
+  \
+  \ In order to disassembly Abersoft Forth, an original binary
+  \ is used, not the patched one this program runs on, so it
+  \ doesn't make any difference if the original words have been
+  \ patched by Afera or not -- unless their apparent size has
+  \ been changed by a patch (e.g. by moving the final `(;S)` of
+  \ the word).  That is what this version of <afera.fsb>
+  \ avoids.
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ See at the end of the file.
+
+  \ -----------------------------------------------------------
+  \ Error messages
+
+  \ Abersoft Forth error messages are 0..24. Afera implements
+  \ the following new messages:
+  \
+  \ 25 Unsupported tape operation.
+  \ 26 Unsupported disk operation.
+  \ 27 Source file needed.
+
+( CHAR [CHAR] , line comments)
+
+." Afera for disassembling" CR  FORTH DEFINITIONS  HEX
+
+: CHAR  ( "name" -- c )  BL WORD HERE 1+ C@  ;
+: [CHAR]  ( "name" -- c )  CHAR [COMPILE] LITERAL  ; IMMEDIATE
+
+: \  ( "ccc<newline>" -- )
+  IN @ C/L MOD C/L SWAP - IN +! ; IMMEDIATE
+
+: .(  ( "ccc<paren>" -- )
+  [CHAR] ) TEXT PAD COUNT TYPE  ; IMMEDIATE
+
+-->
+
+( Bug fixes and patches)
+
+  \ ............................................
+  \ Fix the "11263" bug
+
+  \ The length of the RAM-disk must be 11264 (0x2C00), `HI LO -
+  \ 1+`, not 11263 (0x2BFF), `HI LO -`.
+
+  \ Length of the RAM-disk:
+HI LO - 1+ CONSTANT /DISC
+
+  \ Patch the load tape header (no need to patch also the save
+  \ header, because the load header is copied to the save
+  \ header during the tape operations) and `INIT-DISC`:
+/DISC DUP 75E6 0B + !   ' INIT-DISC 06 + !
+
+  \ ............................................
+  \ Fix the `2OVER` bug
+
+  \ `2OVER` must do `R> R>` at the end, not `>R >R`
+  \
+  \ As Don Thomasson's _Advanced Spectrum Forth_ (1984) says
+  \ (page 131), early versions of Abersoft Forth contained an
+  \ error in the word `2OVER`, that hangs the system. So just
+  \ in case:
+
+' R> CFA ' 2OVER 0A + 2DUP ! 2+ !
+
+  \ ............................................
+  \ Fix the `EXIT` bug
+
+  \ `EXIT` must do `R> DROP`, not `>R DROP`
+  \
+  \ Even Don Thomasson's _Advanced Spectrum Forth_ (1984) shows
+  \ the wrong definition of `EXIT` (page 131)... and with the
+  \ following notice: "This word needs to be used with extreme
+  \ care." Indeed, because it crashes the system. The fix is
+  \ easy:
+
+' R> CFA ' EXIT !
+
+  \ ............................................
+  \ Fix the `COLD` bug
+
+  \ The word `COLD` has a subtle bug: it inits `PREV` and `USE`
+  \ not with `FIRST`, the constant that holds the start address
+  \ of the first disk buffer, but with its default value! This
+  \ must be fixed in order to move the disk buffers (what does
+  \ the module <lowersys.fsb>).
+
+  ' NOOP CFA ' COLD 02 + !  ' FIRST CFA ' COLD 04 + !
+  ' NOOP CFA ' COLD 0A + !  ' FIRST CFA ' COLD 0C + !
+
+DECIMAL -->
+
+( Data stack and conditional compilation)
+
+HEX
+
+  \ ............................................
+  \ Data stack
+
+                            \ pop hl / pop de / jp PUSHHL
+CREATE NIP  ( x1 x2 -- x2 )  E1 C, D1 C, C3 C, PUSHHL ,  SMUDGE
+
+CREATE TUCK  ( x1 x2 -- x2 x1 x2 )
+  \ SWAP OVER
+  \ pop hl / pop de / push hl / jp PUSHDE
+  E1 C, D1 C, E5 C, C3 C, PUSHDE ,  SMUDGE
+
+: DEPTH  ( -- n )  SP@ S0 @ - -2 /  ;
+
+  \ ............................................
+  \ Conditional compilation
+
+: [DEFINED]  ( "name" -- f )
+  -FIND DUP IF  NIP NIP  THEN  ; IMMEDIATE
+
+: [UNDEFINED]  ( "name" -- f )
+  [COMPILE] [DEFINED] 0=  ; IMMEDIATE
+
+  \ The following words provide a simple alternative to
+  \ `[IF]`, `[ELSE]` and `[THEN]` (provided in a module).
+
+: ?--> ( f -- )  IF  [COMPILE] -->  THEN  ; IMMEDIATE
+: ?\  ( f "ccc<newline>" -- )  IF  [COMPILE] \
+  THEN  ; IMMEDIATE
+
+  \ ............................................
+  \ New system colors: black background, green foreground.
+
+: COLORS0  ( -- )
+  0 PAPER 4 INK 0 BRIGHT 0 FLASH 0 INVERSE 0 BORDER  ;
+
+: CLS0  ( -- )  COLORS0 CLS  ;  DECIMAL -->
+
+( Make the first screen usable )
+
+  \ Abersoft Forth doesn't allow to compile sources from the
+  \ first screen (number 0) of its RAM-disk, by convention
+  \ reserved to comments. But that is a waste of memory.  This
+  \ patch solves that problem.
+  \
+  \ After the patch, screen numbers will be 1..11 instead of
+  \ 0..10. Or 1..16 after compiling the <16kramdisks.fsb>
+  \ module.
+
+  \ The only word that has to be patched is `R/W`, the
+  \ fig-Forth standard disk read/write linkage, a system
+  \ dependent word. Its definition in Abersoft Forth is the
+  \ following:
+
+  \ : R/W  ( a n f -- )
+  \   \ a = source or destination block buffer
+  \   \ n = sequential block number on disk
+  \   \ f = 0 for disk write, 1 for read
+  \   >R  B/BUF * LO +
+  \   DUP HI > LIT 6 ?ERROR  \ out of upper bound?
+  \   R>  \ disk read?
+  \   IF  SWAP  THEN  B/BUF CMOVE  ;
+
+  \ Bytes per screen (1024).
+B/SCR B/BUF * CONSTANT /SCR
+
+: DISC-BLOCK  ( n -- a )
+
+  \ Calculate the address of disk block n in the Forth RAM-
+  \ disk.  Give error 6 when the requested disk block is out of
+  \ range.
+  \
+  \ This word works with the default 11-KiB RAM disk and also
+  \ with the 16-KiB paged RAM-disks that can be used with the
+  \ 128K model (installed by the module <16kramdisks.fsb>).
+  \
+  \ The disk block number is adjusted with `OFFSET`, because
+  \ the result address is the same, no matter what the current
+  \ drive is.
+
+  \ n = number of sequential disk block
+  \ a = address in the RAM-disk (when paged in)
+
+  OFFSET @ -
+  B/BUF * DUP /SCR U< 6 ?ERROR
+  LO + /SCR - DUP HI > 6 ?ERROR  ;
+
+
+: (R/W)  ( a1 a2 f -- )
+
+  \ Read to or write from the new RAM-disk.
+
+  \ a1 = buffer address
+  \ a2 = address in the RAM-disk
+  \ f =  0 for writing; 1 for reading
+
+  \ This word is created with `;S` and `NOOP` in order to make
+  \ it easier for the module <16kramdisks.fsb> to convert it
+  \ into the 128K version, that needs four more commands.
+
+  IF  SWAP  THEN  B/BUF CMOVE [COMPILE] ;S NOOP NOOP NOOP ;
+
+  \ Compile the new code of `R/W`.
+
+  \ The original space is padded with `NOOP` before the final
+  \ `;S` in order to make it the same size than the original,
+  \ for the tool that will create the zones for the z80dasm
+  \ disassembler.
+
+HERE  ' >R CFA , ' DISC-BLOCK CFA , ' R> CFA , ' (R/W) CFA ,
+      ' NOOP CFA , ' NOOP CFA , ' NOOP CFA , ' NOOP CFA ,
+      ' NOOP CFA , ' NOOP CFA , ' NOOP CFA , ' NOOP CFA ,
+      ' NOOP CFA , ' NOOP CFA , ' NOOP CFA , ' NOOP CFA ,
+      ' NOOP CFA , ' ;S CFA ,
+
+  \ Patch `R/W` with the new code.  Update `BLK` to prevent the
+  \ current screen to be loaded twice, because of the patch.
+  \ Finally, free the dictionary space used by the patch.
+  \
+  \ Warning: `CMOVE` and `B/SCR BLK +!` must be on the same
+  \ line, otherwise there's a chance they could be in different
+  \ blocks of the screen, what would cause trouble.
+
+DUP ' R/W OVER SWAP OVER HERE SWAP - CMOVE  B/SCR BLK +!  DP !
+
+  \ Change the error 9 caused by `0 LOAD` ("Trying to load from
+  \ screen 0") to error 6 ("Out of RAM-disk range"), what seems
+  \ more logical now, because there's no screen 0 anymore.
+
+6 ' LOAD 8 + !  DECIMAL -->
+
+( Operators)
+
+: BOUNDS  ( a1 len1 -- a2 a1 )  OVER + SWAP  ;  HEX
+
+                        \ pop hl / dec hl / jp PUSHHL
+CREATE 1- ( n1 -- n2 )  E1 C, 2B C,  C3 C, PUSHHL , SMUDGE
+
+                        \ pop hl / dec hl / dec hl / jp PUSHHL
+CREATE 2- ( n1 -- n2 )  E1 C, 2B C, 2B C, C3 C, PUSHHL , SMUDGE
+
+  \ Patch CFA to use the Z80 code of `2-`,
+  \ faster than the original colon definition `2 -`:
+' 2- ' CFA CFA !
+
+                         \ pop hl / add hl,hl / jp PUSHHL
+CREATE 2*  ( n1 -- n2 )  E1 C, 29 C, C3 C, PUSHHL ,  SMUDGE
+
+CREATE 0<>  ( n1 -- n2 )   \ 0= 0=
+  \ ld hl,0 / pop de / ld a,d / or e
+  21 C, 0 ,  D1 C,  78 02 + C,  B0 03 + C,
+  \ jp z,pushhl / inc l / jp pushhl
+  CA C, PUSHHL ,  2C C,  C3 C, PUSHHL , SMUDGE
+
+  \ In Abersoft Forth `1+` and `2+` are colon words.  The
+  \ following code patches the original definitions with 50%
+  \ faster Z80 code, without using dictionary space: The pfa of
+  \ the original words is 12 bytes long, enough for the new
+  \ code.
+  \
+  \ The new code can not be compiled directly into the
+  \ destination address, by pointing `DP` to the target pfa,
+  \ because `WORD` uses `HERE` as buffer (and first it does
+  \ `HERE 34 SPACES`), what would corrupt the dictionary.
+  \ That's why the code is compiled at `HERE` and then moved.
+  \ Beside, some of the words internally used during the
+  \ patching (`WORD` and others) call `1+` or `2+`.  That's why
+  \ the original names can be "ticked" only before patching the
+  \ original code; and the new code, including the new cfa,
+  \ must overwrite the old definition in one single operation,
+  \ with `CMOVE`.
+
+HERE ' 1+  ( a pfa )  DUP ,   \ the cfa will point to pfa:
+  \ pop hl / inc hl / jp PUSHHL
+  E1 C, 23 C, C3 C, PUSHHL ,
+  \ Overwrite the word and restore `DP`:
+  CFA OVER SWAP OVER HERE SWAP - CMOVE  ( a ) DP !
+
+HERE ' 2+  ( a pfa )  DUP , \ the cfa will point to pfa:
+  \ pop hl / inc hl / inc hl / jp PUSHHL
+  E1 C, 23 C, 23 C, C3 C, PUSHHL ,
+  \ Overwrite the word and restore `DP`:
+  CFA OVER SWAP OVER HERE SWAP - CMOVE  ( a ) DP !  DECIMAL -->
+
+( Screens and RAM-disks )
+
+  \ ............................................
+  \ Standard or common usage extensions
+
+: THRU  ( n1 n2 -- )  1+ SWAP DO  I LOAD  LOOP  ;
+: +LOAD  ( n -- )  BLK @ B/SCR / + LOAD  ;
+: +THRU  ( n1 n2 -- )  1+ SWAP DO  I +LOAD  LOOP  ;
+
+  \ ............................................
+  \ Load from tape and compile Forth RAM-disks
+
+  \ The following words make it possible to chain several Forth
+  \ RAM-disk files from tape, allowing the automatic
+  \ compilation of sources larger than 11 blocks.
+
+  \ Read a new RAM-disk from tape and load screen 'n'.
+: /RUNT  ( n -- )  EMPTY-BUFFERS INIT-DISC LOADT LOAD ;
+
+  \ Read a new RAM-disk from tape and load its first screen.
+: RUNT  ( -- )  1 /RUNT  ;
+
+  \ Screens per drive (RAM-disk).
+11 CONSTANT SCR/DR
+
+  \ DISC-SCR  ( n -- a )
+  \
+  \ Address of screen n in the Forth RAM-disk; error 6 if not
+  \ in range.
+  \
+  \ n = 1..11 for 48K
+  \     1..16 for 128K (with the <16kramdisks.fsb> installed)
+
+: DISC-SCR  ( n -- a )
+  1- DUP SCR/DR U< 0= 6 ?ERROR  /SCR * LO +  ;
+
+  \ ............................................
+  \ Required files
+
+  \ `NEEDS` is used in modules of the library that require
+  \ other modules.  Without disk support, `NEEDS` causes an
+  \ error when the required word is not defined. With disk
+  \ support (currently only for G+DOS) the required file will
+  \ be loaded from disk into the RAM-disk and then compiled;
+  \ finally the previous contents of the RAM-disk will be
+  \ restored. Any level of nesting is possible.
+
+  \ (NEEDS-TAPE)  ( f "filename" -- )
+  \
+  \ Tape version of `(NEEDS)`.
+  \
+  \ f = is there a word needed from the given filename?
+  \
+  \ If f is not zero stop with error 27 (source file needed),
+  \ because there's no way to load a specific file in a tape
+  \ based system; otherwise ignore the filename.
+  \
+  \ Error 27 is new, implemented by Afera. Error 0 (word not
+  \ found) could be used for `NEEDS`, but not for `?NEEDS`.
+  \ That's why a new error is defined for both cases.
+
+: (NEEDS-TAPE)  ( f "filename" -- )  27 ?ERROR  BL WORD  ;
+
+  \ ?NEEDS  ( f "filename" -- )
+  \
+  \ If f is not zero, load RAM-disk file "filename", else
+  \ remove the parameters.  The loading works only with disks
+  \ drives, when the correspondent module is installed; the
+  \ default tape-only system will stop with an error.
+  \ This is used instead of `NEEDS` when the needed file
+  \ does not define a word it can be identified with. This
+  \ happens with modules that simply patch the system.
+
+: ?NEEDS  ( f "filename" -- )  (NEEDS-TAPE)  ;
+
+  \ NEEDS  ( "name" "filename" -- )
+
+  \ If "name" is not defined, load file "filename", if
+  \ possible; else remove the parameters.  The loading works
+  \ only with disks drives, when the correspondent module is
+  \ installed; the default tape-only system will stop with an
+  \ error.
+
+: NEEDS  ( "name" "filename" -- )
+  [COMPILE] [UNDEFINED]  ?NEEDS  ;
+
+-->
+
+( EXTEND SYSTEM )
+
+: EXTEND  ( -- )
+
+  \ Change the `COLD` start parameters to extend the system to
+  \ its current state.
+
+  \ This word should be used especially when system words have
+  \ been patched with new words.  Otherwise `COLD` would delete
+  \ the new words and the system would crash when their space
+  \ would be overwritten.
+
+  LATEST 12 +ORIGIN !  HERE 28 +ORIGIN !  HERE 30 +ORIGIN !
+  HERE FENCE !  ' FORTH 8 + 32 +ORIGIN !  ;
+
+  \ SYSTEM  ( -- a len )
+  \
+  \ Prepare the system in order to save a copy.  Return its
+  \ start address and length, to be used as parameters for the
+  \ tape or disk saving commands.
+
+: SYSTEM  ( -- a len )  EXTEND  0 +ORIGIN SIZE 10 + ;
+
+CLS0
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-05-26: Start, based on <afera.fsb>.
+
+  \ -----------------------------------------------------------
+
+  \ vim: filetype=abersoftforthafera
+
