@@ -1,11 +1,12 @@
-" word_labels.vim
+" word_labels.z80dasm_blocks.vim
 
 " This Vim program translates the temporary Z80 labels
-" used in the printout created by <zones.fsb>.
+" used in the printout created by <abersoftforth2z80dasmblocks.fsb>.
 
 " 2015-05-24: Start, to be used with the ouput of <dis.fsb>.
-" 2015-05-26: Modified for the new output of <zones.fsb>.
+" 2015-05-26: Modified for the new output of <abersoftforth2z80dasmblocks.fsb>.
 
+set fileformat=unix
 silent %s`^C_\([nlpc]\)fa\(\d\+\)\?\>`c_\1fa\2`g
 silent %s`^TILL_\([nlpc]\)fa\(\d\+\)\?\>`till_\1fa\2`g
 silent %s`^X_\([nlpc]\)fa\(\d\+\)\?\>`x_\1fa\2`g

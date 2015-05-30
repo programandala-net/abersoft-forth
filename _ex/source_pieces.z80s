@@ -1,0 +1,94 @@
+; Some source pieces of Abersoft Forth
+;
+; By Marcos Cruz (programandala.net)
+;
+; Extracted from the book _Advanced Spectrum Forth_
+; (Don Thomasson, 1984) or disassembled with its help.
+;
+; 2015-01-05: Routines used by `?terminal` and `key`.
+; 2015-05-12: `warm` entry point.
+;
+
+  org 0x5e6c
+next1:
+
+  org 0x6D93
+
+warm_entry:
+
+  ld bc,0x6DA1 ;
+  ld ix,(0x5E66) ; 0x5E00
+  ld hl,(0x5E52) ; initial value of S0, in 0x5E06
+  ld sp,hl
+  jp next1 ; thence to `WARM`
+
+  org 0x6DA1
+
+  defw 0x6DAA ; cfa of `WARM`
+
+  ; Page 113 of _Spectrum Advanced Forth_
+  ; Routine used by `?terminal`
+
+  org 0x6fc0
+
+  push bc
+  push de
+  call 0x1f54
+  ld hl,0
+  jr c,terminal.1
+  inc l
+  jr terminal.end
+
+terminal.1
+  ld a,(0x5c08)
+  cp 7
+  jr nz,terminal.end
+  inc hl
+
+terminal.end
+  pop de
+  pop bc
+  jp pushhl
+
+  ; Page 113 of _Spectrum Advanced Forth_
+  ; Routine used by 'key'
+  push bc
+  ld a,2
+  call 0x1601
+  ld a,0x12
+  rst 0x10
+  ld a,1
+  rst 0x10
+  xor a
+  ld (0x5c08),a
+  ld a,(hold)
+  rst 0x10
+  ld a,8
+  rst 0x10
+key.wait
+  ld a,(0x5c08)
+  jr z,key.wait
+
+
+  org 0x7633 ; pfa of `mon`
+mon.pfa
+
+  ; 0x5cb0 is an unused system variable in ZX Spectrum,
+  ; except the +3, where it's NMIADD.
+
+  ; This code is not optimized; it could better be:
+
+      ; ld a,(0x5cb0)
+      ; and a
+      ; jp nz, next1
+      ; rst 0x08
+      ; db 8 ; STOP message
+ 
+  ld a,(0x5cb0)
+  cp 0
+  jr z,mon.1
+  jp next1
+mon.1:
+  rst 0x08
+  db 8 ; STOP message
+

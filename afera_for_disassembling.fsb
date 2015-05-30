@@ -254,10 +254,6 @@ CREATE 1- ( n1 -- n2 )  E1 C, 2B C,  C3 C, PUSHHL , SMUDGE
                         \ pop hl / dec hl / dec hl / jp PUSHHL
 CREATE 2- ( n1 -- n2 )  E1 C, 2B C, 2B C, C3 C, PUSHHL , SMUDGE
 
-  \ Patch CFA to use the Z80 code of `2-`,
-  \ faster than the original colon definition `2 -`:
-' 2- ' CFA CFA !
-
                          \ pop hl / add hl,hl / jp PUSHHL
 CREATE 2*  ( n1 -- n2 )  E1 C, 29 C, C3 C, PUSHHL ,  SMUDGE
 
@@ -267,35 +263,7 @@ CREATE 0<>  ( n1 -- n2 )   \ 0= 0=
   \ jp z,pushhl / inc l / jp pushhl
   CA C, PUSHHL ,  2C C,  C3 C, PUSHHL , SMUDGE
 
-  \ In Abersoft Forth `1+` and `2+` are colon words.  The
-  \ following code patches the original definitions with 50%
-  \ faster Z80 code, without using dictionary space: The pfa of
-  \ the original words is 12 bytes long, enough for the new
-  \ code.
-  \
-  \ The new code can not be compiled directly into the
-  \ destination address, by pointing `DP` to the target pfa,
-  \ because `WORD` uses `HERE` as buffer (and first it does
-  \ `HERE 34 SPACES`), what would corrupt the dictionary.
-  \ That's why the code is compiled at `HERE` and then moved.
-  \ Beside, some of the words internally used during the
-  \ patching (`WORD` and others) call `1+` or `2+`.  That's why
-  \ the original names can be "ticked" only before patching the
-  \ original code; and the new code, including the new cfa,
-  \ must overwrite the old definition in one single operation,
-  \ with `CMOVE`.
-
-HERE ' 1+  ( a pfa )  DUP ,   \ the cfa will point to pfa:
-  \ pop hl / inc hl / jp PUSHHL
-  E1 C, 23 C, C3 C, PUSHHL ,
-  \ Overwrite the word and restore `DP`:
-  CFA OVER SWAP OVER HERE SWAP - CMOVE  ( a ) DP !
-
-HERE ' 2+  ( a pfa )  DUP , \ the cfa will point to pfa:
-  \ pop hl / inc hl / inc hl / jp PUSHHL
-  E1 C, 23 C, 23 C, C3 C, PUSHHL ,
-  \ Overwrite the word and restore `DP`:
-  CFA OVER SWAP OVER HERE SWAP - CMOVE  ( a ) DP !  DECIMAL -->
+  DECIMAL -->
 
 ( Screens and RAM-disks )
 
@@ -414,6 +382,10 @@ CLS0
   \ History
 
   \ 2015-05-26: Start, based on <afera.fsb>.
+  \
+  \ 2015-05-29: Fix: `1+` and `2+` are not overwritten with Z80
+  \ code words anymore; they have to remain colon words. `CFA`
+  \ is not redirected to `2+`.
 
   \ -----------------------------------------------------------
 

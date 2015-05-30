@@ -1,6 +1,36 @@
-= Abersoft Forth _disassembled_
+= Abersoft Forth _disassembled_ README
 :author: Marcos Cruz (programandala.net)
+:revdate: 2015-05-23
 
-Disassembly of ZX Spectrum Abersoft Forth.
+How to disassemble Abersoft Forth.
 
-http:/programandala.net/
+The file <abersoft_forth.disassembled.z80s> contains the Z80 source
+code of Abersoft Forth.
+
+
+
+// XXX OLD
+// XXX TODO rewrite!
+
+0. Create or update "dis_compiling.tap" with `make dis`, if needed.
+
+1. Open "dis_compiling.tap" with your ZX Spectrum emulator of choice
+(Fuse recommended). Abersoft Forth will start.
+
+2. Configure your emulator to send the printer output to a new empty
+text file of the host system.
+
+3. Compile dis with `LOADT 1 LOAD`. The process will be slow. Set your
+emulator to its maximun speed.
+
+4. When the compilation is finished, a welcome message will be printed
+on screen. Then follow the simple instructions: give the command
+`dis`. Maybe you need to slow down the emulator to be able to type it.
+The process will start. Set your emulator to its maximun speed. At the
+end, the program will print "Done!".
+
+5. Overwrite the file <dis_printout.txt> with the new printout
+produced by dis, wherever it is (it depends on the configuration of
+your emulator).
+
+6. Command `make z80`.

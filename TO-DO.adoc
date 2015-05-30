@@ -1,0 +1,15 @@
+= Abersoft Forth disassembled TO-DO
+:author: Marcos Cruz (programandala.net)
+:revdate: 2015-05-30
+
+
+.2015-05-29:
+
+Document `implementation_attributes`, using Z80 fig-Forth 1.1.g
+
+.2015-05-30:
+
+Finish <abersoftforth2branches.fsb> (notes inside).
+
+Convert its printout <tidy_branches.vim> to Unix file format, in Makefile, with Vim.
+

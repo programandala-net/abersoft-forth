@@ -1,0 +1,260 @@
+.( AbersoftForth2nfa4Vim )
+
+  \ abersoftforth2nfa4vim.fsb
+
+\ Self-disassembly tool for ZX Spectrum Abersoft Forth
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ Copying and distribution of this file, with or without
+  \ modification, are permitted in any medium without royalty
+  \ provided the copyright notice and this notice are
+  \ preserved.  This file is offered as-is, without any
+  \ warranty.
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This tool prints out a Vim program that substitutes the
+  \ name fields of the disassembled Forth dictionary with its
+  \ definitive format.
+  \
+  \ The printout, processed by Vim, is used to recreate the
+  \ original Z80 source of Abersoft Forth.  Ssee <README.adoc>
+  \ and <Makefile> for more details.
+
+  \ -----------------------------------------------------------
+  \ Requirements
+
+  needs +caseins     caseins     needs /string  strings
+  needs ?exit        qexit       needs s+       s-plus
+  needs save-string  csb         needs 128k?    48kq
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-05-27: Start, with code extrated from the deprecated
+  \ tool `dis`.
+  \
+  \ 2015-05-29: `(vim-command)` fixed and improved with
+  \ different quotes, depending on the name, and a better
+  \ regex.
+  \
+  \ 2015-05-30: The 48 K model is detected and an error is
+  \ given. Improved instructions.
+
+  \ -----------------------------------------------------------
+
+-->
+
+( Boot )
+
+forth definitions
+
+vocabulary print-voc  print-voc definitions  hex
+
+: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
+: program-name  ( -- )  ." AbersoftForth2nfa4Vim"  ;
+
+               \  <------------------------------>
+128k? dup   ?\ ." ERROR: this program needs a" cr
+            ?\ ." ZX Spectrum 128 or later." cr quit
+
+3 7 thru cls greeting cr cr program-name cr cr usage
+
+( usage )
+
+: usage  ( -- )
+  \  <------------------------------>
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, first" cr
+  ." make sure the printout file of" cr
+  ." your emulator is empty." cr cr
+  \  <------------------------------>
+  ." Type 'run' to print out a Vim" cr
+  ." program that converts the name" cr
+  ." fields of all disassembled Forthwords." cr quit  ;
+  \  <------------------------------>
+
+( Numbers and names )
+
+: bhex.  ( n -- )
+  base @ hex swap s->d <# # # #> ." 0x" type base !  ;
+
+0 constant addr  \ used as local variable
+
+: editor-prefix  ( ca len -- ca' len' )
+  \ Add the "editor_" prefix to it to the given string.
+  s" editor_" 2swap s+  ;
+
+: editor-id  ( ca len --  ca len ff | ca' len' tf )
+  \ If the given string is "R" or "I",
+  \ add the "editor_" prefix to it and leave a true flag,
+  \ else return the string untouched and a false flag.
+  2dup s" R" s= if  editor-prefix true exit  then
+  2dup s" I" s= if  editor-prefix true exit  then  false  ;
+
+: special-id  ( nfa ca len -- ca len | ca' len' )
+  \ Manage special id cases.
+  rot dup ' addr !  7900 > if  editor-id ?exit  then
+  addr 6923 = if  2drop s" onezeroword" exit  then  ;
+
+: id  ( nfa -- ca len )
+  \ Return the name of a word.
+  \ The "editor_" prefix is added to the words
+  \ `R` and `I` of the editor vocabulary.
+  dup dup 1+ swap c@ 3F and save-string
+  2dup + 1- dup c@ 7F and swap c!  special-id  ;
+
+( Quotes )
+
+: has-double-quote?  ( ca len -- f )
+  \ Has the given string a double quote?
+  bounds do  i c@ [char] " =
+             -dup if  unloop exit  then  loop  false  ;
+
+  \ Quote used to delimit the names, double or single quote.
+char " constant quote
+
+: ?set-single-quote  ( f -- )
+  \ If the given flag is true, use single quote, else use
+  \ double quote.
+  5 * [char] " +  ' quote !  ;
+
+: set-quote-for-string  ( ca len -- )
+  \ Set the `quote` constant to the code of double or single
+  \ quote, depending on the given string: If the given string
+  \ has a double quote, use single quote, else use double
+  \ quote.
+  has-double-quote? ?set-single-quote  ;
+
+: set-quote-for-char  ( c -- )
+  \ Set the `quote` constant to the code of double or single
+  \ quote, depending on the given char: If the given char
+  \ is a double quote, use single quote, else use double
+  \ quote.
+  [char] " = ?set-single-quote  ;
+
+: .quote  ( -- )  quote emit  ;
+
+( Name field )
+
+: nfa-label  ( nfa -- )  id s" _nfa" s+ type  ;
+
+: (name)  ( ca len -- )
+  \ Print the main part of the name of the name field.
+  2dup set-quote-for-string  .quote 1 /string type .quote
+  [char] , emit  ;
+
+: char-only  ( b -- c )  7F and  ;
+
+: last-letter  ( ca len -- )
+  \ Print the last letter of the definition name,
+  \ in the name field,  with its bit 7 set.
+  \ If it's the zero code, print just the 7 bit.
+  \ (There's one special word whose name is one zero code).
+  + c@ char-only -dup
+  if    dup set-quote-for-char .quote emit .quote ." +"
+  then  ." 0x80"  ;
+
+: name  ( ca len -- )
+  \ Print the definition name, in the name field.
+  \ with the final letter apart with its bit 7 set.
+  dup 1 > if  2dup (name)  then  last-letter  ;
+
+: len-only  ( b1 -- b2 )  3F and  ;
+
+: count-byte  ( b -- )
+  \ Print the count byte of the name field,
+  \ showing the bound and precedence bits apart.
+  dup len-only bhex. ." +0x80"
+      40 and if  ." +precedence_bit"  then  ;
+
+( Name field )
+
+: new-name-field  ( pfa -- )
+  \ Print the new name field.
+  nfa ." defb " dup c@ count-byte
+                dup c@ len-only ." , " name  ;
+
+: (vim-command)  ( pfa -- )
+
+  \ Print a Vim command that will substitute the disassembled
+  \ name field of the given word with a new one, using a more
+  \ legible format.
+  \
+  \ Note: The ASCII code 0x60 (grave tilde) is used as
+  \ separator in the Vim command, because it doesn't appear in
+  \ Forth words.  In the non-standard ZX Spectrum character
+  \ set, character 0x60 is the GBP currency symbol.
+
+  cr ." silent %s`^\(" dup nfa id type
+  ." \)_nfa:\_.\{-}\1_lfa:$`\r\1_nfa:\r  " new-name-field
+  ." \r\1_lfa:`"  ;
+
+  \ Is the given word a dummy definition?  Dummy definitions
+  \ have their name field (0xA081) in the second cell of the
+  \ parameter field of vocabularies. They are linked from the
+  \ last word defined in other vocabulary.
+
+: dummy?  ( pfa -- f )  cfa @ 0= ;
+
+  \ Is the given word new (it does not belong to the original
+  \ system)?  (The latest original word is `UDG`.)
+
+: new?  ( pfa -- f )  [ ' udg 1+ ] literal u< 0=  ;
+
+: vim-command  ( pfa -- )
+
+  \ If the given word belongs to the original system and is not
+  \ a dummy, print a Vim command that will substitute the
+  \ disassembled name field of the that word with a new one,
+  \ using a more legible format.
+
+  dup dummy? if  drop exit  then
+  dup   new? if  drop exit  then  (vim-command)  ;
+
+( Done )
+
+: done  ( -- )
+  \  <------------------------------>
+  ." Done." cr
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, copy" cr
+  ." copy the printout of your" cr
+  ." emulator to the file "
+  ." <abersoftforth2nfa4vim_printout."
+  ." txt>." cr cr
+  ." Then close the emulator and use" cr
+  ." <make> to disassemble the code." cr  ;
+  \  <------------------------------>
+
+( Main )
+
+: print-from  ( nfa -- )
+  \ Print starting from a word.
+  begin  pfa dup vim-command  lfa @ dup 0= ?terminal or
+  until  drop  ;
+
+  \ Print the context vocabulary,
+  \ and the vocabularies it's chained to.
+: print-context  ( -- )  context @ @  print-from  ;
+
+: "  ( -- )  cr [char] " emit space  ;
+
+: file-header  ( -- )
+  " ." This file was automatically created by " program-name
+  " ." This file is part of Abersoft Forth disassembled"
+  ~ ." By Marcos Cruz (programandala.net), 2015-05"
+  " ." http://programandala.net/en.program.abersoft_forth.html"
+  cr cr  ;
+
+: run  ( -- )
+  \ Print out all original words of the Forth system.
+  hex  FF printer-width  1 link  file-header
+  editor print-context
+  0 link  decimal cr done  ;
+
+  \ vim: filetype=abersoftforthafera

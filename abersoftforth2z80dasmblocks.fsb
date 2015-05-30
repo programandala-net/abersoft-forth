@@ -7,8 +7,7 @@
 \ This file is part of
 
 \   Abersoft Forth disassembled
-\   <http://programandala.net/
-\   en.program.abersoft_forth_disassembled.html>
+\   <http://programandala.net/en.program.abersoft_forth.html>
 
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
 
@@ -46,31 +45,55 @@
   \
   \ 2015-05-26: Fixes and improvements. Renamed (formerly
   \ "zones"). Fix: vocabularies needed special code.
+  \
+  \ 2015-05-30: Improved instructions.
 
   \ -----------------------------------------------------------
 
--->
-
-( Loading, debug tools and instructions )
-
 forth definitions
 
-  \ Debug tools
-: (xxx) ( -- )  cr id. .s key drop  ;
-: xxx ( -- )  exit
-  latest [compile] literal compile (xxx)  ;  immediate
+vocabulary zones-voc zones-voc definitions hex
 
-vocabulary zones-voc zones-voc definitions hex  03 10 thru cls
-\  <------------------------------>
-." AbersoftForth2z80dasmBlocks" cr cr
-." Copyright (C) 2015 Marcos Cruz  (programandala.net)" cr cr
-." Type 'run' to print out the" cr
-." dz80asm blocks of all words of" cr
-." the original Abersoft Forth" cr
-." system. The printer output of" cr
-." your emulator must be redirected"
-." to a host system file." cr quit
-\  <------------------------------>
+-->
+
+( Boot and done message )
+
+  \ Debug tools
+  \ : (xxx) ( -- )  cr id. .s key drop  ;
+  \ : xxx ( -- )  exit
+  \  latest [compile] literal compile (xxx)  ;  immediate
+
+: program-name  ( -- )  ." AbersoftForthz80dasmBlocks"  ;
+
+: done  ( -- )
+  cls ." Done." cr cr
+  \  <------------------------------>
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, copy" cr
+  ." copy the printout of your" cr
+  ." emulator to the file " cr
+  ." <abersoftforth2z80dasmblocks_output.txt>." cr cr
+  ." Then close the emulator and use" cr
+  ." <make> to disassemble the code." cr  ;
+  \  <------------------------------>
+
+03 10 thru cls program-name cr cr usage
+
+( usage )
+
+: usage  ( -- )
+  \  <------------------------------>
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, first" cr
+  ." make sure the printout file of" cr
+  ." your emulator is empty." cr cr
+  \  <------------------------------>
+  ." Type 'run' to print out the" cr
+  ." dz80asm blocks for all Abersoft" cr
+  ." Forth words." cr quit  ;
+  \  <------------------------------>
 
 ( id )
 
@@ -377,12 +400,19 @@ false variable semicolon-code?
   \ system, starting from the context vocabulary.
   context @ @  zones-from-nfa  ;
 
+: file-header  ( -- )
+  cr ." ; This file was automatically created by "
+  program-name cr
+  ." ; This file is part of Abersoft Forth disassembled" cr
+  ." ; By Marcos Cruz (programandala.net), 2015-05" cr
+  ." ; http://programandala.net/en.program.abersoft_forth.html"
+  cr cr  ;
+
 : run  ( -- )
   \ Print out the zones of all definitions of the original
   \ system.
-  hex  1 link
-  editor context-zones
-  0 link  decimal cr ." Done." cr  ;
+  hex  1 link  file-header  editor context-zones
+       0 link  decimal cr ." Done." cr  ;
 
   \ vim: filetype=abersoftforthafera
 

@@ -1,0 +1,247 @@
+.( AbersoftForth2branches )
+
+  \ abersoftforth2branches.fsb
+
+  \ XXX TODO -- under development
+
+\ Self-disassembly tool for ZX Spectrum Abersoft Forth
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ Copying and distribution of this file, with or without
+  \ modification, are permitted in any medium without royalty
+  \ provided the copyright notice and this notice are
+  \ preserved.  This file is offered as-is, without any
+  \ warranty.
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This tool prints out a Vim program that substitutes the
+  \ branches of Forth colon words with its definitive format.
+  \
+  \ The printout, processed by Vim, is used to recreate the
+  \ original Z80 source of Abersoft Forth.  Ssee <README.adoc>
+  \ and <Makefile> for more details.
+
+  \ -----------------------------------------------------------
+  \ Requirements
+
+  needs +caseins caseins   needs /string strings
+  needs save-string csb    needs s+ s-plus
+  needs ?exit qexit        needs 128k? 48kq
+
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-05-30: Start, with code extrated from the deprecated
+  \ tool `dis`.
+
+  \ -----------------------------------------------------------
+
+forth definitions -->
+
+( Boot )
+
+vocabulary print-voc  print-voc definitions  hex
+
+: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
+: program-name  ( -- )  ." AbersoftForth2branches"  ;
+
+               \  <------------------------------>
+128k? dup   ?\ ." ERROR: this program needs a" cr
+            ?\ ." ZX Spectrum 128 or later." cr quit
+
+03 0A thru cls program-name cr cr usage
+
+( usage )
+
+: usage  ( -- )
+  \  <------------------------------>
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, first" cr
+  ." make sure the printout file of" cr
+  ." your emulator is empty." cr cr
+  \  <------------------------------>
+  ." Type 'vim' to print out a Vim" cr
+  ." program that tidies the Forth" cr
+  ." branches of the Z80 source." cr cr
+  \  <------------------------------>
+  ." Type 'sym' to print out a" cr
+  ." z80dasm symbols file with the"  cr
+  ." branch destination addresses." cr quit  ;
+  \  <------------------------------>
+
+( Labels )
+
+
+: id  ( nfa -- ca len )
+  \ Return the label name of a branch word,
+  \ as used in the target Z80 source. This way
+  \ the printout doesn't need to be post-processed.
+  case
+    [ ' branch  nfa ] literal of  s" branch"           endof
+    [ ' 0branch nfa ] literal of  s" zero_branch"      endof
+    [ ' (loop)  nfa ] literal of  s" paren_loop"       endof
+    [ ' (+loop) nfa ] literal of  s" paren_plus_loop"  endof
+    cr ." ERROR: Not a branch word" cr quit
+  endcase  ;
+
+: hexa  ( a -- ca len )
+  base @ >r hex s->d <# # # # # #> r> base !  ;
+
+: hexa.  ( a -- )  ." 0x" hexa type  ;
+
+: cfa-label$  ( cfa -- ca len )  2+ nfa id s" _cfa" s+  ;
+
+: cfa-label  ( cfa -- )  cfa-label$ type  ;
+
+( branch-symbol vim-command )
+
+: destination  ( pfa+n1 -- pfa+n2 )
+  \ pfa+n1 = address of a relative jump literal
+  \ pfa+n2 = address of the correspondant destination address
+  dup @ +  ;
+
+: branch-label  ( a -- )  ." branch_destination_" hexa.  ;
+
+: branch-symbol  ( pfa+n -- pfa+n+2 )
+  \ Print out a Z80 symbol definition
+  \ for a Forth branch destination address.
+  \ pfa+n   = address of a branch word
+  \ pfa+n+2 = address of its relative jump literal
+  2+ dup destination dup branch-label ." : equ " hexa.  ;
+
+: vim-command  ( pfa+n -- pfa+n+2 )
+  \ Print out a Vim command that tidies a Forth branch
+  \ in the Z80 source.
+  \ pfa+n   = address of a branch word
+  \ pfa+n+2 = address of its relative jump literal
+  \ XXX TODO -- use `call search()` instead, in order to
+  \ convert only the first match!
+
+  [char] " emit space ." Branch word at " dup hexa. cr
+
+  ." if search('defw " dup @ dup >r cfa-label ." \s;\s" 
+  dup hexa.  2+ ." \n\s\+defw " dup @ hexa. ." $','wc')"
+
+  cr ."   silent s`\(defw " r> cfa-label
+  ." \)\s;\s0x[A-F0-9]\{4}\n\s\+defw \(" dup @ hexa.
+  ." \)$`\1,\2 ; to " dup destination branch-label ." `" cr
+
+  ." else" cr ."   echoerr 'Branch not found'" cr
+              ."   wq" cr
+  ." endif" cr  ;
+
+( mode print-branch colon-end? )
+
+0 variable mode
+  \ Print mode:
+  \ 0 for Vim command to convert branches
+  \ 1 for destination branch symbols
+
+: print-branch  ( pfa+n -- pfn+n+2 )
+  \ pfa+n   = address of a branch word
+  \ pfa+n+2 = address of its relative jump literal
+  cr mode @ if  branch-symbol  else  vim-command  then  ;
+
+0 constant addr  \ used as local variable
+
+: colon-end?  ( a -- f )
+  \ Is the given address the end of a colon definition?
+  ' addr !  true
+  addr @ [ ' ;s cfa ] literal = ?exit
+  addr @ [ ' (;code) cfa ] literal  = ?exit
+  addr 6E04 = ?exit  \ end of COLD
+  addr 6DAE = ?exit  \ end of WARM
+  addr 6D6A = ?exit  \ end of ABORT
+  addr 6C99 = ?exit  \ end of INTERPRET
+  addr 6B2A = ?exit  \ end of ERROR
+  addr 6D4C = ?exit  \ end of QUIT
+  0= ;
+
+( print-colon )
+
+: skip-string  ( pfa+n1 -- pfa+n1+n2 )  2+ dup c@ + 1-  ;
+
+: (print-colon)  ( pfa+n1 -- pfa+n1 | pfa+n2 )
+  dup @ case
+    [ ' compile cfa ] literal of  2+            endof
+    [ ' lit     cfa ] literal of  2+            endof
+    [ ' branch  cfa ] literal of  print-branch  endof
+    [ ' 0branch cfa ] literal of  print-branch  endof
+    [ ' (loop)  cfa ] literal of  print-branch  endof
+    [ ' (+loop) cfa ] literal of  print-branch  endof
+    [ ' (.")    cfa ] literal of  skip-string   endof
+  endcase  ;
+
+: print-colon  ( pfa --- )
+  \ Print branches of a colon definition.
+  begin   dup colon-end? 0=
+  while   (print-colon) 2+
+  repeat  drop  ;
+
+( print-pfa )
+
+: colon?      ( pfa -- f )  cfa @ ' : cfa @ =  ;
+
+: (print-pfa)  ( pfa --- )
+  \ Print branches of a word.
+  dup colon?  if  print-colon  exit  then  drop  ;
+
+  \ Print a word, if it belongs to the original system.
+: print-pfa  ( pfa -- )  dup [ ' udg 1+ ] literal u<
+                         if  (print-pfa)  else  drop  then  ;
+
+: print-from-nfa  ( nfa -- )
+  \ Print branches of words starting from a word.
+  begin  pfa dup print-pfa  lfa @ dup 0= ?terminal or
+  until  drop  ;
+
+  \ Print branches of the context vocabulary,
+  \ and the vocabularies it's chained to.
+: print-context  ( -- )  context @ @  print-from-nfa  ;
+
+( done )
+
+: done  ( -- )
+  cls
+  \  <------------------------------>
+  ." Done." cr cr
+  ." If you have not launched this" cr
+  ." program with the provided" cr
+  ." boot shell file for Fuse, copy" cr
+  ." the printout of your emulator" cr
+  ." to the file " 
+  mode @ if    cr ." <z80dasm_symbols.branches.z80s>."
+         else  ." <tidy_branches.vim>." then  cr
+  ." Then close the emulator and use" cr
+  ." <make> to disassemble the code." cr  ;
+  \  <------------------------------>
+
+( run )
+
+: ~  ( -- )
+  \ Start a comment line of the output file.
+  cr mode @ if  [char] ;  else  [char] "  then  emit space  ;
+
+: file-header  ( -- )
+  ~ ." This file was automatically created by " program-name
+  ~ ." This file is part of Abersoft Forth disassembled"
+  ~ ." By Marcos Cruz (programandala.net), 2015-05"
+  ~ ." http://programandala.net/en.program.abersoft_forth.html"
+  cr cr  mode @ 0= if  ." call cursor(1,1)" cr  then   ;
+
+: run  ( n -- )
+  \ n = 0: Print out Vim commands to convert branches.
+  \     1: Print out destination branch symbols.
+  mode !
+  hex  FF printer-width  1 link  file-header
+  editor print-context
+  0 link  decimal cr done  ;
+
+: vim  ( -- )  0 run  ;
+: sym  ( -- )  1 run  ;
+
+  \ vim: filetype=abersoftforthafera

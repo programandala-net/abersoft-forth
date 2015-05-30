@@ -1,12 +1,21 @@
-; symbols_input.z80s
+; z80dasm_symbols.z80s
 ;
 ; This file is part of
 ;   Abersoft Forth disassembled
+;   http://programandala.net/en.program.abersoft_forth.html
 ;
 ; 2015-05-24: Start.
+; 2015-05-27: Updated.
+; 2015-05-30: New: "z80dasm_symbols.branches.z80s" included.
+
+; ZX Spectrum
 
 include "zx_spectrum_rom_routines.z80s"
 include "zx_spectrum_system_variables.z80s"
+
+; Abersoft Forth
+
+include "z80dasm_symbols.branches.z80s"
 
 origin: equ 0x5E00
 s0_value: equ 0x5E06
@@ -40,10 +49,6 @@ fig_revision: equ 0x5E49
 fig_user_version: equ 0x5E4A
 fig_implementation_attributes: equ 0x5E4B
 
-top_most_word_in_forth_voc: equ 0x5E4C
-backspace_char: equ 0x5E4E
-init_up: equ 0x5E50
-
 init_s0_value: equ 0x5E52
 init_r0_value: equ 0x5E54
 init_tib_value: equ 0x5E56
@@ -61,5 +66,24 @@ pushhl: equ 0x5E6B
 next: equ 0x5E6C
 next2: equ 0x5E72
 
+do_vocabulary: equ 0x6CE2
+forth_vocabulary_dummy_nfa: equ 0x6CF6
+forth_vocabulary_link: equ 0x6CFA
+editor_vocabulary_dummy_nfa: equ 0x77A8
+editor_vocabulary_link: equ 0x77AC
+
+cold_start: equ 0x6DB0
+warm_start: equ 0x6D93
+
 paren_emit_cfa: equ 0x706E
 paren_emit_pfa: equ 0x7070
+
+key_routine: equ 0x6FDB
+cr_routine: equ 0x7093
+
+question_terminal_routine: equ 0x6FC0
+
+do_two_constant: equ 0x7F00
+
+ram_disc_bottom: equ 0xD000
+ram_disc_top: equ 0xFBFF

@@ -23,6 +23,8 @@
   \ The printout, processed by other tools and combined with
   \ other files (see <README.adoc> and <Makefile>), is used to
   \ recreate the original Z80 source of Abersoft Forth.
+  \
+  \ This tool is deprecated. "zones.fsb" is used instead.
 
   \ -----------------------------------------------------------
   \ Requirements
@@ -49,6 +51,8 @@
   \
   \ 2015-05-24: Little fixes. Improvement: Only the words of
   \ the original system are printed out.
+  \
+  \ 2015-05-25: Deprecated. "zones.fsb" is used instead.
 
   \ -----------------------------------------------------------
 
