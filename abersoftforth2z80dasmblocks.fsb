@@ -47,12 +47,16 @@
   \ "zones"). Fix: vocabularies needed special code.
   \
   \ 2015-05-30: Improved instructions.
+  \
+  \ 2015-05-31: Fix: `editor` is immediate! It needed a
+  \ `[compile]`. Improvement: the bounds of zones can be marked
+  \ with "unlabeled".
 
   \ -----------------------------------------------------------
 
 forth definitions
 
-vocabulary zones-voc zones-voc definitions hex
+vocabulary print-voc immediate  print-voc definitions hex
 
 -->
 
@@ -71,9 +75,9 @@ vocabulary zones-voc zones-voc definitions hex
   ." If you have not launched this" cr
   ." program with the provided" cr
   ." boot shell file for Fuse, copy" cr
-  ." copy the printout of your" cr
-  ." emulator to the file " cr
-  ." <abersoftforth2z80dasmblocks_output.txt>." cr cr
+  ." the printout of your emulator" cr
+  ." to the file <abersoftforth2z80dasmblocks_printout.txt>."
+  cr cr
   ." Then close the emulator and use" cr
   ." <make> to disassemble the code." cr  ;
   \  <------------------------------>
@@ -147,41 +151,52 @@ vocabulary zones-voc zones-voc definitions hex
 : addr+  ( a ca len -- )
   s" at_0x" s+ rot s->d <# # # # # #> s+  ;
 
-( Zones )
+( Basic zones )
 
   \ Zone addresses.
 
-0 variable zone-first
-0 variable zone-last
+0 variable zone-first  0 variable zone-last
 
   \ z80dasm zones: bytedata, worddata, pointers and code.
 
-: zone  ( ca len -- )
+: ?unlabeled  ( f -- )  if  ." unlabeled"  then  ;
+: zone  ( ca len f1 f2 -- )
   \ ca len = label
-  cr type ." : first " zone-first @ hex.
-  ."  last " zone-last @ hex. ."  type " ;
+  \ f1 = unlabeled last?
+  \ f2 = unlabeled first?
+  2swap cr type ." : "
+  ?unlabeled ."  first " zone-first @ hex.
+  ?unlabeled ."  last " zone-last @ hex. ."  type " ;
 
-: bytedata-zone  ( ca len -- )  zone ." bytedata"  ;
-: worddata-zone  ( ca len -- )  zone ." worddata"  ;
-: pointers-zone  ( ca len -- )  zone ." pointers"  ;
-: code-zone  ( ca len -- )  zone ." code"  ;
-
-  \ Zones for special cases: literals and strings.
-
-: literal-zone  ( a -- )  s" literal_" addr+ worddata-zone  ;
-: string-zone  ( a -- )  s" string_" addr+ bytedata-zone  ;
+: (bytedata-zone)  ( ca len f1 f2 -- )  zone ." bytedata"  ;
+: bytedata-zone    ( ca len -- )        0 0 (bytedata-zone)  ;
+: (worddata-zone)  ( ca len f1 f2 -- )  zone ." worddata"  ;
+: worddata-zone    ( ca len -- )        0 0 (worddata-zone)  ;
+: (pointers-zone)  ( ca len f1 f2 -- )  zone ." pointers"  ;
+: pointers-zone    ( ca len -- )        0 0 (pointers-zone)  ;
+: (code-zone)      ( ca len f1 f2 -- )  zone ." code"  ;
+: code-zone        ( ca len -- )        0 0 (code-zone)  ;
 
 ( Special zones )
 
-  \ End the current pfa zone.
+: literal-zone  ( a -- )
+  s" literal_" addr+ 0 0 (worddata-zone)  ;
 
+: string-zone  ( a -- )
+  s" string_" addr+ 0 0 (bytedata-zone)  ;
+
+: value-zone  ( ca len -- )
+  0 0 (worddata-zone)  ;
+
+  \ End the current pfa zone.
 : end-pfa-zone  ( pfa+n -- )
   \ pfa+n = address of the last cf of the zone.
   1+ zone-last ! current-pfa @ pfa-label$ pointers-zone  ;
 
   \ Start a new pfa zone. Used after a string or a literal.
-
 : new-pfa-zone  ( pfa+n -- )  zone-first ! 1 pfa-zone# +!  ;
+
+( Special zones )
 
   \ The word compiled after `COMPILE` does not need a specific
   \ zone, because the pfa is marked as "pointers zone". Only
@@ -189,10 +204,9 @@ vocabulary zones-voc zones-voc definitions hex
   \ compiled cfa to be checked as part of the executable
   \ definition.
 
-: do-compile-zone  ( pfa+n -- pfa+n+2 )
+: do-compile-zone  ( pfa+n -- pfa+n+2 )  2+  ;
   \ pfa+n = Address of `COMPILE` in the current pfa.
   \ pfa+n+2 = Address after the data word minus 2.
-  2+  ;
 
   \ Do a specific zone for a compiled literal. It will be a
   \ "wordata zone" with a unique address-based name.
@@ -216,10 +230,7 @@ vocabulary zones-voc zones-voc definitions hex
   \ pfa+n1+n2 = Address of the byte after the string minus 2.
   dup end-pfa-zone
   2+ dup zone-first ! dup count + 1- zone-last !
-     dup string-zone
-     count + dup new-pfa-zone  2-  ;
-
-( do-code-zone )
+     dup string-zone  count + dup new-pfa-zone  2-  ;
 
 : do-code-zone  ( pfa+n -- )
   \ Print the z80dasm code zone of a low-level word.
@@ -232,8 +243,7 @@ vocabulary zones-voc zones-voc definitions hex
   \ This code zones are made distinctive
   \ with a decimal 100 suffix,
   \ because they need special treatment later.
-  64 pfa-zone# !  \ Make this code zones distinctive.
-  do-code-zone  ;
+  64 pfa-zone# !  do-code-zone  ;
 
 ( Special cases dispatcher )
 
@@ -312,11 +322,11 @@ false variable semicolon-code?
 
 : do-value-zone  ( pfa --- )
   \ Print a value (constant or variable).
-  dup 1+ zone-last !  pfa-label$ worddata-zone ;
+  dup 1+ zone-last !  pfa-label$ value-zone ;
 
 : do-2value-zone  ( pfa --- )
   \ Print a double value (constant or variable).
-  dup 3 + zone-last !  pfa-label$ worddata-zone ;
+  dup 3 + zone-last !  pfa-label$ value-zone ;
 
 : do-colon-zone  ( pfa --- )
   \ Print a colon definition.
@@ -395,7 +405,7 @@ false variable semicolon-code?
   begin  pfa dup definition-zones  lfa @ dup 0= ?terminal or
   until  drop  ;
 
-: context-zones  ( -- )
+: print-context  ( -- )
   \ Print the zones of all definitions of the original
   \ system, starting from the context vocabulary.
   context @ @  zones-from-nfa  ;
@@ -411,8 +421,8 @@ false variable semicolon-code?
 : run  ( -- )
   \ Print out the zones of all definitions of the original
   \ system.
-  hex  1 link  file-header  editor context-zones
-       0 link  decimal cr ." Done." cr  ;
+  hex  1 link  file-header  [compile] editor print-context
+       [compile] print-voc  0 link  decimal cr ." Done." cr  ;
 
   \ vim: filetype=abersoftforthafera
 

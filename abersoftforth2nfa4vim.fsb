@@ -42,25 +42,28 @@
   \
   \ 2015-05-30: The 48 K model is detected and an error is
   \ given. Improved instructions.
+  \
+  \ 2015-05-31: Fix: `editor` is immediate! It needed a
+  \ `[compile]`.
 
   \ -----------------------------------------------------------
 
--->
-
-( Boot )
-
-forth definitions
-
-vocabulary print-voc  print-voc definitions  hex
-
-: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
-: program-name  ( -- )  ." AbersoftForth2nfa4Vim"  ;
+forth
 
                \  <------------------------------>
 128k? dup   ?\ ." ERROR: this program needs a" cr
             ?\ ." ZX Spectrum 128 or later." cr quit
 
-3 7 thru cls greeting cr cr program-name cr cr usage
+definitions -->
+
+( Boot )
+
+vocabulary print-voc immediate  print-voc definitions  hex
+
+: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
+: program-name  ( -- )  ." AbersoftForth2nfa4Vim"  ;
+
+3 9 thru cls greeting cr cr program-name cr cr usage
 
 ( usage )
 
@@ -209,7 +212,7 @@ char " constant quote
 
   \ If the given word belongs to the original system and is not
   \ a dummy, print a Vim command that will substitute the
-  \ disassembled name field of the that word with a new one,
+  \ disassembled name field of the word with a new one,
   \ using a more legible format.
 
   dup dummy? if  drop exit  then
@@ -218,13 +221,14 @@ char " constant quote
 ( Done )
 
 : done  ( -- )
+  cls
   \  <------------------------------>
-  ." Done." cr
+  ." Done." cr cr
   ." If you have not launched this" cr
   ." program with the provided" cr
   ." boot shell file for Fuse, copy" cr
-  ." copy the printout of your" cr
-  ." emulator to the file "
+  ." the printout of your emulator" cr
+  ." to the file "
   ." <abersoftforth2nfa4vim_printout."
   ." txt>." cr cr
   ." Then close the emulator and use" cr
@@ -247,14 +251,14 @@ char " constant quote
 : file-header  ( -- )
   " ." This file was automatically created by " program-name
   " ." This file is part of Abersoft Forth disassembled"
-  ~ ." By Marcos Cruz (programandala.net), 2015-05"
+  " ." By Marcos Cruz (programandala.net), 2015-05"
   " ." http://programandala.net/en.program.abersoft_forth.html"
   cr cr  ;
 
 : run  ( -- )
   \ Print out all original words of the Forth system.
   hex  FF printer-width  1 link  file-header
-  editor print-context
+  [compile] editor print-context [compile] print-voc
   0 link  decimal cr done  ;
 
   \ vim: filetype=abersoftforthafera

@@ -17,7 +17,7 @@ include "zx_spectrum_system_variables.z80s"
 
 include "z80dasm_symbols.branches.z80s"
 
-origin: equ 0x5E00
+user_variables_origin: equ 0x5E00
 s0_value: equ 0x5E06
 r0_value: equ 0x5E08
 tib_value: equ 0x5E0A
@@ -41,6 +41,7 @@ csp_value: equ 0x5E2C
 r_hash_value: equ 0x5E2E
 hld_value: equ 0x5E30
 
+origin: equ 0x5E40
 cold_entry: equ 0x5E40
 warm_entry: equ 0x5E44
 

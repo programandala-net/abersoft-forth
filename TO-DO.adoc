@@ -1,15 +1,15 @@
 = Abersoft Forth disassembled TO-DO
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-05-30
+:revdate: 2015-05-31
 
 
-.2015-05-29:
+.2015-05-31:
 
-Document `implementation_attributes`, using Z80 fig-Forth 1.1.g
+Strange problem with <abersoftforth2branches.fsb>: one instance is not
+found.  Others are not translated later.
 
-.2015-05-30:
+Document `cold_start`, `COLD`, `warm_start` and `WARM`.
 
-Finish <abersoftforth2branches.fsb> (notes inside).
+Make the automatic blocks unlabeled?
 
-Convert its printout <tidy_branches.vim> to Unix file format, in Makefile, with Vim.
-
+Tidy the strings.

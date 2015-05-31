@@ -46,11 +46,9 @@ MAKEFLAGS = --no-print-directory
 ################################################################
 # Main
 
-.PHONY: all
 all: \
 	abersoft_forth.rebuilt.tap
 
-.PHONY: tools
 tools: \
 	abersoftforth2z80dasmblocks \
 	abersoftforth2nfa4vim \
@@ -150,7 +148,6 @@ tidy_name_fields.vim: \
 tidy_branches.vim:
 	vim -e -c "set fileformat=unix|wq" tidy_branches.vim
 
-.PHONY: tidy
 tidy: \
 	tidy_name_fields.vim \
 	tidy_branches.vim \
@@ -195,7 +192,7 @@ abersoft_forth.rebuilt.bin.tap: abersoft_forth.disassembled.z80s
 abersoft_forth.rebuilt.tap: \
 	abersoft_forth_loader.tap \
 	abersoft_forth.rebuilt.bin.tap
-	cat abersoft_forth_loader.bas.tap abersoft_forth.rebuilt.bin.tap > \
+	cat abersoft_forth_loader.tap abersoft_forth.rebuilt.bin.tap > \
 		abersoft_forth.rebuilt.tap \
 
 ################################################################
@@ -204,7 +201,6 @@ abersoft_forth.rebuilt.tap: \
 %.tap: %.fsb
 	fsb2abersoft16k $<
 
-.PHONY: abersoftforth2z80dasmblocks
 abersoftforth2z80dasmblocks: abersoftforth2z80dasmblocks_compiling.tap
 
 abersoftforth2z80dasmblocks_compiling.tap: \
@@ -238,7 +234,6 @@ abersoftforth2z80dasmblocks_compiling.tap: \
 		> abersoftforth2z80dasmblocks_compiling.tap ; \
 	rm -f abersoftforth2z80dasmblocks.tap
 
-.PHONY: abersoftforth2nfa4vim
 abersoftforth2nfa4vim: abersoftforth2nfa4vim_compiling.tap
 
 abersoftforth2nfa4vim_compiling.tap: abersoftforth2nfa4vim.tap
@@ -272,7 +267,6 @@ abersoftforth2nfa4vim_compiling.tap: abersoftforth2nfa4vim.tap
 		> abersoftforth2nfa4vim_compiling.tap ; \
 	rm -f abersoftforth2nfa4vim.tap
 
-.PHONY: abersoftforth2branches
 abersoftforth2branches: abersoftforth2branches_compiling.tap
 
 abersoftforth2branches_compiling.tap: \
@@ -310,6 +304,7 @@ abersoftforth2branches_compiling.tap: \
 ################################################################
 # Backup
 
+.PHONY: backup
 backup:
 	tar -czf backups/$$(date +%Y%m%d%H%M)_abersoft_forth_disassembled.tgz \
 		Makefile \
@@ -321,9 +316,6 @@ backup:
 		z80dasm_symbols.z80s \
 		tidy_z80.vim \
 		word_labels.*.vim \
-		sys/*.bas \
-		_drafts/* \
-		_tests/*.fsb \
 		_ex/*
 
 ################################################################

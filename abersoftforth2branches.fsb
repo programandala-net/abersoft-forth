@@ -36,21 +36,33 @@
 
   \ 2015-05-30: Start, with code extrated from the deprecated
   \ tool `dis`.
+  \
+  \ 2015-05-31: Fix: `editor` is immediate! It needed a
+  \ `[compile]`.
 
   \ -----------------------------------------------------------
 
-forth definitions -->
-
-( Boot )
-
-vocabulary print-voc  print-voc definitions  hex
-
-: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
-: program-name  ( -- )  ." AbersoftForth2branches"  ;
+forth 
 
                \  <------------------------------>
 128k? dup   ?\ ." ERROR: this program needs a" cr
             ?\ ." ZX Spectrum 128 or later." cr quit
+
+definitions -->
+
+( Boot )
+
+vocabulary print-voc immediate  print-voc definitions  hex
+
+: printer-width  ( b -- )  5B64 !  ;  \ ZX Spectrum 128 only
+: program-name  ( -- )  ." AbersoftForth2branches"  ;
+
+0 variable current-pfa
+
+0 variable mode
+  \ Print mode:
+  \ 0 for Vim command to convert branches
+  \ 1 for destination branch symbols
 
 03 0A thru cls program-name cr cr usage
 
@@ -97,6 +109,10 @@ vocabulary print-voc  print-voc definitions  hex
 
 : cfa-label  ( cfa -- )  cfa-label$ type  ;
 
+: ~  ( -- )
+  \ Start a comment line of the output file.
+  cr mode @ if  [char] ;  else  [char] "  then  emit space  ;
+
 ( branch-symbol vim-command )
 
 : destination  ( pfa+n1 -- pfa+n2 )
@@ -118,28 +134,21 @@ vocabulary print-voc  print-voc definitions  hex
   \ in the Z80 source.
   \ pfa+n   = address of a branch word
   \ pfa+n+2 = address of its relative jump literal
-  \ XXX TODO -- use `call search()` instead, in order to
-  \ convert only the first match!
 
-  [char] " emit space ." Branch word at " dup hexa. cr
+  ~ ." Branch word at " dup hexa.
+    ."  in " current-pfa @ nfa id.
 
-  ." if search('defw " dup @ dup >r cfa-label ." \s;\s" 
+  cr ." if search('defw " dup @ dup >r cfa-label ." \s;\s"
   dup hexa.  2+ ." \n\s\+defw " dup @ hexa. ." $','wc')"
 
   cr ."   silent s`\(defw " r> cfa-label
   ." \)\s;\s0x[A-F0-9]\{4}\n\s\+defw \(" dup @ hexa.
   ." \)$`\1,\2 ; to " dup destination branch-label ." `" cr
 
-  ." else" cr ."   echoerr 'Branch not found'" cr
-              ."   wq" cr
+  ." else" cr ."   echoerr 'Branch not found'" cr ."   wq" cr
   ." endif" cr  ;
 
-( mode print-branch colon-end? )
-
-0 variable mode
-  \ Print mode:
-  \ 0 for Vim command to convert branches
-  \ 1 for destination branch symbols
+( print-branch colon-end? )
 
 : print-branch  ( pfa+n -- pfn+n+2 )
   \ pfa+n   = address of a branch word
@@ -178,9 +187,9 @@ vocabulary print-voc  print-voc definitions  hex
 
 : print-colon  ( pfa --- )
   \ Print branches of a colon definition.
-  begin   dup colon-end? 0=
-  while   (print-colon) 2+
-  repeat  drop  ;
+  dup current-pfa !   begin   dup colon-end? 0=
+                      while   (print-colon) 2+
+                      repeat  drop  ;
 
 ( print-pfa )
 
@@ -190,9 +199,10 @@ vocabulary print-voc  print-voc definitions  hex
   \ Print branches of a word.
   dup colon?  if  print-colon  exit  then  drop  ;
 
+: print-pfa  ( pfa -- )
   \ Print a word, if it belongs to the original system.
-: print-pfa  ( pfa -- )  dup [ ' udg 1+ ] literal u<
-                         if  (print-pfa)  else  drop  then  ;
+  dup [ ' udg 1+ ] literal u<
+  if  (print-pfa)  else  drop  then  ;
 
 : print-from-nfa  ( nfa -- )
   \ Print branches of words starting from a word.
@@ -222,23 +232,19 @@ vocabulary print-voc  print-voc definitions  hex
 
 ( run )
 
-: ~  ( -- )
-  \ Start a comment line of the output file.
-  cr mode @ if  [char] ;  else  [char] "  then  emit space  ;
-
 : file-header  ( -- )
   ~ ." This file was automatically created by " program-name
   ~ ." This file is part of Abersoft Forth disassembled"
   ~ ." By Marcos Cruz (programandala.net), 2015-05"
   ~ ." http://programandala.net/en.program.abersoft_forth.html"
-  cr cr  mode @ 0= if  ." call cursor(1,1)" cr  then   ;
+  cr cr  ;
 
 : run  ( n -- )
   \ n = 0: Print out Vim commands to convert branches.
   \     1: Print out destination branch symbols.
   mode !
   hex  FF printer-width  1 link  file-header
-  editor print-context
+  [compile] editor print-context [compile] print-voc
   0 link  decimal cr done  ;
 
 : vim  ( -- )  0 run  ;

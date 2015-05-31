@@ -22,8 +22,7 @@ top_most_word_in_forth_voc: first 0x5E4C unlabeled last 0x5E4D type pointers
 
 backspace_char: first 0x5E4E unlabeled last 0x5E4F type worddata
 
-; XXX TODO rename:
-init_up: first 0x5E50 unlabeled last 0x5E51 type pointers
+init_user_pointer_value: first 0x5E50 unlabeled last 0x5E51 type pointers
 
 user_variables_init: unlabeled first 0x5E52 unlabeled last 0x5E61 type pointers
 
