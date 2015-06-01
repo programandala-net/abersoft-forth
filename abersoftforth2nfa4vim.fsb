@@ -251,7 +251,7 @@ char " constant quote
 : file-header  ( -- )
   " ." This file was automatically created by " program-name
   " ." This file is part of Abersoft Forth disassembled"
-  " ." By Marcos Cruz (programandala.net), 2015-05"
+  " ." By Marcos Cruz (programandala.net), 2015"
   " ." http://programandala.net/en.program.abersoft_forth.html"
   cr cr  ;
 

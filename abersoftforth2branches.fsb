@@ -39,10 +39,13 @@
   \
   \ 2015-05-31: Fix: `editor` is immediate! It needed a
   \ `[compile]`.
-
+  \
+  \ 2015-06-01: Fix: the loop in `print-colon` didn't processed
+  \ the last word of the definition.
+  \
   \ -----------------------------------------------------------
 
-forth 
+forth
 
                \  <------------------------------>
 128k? dup   ?\ ." ERROR: this program needs a" cr
@@ -162,9 +165,9 @@ vocabulary print-voc immediate  print-voc definitions  hex
   ' addr !  true
   addr @ [ ' ;s cfa ] literal = ?exit
   addr @ [ ' (;code) cfa ] literal  = ?exit
-  addr 6E04 = ?exit  \ end of COLD
+  addr 6E08 = ?exit  \ end of COLD (original, not patched)
   addr 6DAE = ?exit  \ end of WARM
-  addr 6D6A = ?exit  \ end of ABORT
+  addr 6D91 = ?exit  \ end of ABORT (original, not patched)
   addr 6C99 = ?exit  \ end of INTERPRET
   addr 6B2A = ?exit  \ end of ERROR
   addr 6D4C = ?exit  \ end of QUIT
@@ -187,9 +190,13 @@ vocabulary print-voc immediate  print-voc definitions  hex
 
 : print-colon  ( pfa --- )
   \ Print branches of a colon definition.
-  dup current-pfa !   begin   dup colon-end? 0=
-                      while   (print-colon) 2+
-                      repeat  drop  ;
+  \ XXX OLD -- buggy
+  \ dup current-pfa !   begin   dup colon-end? 0=
+  \                     while   (print-colon) 2+
+  \                     repeat  drop  ;
+  \ XXX NEW
+  dup current-pfa !
+  begin  dup colon-end? >r (print-colon) 2+ r>  until  drop  ;
 
 ( print-pfa )
 
@@ -223,7 +230,7 @@ vocabulary print-voc immediate  print-voc definitions  hex
   ." program with the provided" cr
   ." boot shell file for Fuse, copy" cr
   ." the printout of your emulator" cr
-  ." to the file " 
+  ." to the file "
   mode @ if    cr ." <z80dasm_symbols.branches.z80s>."
          else  ." <tidy_branches.vim>." then  cr
   ." Then close the emulator and use" cr
@@ -235,7 +242,7 @@ vocabulary print-voc immediate  print-voc definitions  hex
 : file-header  ( -- )
   ~ ." This file was automatically created by " program-name
   ~ ." This file is part of Abersoft Forth disassembled"
-  ~ ." By Marcos Cruz (programandala.net), 2015-05"
+  ~ ." By Marcos Cruz (programandala.net), 2015"
   ~ ." http://programandala.net/en.program.abersoft_forth.html"
   cr cr  ;
 

@@ -51,6 +51,9 @@
   \ 2015-05-31: Fix: `editor` is immediate! It needed a
   \ `[compile]`. Improvement: the bounds of zones can be marked
   \ with "unlabeled".
+  \
+  \ 2015-06-02: Fix: the loop in `do-colon-zone` didn't
+  \ processed the last word of the definition.
 
   \ -----------------------------------------------------------
 
@@ -196,18 +199,6 @@ vocabulary print-voc immediate  print-voc definitions hex
   \ Start a new pfa zone. Used after a string or a literal.
 : new-pfa-zone  ( pfa+n -- )  zone-first ! 1 pfa-zone# +!  ;
 
-( Special zones )
-
-  \ The word compiled after `COMPILE` does not need a specific
-  \ zone, because the pfa is marked as "pointers zone". Only
-  \ the current address must be updated, to prevent the
-  \ compiled cfa to be checked as part of the executable
-  \ definition.
-
-: do-compile-zone  ( pfa+n -- pfa+n+2 )  2+  ;
-  \ pfa+n = Address of `COMPILE` in the current pfa.
-  \ pfa+n+2 = Address after the data word minus 2.
-
   \ Do a specific zone for a compiled literal. It will be a
   \ "wordata zone" with a unique address-based name.
 
@@ -219,6 +210,27 @@ vocabulary print-voc immediate  print-voc definitions hex
   \          literal.
   \ pfa+n+2 = Address of the byte after the literal minus 2.
   dup end-pfa-zone (do-literal-zone) dup 2+ new-pfa-zone ;
+
+( Special zones )
+
+  \ Flag: Was the last word of the definition a branch?
+0 variable final-branch?
+
+: do-branch-zone  ( pfa+n -- pfa+n+2 )
+  \ pfa+n  = Address of the cf that precedes the compiled
+  \          literal.
+  \ pfa+n+2 = Address of the byte after the literal minus 2.
+  final-branch? on  do-literal-zone  ;
+
+  \ The word compiled after `COMPILE` does not need a specific
+  \ zone, because the pfa is marked as "pointers zone". Only
+  \ the current address must be updated, to prevent the
+  \ compiled cfa to be checked as part of the executable
+  \ definition.
+
+: do-compile-zone  ( pfa+n -- pfa+n+2 )  2+  ;
+  \ pfa+n = Address of `COMPILE` in the current pfa.
+  \ pfa+n+2 = Address after the data word minus 2.
 
   \ Do a specific zone for a compiled string. It will be a a
   \ "bytedata zone" (z80dasm does not provide text zones) with
@@ -252,16 +264,15 @@ vocabulary print-voc immediate  print-voc definitions hex
   \ The words that manage every individual case must
   \ return the received address updated, pointing to the byte
   \ after the data minus 2.
-  dup @
+  final-branch? off  dup @
   case
-    [ ' compile cfa ] literal of  do-compile-zone     endof
-    [ ' lit     cfa ] literal of  do-literal-zone     endof
-    [ ' branch  cfa ] literal of  do-literal-zone     endof
-    [ ' 0branch cfa ] literal of  do-literal-zone     endof
-    [ ' (loop)  cfa ] literal of  do-literal-zone     endof
-    [ ' (+loop) cfa ] literal of  do-literal-zone     endof
-    [ ' (.")    cfa ] literal of  do-string-zone      endof
-    [ ' slit    cfa ] literal of  do-string-zone      endof
+    [ ' compile cfa ] literal of  do-compile-zone  endof
+    [ ' lit     cfa ] literal of  do-literal-zone  endof
+    [ ' branch  cfa ] literal of  do-branch-zone   endof
+    [ ' 0branch cfa ] literal of  do-branch-zone   endof
+    [ ' (loop)  cfa ] literal of  do-branch-zone   endof
+    [ ' (+loop) cfa ] literal of  do-branch-zone   endof
+    [ ' (.")    cfa ] literal of  do-string-zone   endof
   endcase  ;
 
 ( Checks )
@@ -330,9 +341,17 @@ false variable semicolon-code?
 
 : do-colon-zone  ( pfa --- )
   \ Print a colon definition.
-  dup begin   dup colon-end? 0=
-      while   do-special-zones 2+
-      repeat  1+ zone-last ! pfa-label$  pointers-zone
+  \ XXX OLD -- buggy
+  \ dup begin   dup colon-end? 0=
+  \     while   do-special-zones 2+
+  \     repeat  1+ zone-last ! pfa-label$  pointers-zone
+  dup begin   dup colon-end? >r
+              do-special-zones 2+ r>  until  2-
+  \ If the word was not finished by a branch,
+  \ create the end of the pointers zone.
+  final-branch? @ 0=
+  if    1+ zone-last ! pfa-label$  pointers-zone
+  else  drop  then
   \ If the word was finished by `;code`, define a code zone
   \ for z80dasm.
   semicolon-code? @
@@ -414,7 +433,7 @@ false variable semicolon-code?
   cr ." ; This file was automatically created by "
   program-name cr
   ." ; This file is part of Abersoft Forth disassembled" cr
-  ." ; By Marcos Cruz (programandala.net), 2015-05" cr
+  ." ; By Marcos Cruz (programandala.net), 2015" cr
   ." ; http://programandala.net/en.program.abersoft_forth.html"
   cr cr  ;
 

@@ -1,0 +1,24 @@
+= Abersoft Forth integer division
+:author: Marcos Cruz (programandala.net)
+:revdate: 2015-06-02
+
+|===
+
+| Calculation     | Abersoft Forth | SpecForth | 40/80 Forth | WL | Spectrum Forth-83 | Gforth
+
+| 10 7 /mod . .   | 1 3            |           |             |    |                  |
+| -10 7 /mod . .  | -1 -3          |           |             |    |                  |
+| 10 -7 /mod . .  | -1 -3          |           |             |    |                  |
+| -10 -7 /mod . . | 1 -3           |           |             |    |                  |
+
+| -64 128 mod     | -64            | 64        | -64         |-64 | 64               | 64
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+|                 |                |           |             |    |                  |
+
+|===

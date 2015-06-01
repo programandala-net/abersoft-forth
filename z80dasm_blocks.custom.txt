@@ -31,6 +31,7 @@ cpu_name: first 0x5E62 unlabeled last 0x5E65 type worddata
 registers: unlabeled first 0x5E66 unlabeled last 0x5E69 type pointers
 
 warm_start_phony_cfa: first 0x6DA1 unlabeled last 0x6DA2 type pointers
+cold_start_phony_cfa: first 0x6DC7 unlabeled last 0x6DC8 type pointers
 
 unknown_use_00: first 0x6FDA unlabeled last 0x6FDA type bytedata
 

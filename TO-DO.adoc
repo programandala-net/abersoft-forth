@@ -12,4 +12,12 @@ Document `cold_start`, `COLD`, `warm_start` and `WARM`.
 
 Make the automatic blocks unlabeled?
 
-Tidy the strings.
+.2015-06-02:
+
+Unpatch `r/w`, at least its branch, before creating the branches.
+
+Document l706dh.
+
+Document `mon`.
+
+Document 0xCBE0.

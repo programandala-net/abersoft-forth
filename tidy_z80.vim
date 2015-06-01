@@ -12,6 +12,29 @@
 
 " 2015-05-26: Start.
 " 2015-05: Improvements.
+" 2015-06-01: Strings are tidied. Trace.
+
+" --------------------------------------------------------------
+" Trace
+
+let s:trace=1 " flag
+let s:tracePath='./' " path with trailing slash
+let s:traceBaseFilename='abersoft_forth.disassembled.step_'
+let s:traceStep=0 " counter
+silent execute '!rm -f '.s:tracePath.s:traceBaseFilename.'*.z80s'
+
+function! TidyTrace(description)
+
+  if s:trace
+
+    let l:number='00'.s:traceStep
+    let l:number=strpart(l:number,len(l:number)-2)
+    execute 'write! '.s:tracePath.s:traceBaseFilename.l:number.'_'.a:description.'.z80s'
+    let s:traceStep=s:traceStep+1
+
+  endif
+
+endfunction
 
 " --------------------------------------------------------------
 " No default comments.
@@ -27,11 +50,15 @@ silent %s@\(defw \(zero_branch\|branch\|paren_loop\|paren_plus_loop\)_cfa\)_firs
 
 silent %s@\s\+;[0-9a-f]\{4} [0-9a-f]\{2}.\+$@@
 
+call TidyTrace('no_comments')
+
 " --------------------------------------------------------------
 " Change the format of hex numbers.
 
 silent %s@\<0x\([0-9a-f]\+\)\>@0x\U\1@g
 silent %s@\<0\([0-9a-f]\+\)h\>@0x\U\1@g
+
+call TidyTrace('hex_numbers')
 
 " --------------------------------------------------------------
 " Rename labels that must be preserved.
@@ -42,6 +69,8 @@ silent %s@\<0\([0-9a-f]\+\)h\>@0x\U\1@g
 %s@\<two_variable_pfa100_first\>@do_two_variable@
 %s@\<does_pfa100_first\>@do_does@
 %s@\<variable_pfa100_first\>@do_variable@
+
+call TidyTrace('do_labels')
 
 " --------------------------------------------------------------
 " Remove the end of zone labels.
@@ -119,7 +148,7 @@ call append(line('.'),'  ; XXX FIXME -- It should be 0x41 ("A").')
 %s@^user_pointer_value:$@\r&@
 
 call search('^cold_entry:','wc')
-call append(line('.')-1,'  ; Entry points'])
+call append(line('.')-1,'  ; Entry points')
 
 call search('^fig_release:','wc')
 call append(line('.')-1,'')
@@ -156,16 +185,18 @@ call append(line('.')+17,'  ;   A: CPU address:')
 call append(line('.')+18,'  ;      0 = byte')
 call append(line('.')+19,'  ;      1 = word')
 
+call TidyTrace('new_comments')
+
 function! TidyRuler(heading)
 
   " Add a ruler above a heading.
 
   if search('^\s\+; '.a:heading.'$','wc')
     " XXX FIXME -- Why the comments are duplicated?
-    " call append(line('.')-1,'  ; '.repeat('-',64))
+    call append(line('.')-1,'  ; '.repeat('-',64))
   else
     echoerr 'Heading not found'
-    wq!
+    quit!
   endif
 
 endfunction
@@ -176,11 +207,15 @@ call TidyRuler('User variables init values')
 call TidyRuler('Interpreter')
 call TidyRuler('Dictionary')
 
+call TidyTrace('rulers')
+
 " --------------------------------------------------------------
 " Tidy the tape headers.
 
 " %s@^tape_\(load\|save\)_header_length:$@&\r  ; XXX FIXME -- It should be 0x2C00.@
 %s@^\(tape_\(load\|save\)_header:\)\_.\{-}\ntape_\2@\r\1\r  defb 3 ; filetype: code file\r  defb "DISC      " ; filename\rtape_\2@
+
+call TidyTrace('tape_headers')
 
 " --------------------------------------------------------------
 " Add symbols that are needed by <abersoft_forth.disassembled.z80s> but can not
@@ -212,6 +247,8 @@ call append(line('.'),'ram_disc_top: equ 0xFBFF')
 " Add symbols whose values appear also in variables, constants or compiled
 " literals, where they are not substituted by the disassembler.
 
+%s,defw 0x5E52$,defw init_s0_value,
+%s,defw 0x5E66$,defw user_pointer_value,
 %s,defw 0x5E6A$,defw pushde,
 %s,defw 0x5E6B$,defw pushhl,
 
@@ -222,18 +259,24 @@ call append(line('.'),'ram_disc_top: equ 0xFBFF')
 
 call cursor(1,1)
 call search('^\s\+org\>')
-call append(line('.'),'')
-+2,/^$/-1 sort
++1,/^$/-1 sort
+call append(line('.')-1,'')
+
+call TidyTrace('new_symbols')
 
 " --------------------------------------------------------------
 " Convert the name fields.
 
 source tidy_name_fields.vim
 
+call TidyTrace('name_fields')
+
 " --------------------------------------------------------------
 " Tidy the branches.
 
 source tidy_branches.vim
+
+call TidyTrace('branches')
 
 " --------------------------------------------------------------
 " Remove the comment addresses of branch words that are not actual branches,
@@ -248,28 +291,40 @@ function! TidyString(length,first_letter,new_string)
   " length = length of the string, as an hex string
   " first_letter = first letter of the string, as an hex string
   if search('^\s\+defw paren_dot_quote_cfa\n\s\+defb '.a:length.'\n\s\+defb '.a:first_letter,'wc')
-    s@^\(\s\+defw paren_dot_quote_cfa\)\n\(\s\+defb 0x[0-9A-B]\{2}\n\)\+@\1\r@
-	" XXX FIXME
+    call cursor(line('.')+1,1)
+    while match(getline(line('.')),'^\s\+defb 0x[0-9A-F]\{2}$')==0
+      " Delete the current line.
+      normal dd
+    endwhile
     if a:first_letter=='0x7F'
       " The copyright sign needs special representation.
-      call append(line('.')+1,'  defb '.a:length.",".a:first_letter.",\"".a:new_string.'"')
+      call append(line('.')-1,'  defb '.a:length.",".a:first_letter.",\"".a:new_string.'"')
     else
-      call append(line('.')+1,'  defb '.a:length.",\"".a:new_string.'"')
+      call append(line('.')-1,'  defb '.a:length.",\"".a:new_string.'"')
     endif
   else
     echoerr 'String not found'
-    wq!
+    quit!
   endif
 endfunction
 
-call TidyString('0x02','0x3F','? ')
-call TidyString('0x02','0x6F','ok')
-call TidyString('0x0E','0x66','fig-FORTH 1.1A')
-call TidyString('0x0F','0x7F',' Abersoft:1983')
-call TidyString('0x06','0x4D','MSG # ')
-call TidyString('0x06','0x53','SCR # ') " in `LIST`
-call TidyString('0x0D','0x34','48K SPECTRUM ')
-call TidyString('0x06','0x53','SCR # ') " in `WHERE`
+call TidyString('0x02','0x3F','? ')             " in `ERROR`
+call TidyString('0x02','0x6F','ok')             " in `QUIT`
+call TidyString('0x0E','0x66','fig-FORTH 1.1A') " in `ABORT`
+call TidyString('0x0F','0x7F',' Abersoft:1983') " in `ABORT`
+call TidyString('0x06','0x4D','MSG # ')         " in `MESSAGE`
+call TidyString('0x06','0x53','SCR # ')         " in `LIST`
+call TidyString('0x0D','0x34','48K SPECTRUM ')  " in `.CPU`
+call TidyString('0x06','0x53','SCR # ')         " in `WHERE`
+
+call TidyTrace('strings')
+
+" --------------------------------------------------------------
+" Tidy the compiled literals.
+
+%s@^\(\s\+defw lit_cfa\)\n\s\+defw \(\(sys_\|ram_\|0x\).\+\)$@\1,\2@
+
+call TidyTrace('literal')
 
 " --------------------------------------------------------------
 " Add the header.

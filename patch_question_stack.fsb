@@ -1,0 +1,34 @@
+.( Patch ?STACK )
+
+  \ patch_question_stack.fsb
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+\ This file is part of
+\ Abersoft Forth disassembled
+\ <http://programandala.net/
+\ en.program.abersoft_forth_disassembled.html>.
+
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This file modifies the patch of `?stacks` created by the
+  \ Afera module <lowersys.fsb>, in order to make the patched
+  \ `?stacks' have the same size than its original version.
+  
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-06-01.
+
+HERE
+
+' NOOP CFA , ' NOOP CFA , ' ;S CFA ,
+
+DUP                     \ Origin: start of the compiled patch.
+' ?STACK 28 +           \ Destination.
+OVER HERE SWAP - CMOVE  \ Do it.
+DP !                    \ Free the space of the compiled patch.
+
+  \ vim: filetype=abersoftforthafera
+
