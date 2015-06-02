@@ -1,23 +1,12 @@
 = Abersoft Forth disassembled TO-DO
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-05-31
-
+:revdate: 2015-06-02
 
 .2015-05-31:
 
-Strange problem with <abersoftforth2branches.fsb>: one instance is not
-found.  Others are not translated later.
-
-Document `cold_start`, `COLD`, `warm_start` and `WARM`.
-
-Make the automatic blocks unlabeled?
+Document the `COLD` bug.
 
 .2015-06-02:
 
-Unpatch `r/w`, at least its branch, before creating the branches.
+Tidy the number of `rst` calls.
 
-Document l706dh.
-
-Document `mon`.
-
-Document 0xCBE0.

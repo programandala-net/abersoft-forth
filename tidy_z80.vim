@@ -17,7 +17,7 @@
 " --------------------------------------------------------------
 " Trace
 
-let s:trace=1 " flag
+let s:trace=0 " flag
 let s:tracePath='./' " path with trailing slash
 let s:traceBaseFilename='abersoft_forth.disassembled.step_'
 let s:traceStep=0 " counter
@@ -137,13 +137,15 @@ call append(line('.'),'  ; XXX FIXME -- It should be 0x41 ("A").')
 
 %s@\(^\s\+defw semicolon_s_cfa\)\n\s\+ld c,b\n\s\+ld h,c@\1\r\1 ; XXX FIXME --  Unnecessary duplicated code.@
 
-%s@^origin:$@\r  ; Parameter area\r\r&\r\r@
+%s@^\s\+defb 0x[0-9A-F]\{2}\n\s\+nop$@& ; XXX FIXME -- Unnecessary.@
+
+%s@^origin:$@\r  ; Parameter area\r\r&\r@
 
 %s@^hld_value:\n\s\+defw \S\+$@&\r  ; Unused@
 
 %s@^user_variables_origin:@\r  ; User variables\r\r&\r\r  ; Unused@
 
-%s@^init_s0_value:@\r  ; User variables init values\r\r&\r@
+%s@^init_s0_value:@\r  ; User variables init values\r\r&@
 
 %s@^user_pointer_value:$@\r&@
 
@@ -156,11 +158,24 @@ call append(line('.')-1,'')
 call search('^cpu_name:','wc')
 call append(line('.')-1,'')
 
+call search('^warm_start:','wc')
+call append(line('.')-1,'')
+
+call search('^cold_start:','wc')
+call append(line('.')-1,'')
+
+call search('^link_status:','wc')
+call append(line('.')-1,'')
+
+call search('^mon_pfa:','wc')
+call append(line('.'),'  ; XXX FIXME -- Checking NMIADD (undocumented feature) is not compatible with ZX Spectrum +3.')
+call append(line('.')+2,'  ; XXX FIXME -- This code wastes 3 bytes.')
+
 call search('^pushde:','wc')
 call append(line('.')-1,['','  ; Interpreter',''])
 
 call search('^lit_nfa:','wc')
-call append(line('.')-1,['','  ; Dictionary',''])
+call append(line('.')-1,['','  ; Dictionary'])
 
 call search('^fig_implementation_attributes:$','wc')
 call append(line('.')-01,'')
@@ -184,6 +199,24 @@ call append(line('.')+16,'  ;      1 = high address')
 call append(line('.')+17,'  ;   A: CPU address:')
 call append(line('.')+18,'  ;      0 = byte')
 call append(line('.')+19,'  ;      1 = word')
+
+call search('^question_terminal_routine:$','wc')
+call append(line('.')-1,'')
+
+call search('^cr_routine:$','wc')
+call append(line('.')-1,'')
+
+call search('^key_routine:$','wc')
+call append(line('.')-1,'')
+
+call search('^key_routine_cursor_char:$','wc')
+call append(line('.')-1,'')
+
+call search('^printer_channel_or_zero:$','wc')
+call append(line('.')-1,'')
+
+call search('^paren_emit_cfa:$','wc')
+call append(line('.')-1,'')
 
 call TidyTrace('new_comments')
 
@@ -247,10 +280,16 @@ call append(line('.'),'ram_disc_top: equ 0xFBFF')
 " Add symbols whose values appear also in variables, constants or compiled
 " literals, where they are not substituted by the disassembler.
 
+%s,defw 0x5E4C$,defw top_most_word_in_forth_voc,
 %s,defw 0x5E52$,defw init_s0_value,
 %s,defw 0x5E66$,defw user_pointer_value,
 %s,defw 0x5E6A$,defw pushde,
 %s,defw 0x5E6B$,defw pushhl,
+
+%s,defw 0x6CF8$,defw forth_vocabulary_latest,
+
+" %s,defw 0xCB40$,defw data_stack_bottom, " XXX OLD
+%s,defw 0xCBE0$,defw first_buffer,
 
 %s,defw 0xD000$,defw ram_disc_bottom,
 
@@ -330,7 +369,12 @@ call TidyTrace('literal')
 " Add the header.
 
 call setline(1,'; Abersoft Forth disassembled')
-call append(1,'; in 2015 by Marcos Cruz (programandala.net)')
+call append(1,'; By Marcos Cruz (programandala.net), 2015')
 call append(2,'; http://programandala.net/en.program.abersoft_forth.html')
 call append(3,'')
+
+" --------------------------------------------------------------
+" Remove empty lines.
+
+silent %s@\n\n\n\+@\r\r@
 

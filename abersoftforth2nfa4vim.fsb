@@ -4,6 +4,10 @@
 
 \ Self-disassembly tool for ZX Spectrum Abersoft Forth
 
+\ This file is part of
+\ Abersoft Forth disassembled
+\ <http://programandala.net.en.program.abersoft_forth.html>.
+
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
 
   \ Copying and distribution of this file, with or without
@@ -20,7 +24,7 @@
   \ definitive format.
   \
   \ The printout, processed by Vim, is used to recreate the
-  \ original Z80 source of Abersoft Forth.  Ssee <README.adoc>
+  \ original Z80 source of Abersoft Forth.  See <README.adoc>
   \ and <Makefile> for more details.
 
   \ -----------------------------------------------------------
@@ -179,7 +183,7 @@ char " constant quote
 : new-name-field  ( pfa -- )
   \ Print the new name field.
   nfa ." defb " dup c@ count-byte
-                dup c@ len-only ." , " name  ;
+                dup c@ len-only ." ," name  ;
 
 : (vim-command)  ( pfa -- )
 

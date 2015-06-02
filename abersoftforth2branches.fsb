@@ -2,9 +2,11 @@
 
   \ abersoftforth2branches.fsb
 
-  \ XXX TODO -- under development
-
 \ Self-disassembly tool for ZX Spectrum Abersoft Forth
+
+\ This file is part of
+\ Abersoft Forth disassembled
+\ <http://programandala.net.en.program.abersoft_forth.html>.
 
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
 
@@ -79,13 +81,13 @@ vocabulary print-voc immediate  print-voc definitions  hex
   ." make sure the printout file of" cr
   ." your emulator is empty." cr cr
   \  <------------------------------>
-  ." Type 'vim' to print out a Vim" cr
-  ." program that tidies the Forth" cr
-  ." branches of the Z80 source." cr cr
-  \  <------------------------------>
   ." Type 'sym' to print out a" cr
   ." z80dasm symbols file with the"  cr
-  ." branch destination addresses." cr quit  ;
+  ." branch destination addresses." cr cr
+  \  <------------------------------>
+  ." Type 'vim' to print out a Vim" cr
+  ." program that tidies the Forth" cr
+  ." branches of the Z80 source." cr quit  ;
   \  <------------------------------>
 
 ( Labels )
@@ -216,9 +218,10 @@ vocabulary print-voc immediate  print-voc definitions  hex
   begin  pfa dup print-pfa  lfa @ dup 0= ?terminal or
   until  drop  ;
 
+: print-context  ( -- )
   \ Print branches of the context vocabulary,
   \ and the vocabularies it's chained to.
-: print-context  ( -- )  context @ @  print-from-nfa  ;
+  context @ @  print-from-nfa  ;
 
 ( done )
 

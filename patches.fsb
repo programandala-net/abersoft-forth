@@ -1,0 +1,66 @@
+.( Patches )
+
+  \ patches.fsb
+
+\ This file is part of
+\ Abersoft Forth disassembled
+\ <http://programandala.net.en.program.abersoft_forth.html>.
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+  \ Copying and distribution of this file, with or without
+  \ modification, are permitted in any medium without royalty
+  \ provided the copyright notice and this notice are
+  \ preserved.  This file is offered as-is, without any
+  \ warranty.
+  
+  \ -----------------------------------------------------------
+  \ Description
+
+  \ This file modifies some patches created by modules of the
+  \ Afera library, in order to make the patched words the same
+  \ size than their original versions. Otherwise the Abersoft
+  \ Forth tools that create data and programs to process the
+  \ disassembling, would make wrong calculations.
+  
+  \ -----------------------------------------------------------
+  \ History
+
+  \ 2015-06-01: `?STACK`.
+  \ 2015-06-02: `R/W`.
+
+-->
+
+( Repatch ?STACK )
+
+  \ `?STACK` was patched by the Afera module <lowersys.fsb>.
+
+  \ It has to be padded with `NOOP`, and `;S` has to be in its
+  \ original address.
+
+HERE  ] NOOP NOOP ;S [
+
+DUP                     \ Origin: start of the compiled patch.
+' ?STACK 28 +           \ Destination.
+OVER HERE SWAP - CMOVE  \ Do it.
+DP !                    \ Free the space of the compiled patch.
+
+-->
+
+( Repatch R/W )
+
+  \ `R/W` was patched by the Afera main module <afera.fsb>.
+
+  \ It has to be padded with `NOOP`, `;S` has to be in its
+  \ original address, and its original branch must be restored.
+
+HERE  ] NOOP NOOP NOOP NOOP NOOP NOOP NOOP
+        1 0BRANCH [ 4 , ] NOOP NOOP NOOP ;S [
+
+DUP                     \ Origin: start of the compiled patch.
+' R/W 8 +               \ Destination.
+OVER HERE SWAP - CMOVE  \ Do it.
+DP !                    \ Free the space of the compiled patch.
+
+  \ vim: filetype=abersoftforthafera
+

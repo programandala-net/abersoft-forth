@@ -206,7 +206,7 @@ abersoftforth2z80dasmblocks: abersoftforth2z80dasmblocks_compiling.tap
 abersoftforth2z80dasmblocks_compiling.tap: \
 	abersoftforth2z80dasmblocks.tap \
 	afera_for_disassembling.tap \
-	patch_question_stack.tap
+	patches.tap
 	cat \
 		abersoft_forth.original.tap \
 		lib/loader.tap \
@@ -217,7 +217,6 @@ abersoftforth2z80dasmblocks_compiling.tap: \
 		lib/recurse.tap \
 		lib/decode.tap \
 		lib/lowersys.tap \
-		patch_question_stack.tap \
 		lib/bank.tap \
 		lib/16kramdisks.tap \
 		lib/upperc.tap \
@@ -232,6 +231,7 @@ abersoftforth2z80dasmblocks_compiling.tap: \
 		lib/csb.tap \
 		lib/csb-256.tap \
 		lib/s-plus.tap \
+		patches.tap \
 		abersoftforth2z80dasmblocks.tap \
 		> abersoftforth2z80dasmblocks_compiling.tap ; \
 	rm -f abersoftforth2z80dasmblocks.tap
@@ -240,7 +240,7 @@ abersoftforth2nfa4vim: abersoftforth2nfa4vim_compiling.tap
 
 abersoftforth2nfa4vim_compiling.tap: \
 	abersoftforth2nfa4vim.tap \
-	patch_question_stack.tap
+	patches.tap
 	cat \
 		abersoft_forth.original.tap \
 		lib/loader.tap \
@@ -251,7 +251,6 @@ abersoftforth2nfa4vim_compiling.tap: \
 		lib/recurse.tap \
 		lib/decode.tap \
 		lib/lowersys.tap \
-		patch_question_stack.tap \
 		lib/bank.tap \
 		lib/48kq.tap \
 		lib/16kramdisks.tap \
@@ -268,6 +267,7 @@ abersoftforth2nfa4vim_compiling.tap: \
 		lib/csb.tap \
 		lib/csb-256.tap \
 		lib/s-plus.tap \
+		patches.tap \
 		abersoftforth2nfa4vim.tap \
 		> abersoftforth2nfa4vim_compiling.tap ; \
 	rm -f abersoftforth2nfa4vim.tap
@@ -277,7 +277,7 @@ abersoftforth2branches: abersoftforth2branches_compiling.tap
 abersoftforth2branches_compiling.tap: \
 	abersoftforth2branches.tap \
 	afera_for_disassembling.tap \
-	patch_question_stack.tap
+	patches.tap
 	cat \
 		abersoft_forth.original.tap \
 		lib/loader.tap \
@@ -288,7 +288,6 @@ abersoftforth2branches_compiling.tap: \
 		lib/recurse.tap \
 		lib/decode.tap \
 		lib/lowersys.tap \
-		patch_question_stack.tap \
 		lib/bank.tap \
 		lib/48kq.tap \
 		lib/16kramdisks.tap \
@@ -304,6 +303,7 @@ abersoftforth2branches_compiling.tap: \
 		lib/csb.tap \
 		lib/csb-256.tap \
 		lib/s-plus.tap \
+		patches.tap \
 		abersoftforth2branches.tap \
 		> abersoftforth2branches_compiling.tap ; \
 	rm -f abersoftforth2branches.tap

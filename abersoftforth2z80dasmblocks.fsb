@@ -5,9 +5,8 @@
 \ Self-disassembly tool for ZX Spectrum Abersoft Forth
 
 \ This file is part of
-
-\   Abersoft Forth disassembled
-\   <http://programandala.net/en.program.abersoft_forth.html>
+\ Abersoft Forth disassembled
+\ <http://programandala.net/en.program.abersoft_forth.html>.
 
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
 
@@ -441,7 +440,7 @@ false variable semicolon-code?
   \ Print out the zones of all definitions of the original
   \ system.
   hex  1 link  file-header  [compile] editor print-context
-       [compile] print-voc  0 link  decimal cr ." Done." cr  ;
+       [compile] print-voc  0 link  decimal cr done  ;
 
   \ vim: filetype=abersoftforthafera
 

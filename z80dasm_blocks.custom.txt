@@ -33,7 +33,7 @@ registers: unlabeled first 0x5E66 unlabeled last 0x5E69 type pointers
 warm_start_phony_cfa: first 0x6DA1 unlabeled last 0x6DA2 type pointers
 cold_start_phony_cfa: first 0x6DC7 unlabeled last 0x6DC8 type pointers
 
-unknown_use_00: first 0x6FDA unlabeled last 0x6FDA type bytedata
+key_routine_cursor_char: first 0x6FDA unlabeled last 0x6FDA type bytedata
 
 tape_load_header: first 0x75E6 unlabeled last 0x75F0 type bytedata
 tape_load_header_length: first 0x75F1 unlabeled last 0x75F2 type worddata
@@ -46,5 +46,9 @@ tape_save_header_address: first 0x7604 unlabeled last 0x7605 type worddata
 tape_save_header_not_used: first 0x7606 unlabeled last 0x7607 type bytedata
 
 stop_code: unlabeled first 0x763E unlabeled last 0x763E type bytedata
+
+printer_channel_or_zero: first 0x706D unlabeled last 0x706D type bytedata
+
+paren_emit_cfa: first 0x706E unlabeled last 0x706F type pointers
 
 ; vim: filetype=z80

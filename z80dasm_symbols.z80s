@@ -69,14 +69,15 @@ next2: equ 0x5E72
 
 do_vocabulary: equ 0x6CE2
 forth_vocabulary_dummy_nfa: equ 0x6CF6
+forth_vocabulary_latest: equ 0x6CF8
 forth_vocabulary_link: equ 0x6CFA
 editor_vocabulary_dummy_nfa: equ 0x77A8
+editor_vocabulary_latest: equ 0x77AA
 editor_vocabulary_link: equ 0x77AC
 
 cold_start: equ 0x6DB0
 warm_start: equ 0x6D93
 
-paren_emit_cfa: equ 0x706E
 paren_emit_pfa: equ 0x7070
 
 key_routine: equ 0x6FDB
@@ -88,3 +89,6 @@ do_two_constant: equ 0x7F00
 
 ram_disc_bottom: equ 0xD000
 ram_disc_top: equ 0xFBFF
+
+first_buffer: equ 0xCBE0
+data_stack_bottom: equ 0xCB40
