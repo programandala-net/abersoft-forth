@@ -1,6 +1,6 @@
-= Abersoft Forth _disassembled_ README
+= Abersoft Forth _Disassembled_
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-11-13
+:revdate: 2015-12-24
 
 // This file is written in AsciDoc/Asciidoctor format
 // (see <http://asciidoctor.org>).
