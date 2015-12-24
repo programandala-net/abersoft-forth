@@ -8,9 +8,6 @@
 ; 2015-05-27: Updated with 'unlabeled'.
 ; 2015-05-29: Updated with tape headers.tape headers
 
-; XXX TODO
-; paren_emit: 
-
 not_used_00: unlabeled first 0x5E00 unlabeled last 0x5E05 type worddata
 not_used_01: unlabeled first 0x5E32 unlabeled last 0x5E3F type worddata
 

@@ -13,23 +13,23 @@
 ################################################################
 # Requirements
 
-# Vim (by Bram Moolenaar)
-# 	http://vim.org
-
-# head, cat and sort (from the GNU coreutils)
+# Afera (by Marcos Cruz)
+# 	http://programandala.net/en.program.afera.html
 
 # bas2tap (by Martijn van der Heide)
 #   Utilities section of
 #   http://worldofspectrum.org
 
+# fsb (by Marcos Cruz)
+# 	http://programandala.net/en.program.fsb.html
+
+# head, cat and sort (from the GNU coreutils)
+
 # Pasmo (by Julián Albo)
 #   http://pasmo.speccy.org/
 
-# Afera (by Marcos Cruz)
-# 	http://programandala.net/en.program.afera.html
-
-# fsb (by Marcos Cruz)
-# 	http://programandala.net/en.program.fsb.html
+# Vim (by Bram Moolenaar)
+# 	http://vim.org
 
 ################################################################
 # Change history
@@ -86,6 +86,7 @@ abersoftforth2z80dasmblocks_printout.tidy.txt: \
 	word_labels.z80dasm_blocks.vim
 	vim -e -n -R \
 		-S word_labels.z80dasm_blocks.vim \
+		-c "call append(0,'; Modified by Makefile using <words_labels.z80dasm_blocks.vim>.')" \
 		-c "saveas! abersoftforth2z80dasmblocks_printout.tidy.txt|q" \
 		abersoftforth2z80dasmblocks_printout.txt 
 
@@ -139,8 +140,9 @@ tidy_name_fields.vim: \
 	word_labels.name_fields.vim
 	vim -e -n -R \
 		-S word_labels.name_fields.vim \
+		-c "call append(0,'\" Modified by Makefile using <word_labels.name_fields.vim>.')" \
 		-c "saveas! tidy_name_fields.vim|q" \
-		abersoftforth2nfa4vim_printout.txt 
+		abersoftforth2nfa4vim_printout.txt ; \
 
 # The file <tidy_branches.vim>, created by <abersoftforth2branches.fsb>,
 # must be converted to Unix format, else its commands will fail.
@@ -309,6 +311,28 @@ abersoftforth2branches_compiling.tap: \
 	rm -f abersoftforth2branches.tap
 
 ################################################################
+# ZIP archive for distribution
+
+.PHONY: zip
+zip: 
+	cd .. && \
+	zip -9 -FS abersoft_forth_disassembled/abersoft_forth_disassembled.zip \
+		abersoft_forth_disassembled/Makefile \
+		abersoft_forth_disassembled/README.adoc \
+		abersoft_forth_disassembled/*.z80s \
+		abersoft_forth_disassembled/*.bas \
+		abersoft_forth_disassembled/*.bin \
+		abersoft_forth_disassembled/*.tap \
+		abersoft_forth_disassembled/*.fsb \
+		abersoft_forth_disassembled/*.sh \
+		abersoft_forth_disassembled/tidy_*.vim \
+		abersoft_forth_disassembled/word_labels.*.vim \
+		abersoft_forth_disassembled/abersoftforth*.txt \
+		abersoft_forth_disassembled/z80dasm_*.txt \
+		abersoft_forth_disassembled/lib/*.tap && \
+	cd -
+
+################################################################
 # Backup
 
 .PHONY: backup
@@ -345,3 +369,7 @@ backup:
 # 2015-05-30: Improvements and updates.
 #
 # 2015-05-31: New: backup recipe.
+#
+# 2015-05-31: New: zip recipe.
+#
+# 2015-11-13: Modified the zip recipe.

@@ -1,0 +1,9 @@
+Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+This file is part of Abersoft Forth disassembled
+http://programandala.net/en.program.abersoft_forth.html
+
+Copying and distribution of this work, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This work is offered as-is,
+without any warranty.

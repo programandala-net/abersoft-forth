@@ -14,7 +14,7 @@
   \ the Afera library.
   \
   \ It does the same than the original one except some
-  \ modifications to the original words that would case an
+  \ modifications to the original words that would cause an
   \ output different than with the original system.
   \
   \ In order to disassembly Abersoft Forth, an original binary

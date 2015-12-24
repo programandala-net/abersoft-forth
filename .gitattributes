@@ -1,5 +1,8 @@
-*.z80s linguist-language=Assembly
+*.z80s linguist-language=Z80 Assembly
 *.fsb linguist-language=Forth
-*.tap binary
-*.bin binary
+
+lib/* linguist-vendored
+abersoft_forth.original.* linguist-vendored
+*.tap linguist-vendored
+*.bin linguist-vendored
 

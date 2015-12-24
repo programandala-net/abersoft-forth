@@ -13,6 +13,16 @@
 " 2015-05-26: Start.
 " 2015-05: Improvements.
 " 2015-06-01: Strings are tidied. Trace.
+" 2015-06-07: One more note added to the disassembled source.
+" 2015-06-08: More notes added to the disassembled source
+" (about the optimization of color words).
+" 2015-06-19: Notes about the `0 MESSAGE` bug, recently discovered during
+" the development of Solo Forth.
+" 2015-06-23: Notes about `jp pushde` optimizations.
+" 2015-06-24: Notes about optimization in `j` and `(do)`.
+" 2015-08-14: Notes about `ld hl,(init_s0_value)`; `ld c,0x00` in `INKEY`; `;S`
+" in `WHERE`.
+" 2015-09-03: Divided some comments that were longer than 80 characters.
 
 " --------------------------------------------------------------
 " Trace
@@ -105,7 +115,7 @@ silent %s@\<l8159h\>@dictionary_pointer_after_cold@g
 " --------------------------------------------------------------
 " Rename numbers that z80dasm could not convert
 " to symbols because they appear in compiled literals,
-" thus in worddata blocks.
+" therefore in worddata blocks.
 
 silent %s@\<0x5C7B\>@sys_udg@g
 call cursor(1,1)
@@ -133,11 +143,25 @@ call append(line('.'),'  ; XXX FIXME -- It should be 0x41 ("A").')
 
 %s@^  defw 0x2BFF$@& ; XXX FIXME -- It should be 0x2C00.@
 
-%s@^exit_pfa:\n\s\+defw to_r_cfa$@& ; XXX FIXME -- Serious bug: It should be `R>` (r_from_cfa), not `>R` (to_r_cfa).@
+%s@^exit_pfa:\n\s\+defw to_r_cfa$@& ; XXX FIXME -- Serious bug: It should be `R>` (from_r_cfa),\r                ;              not `>R` (to_r_cfa).@
+
+%s@^\s\+defw noop_cfa\n\s\+defw noop_cfa$@; XXX FIXME -- These useless `noop` can be removed, they are a patch to overwrite a bell in the original fig-Forth implementation:\r&@
 
 %s@\(^\s\+defw semicolon_s_cfa\)\n\s\+ld c,b\n\s\+ld h,c@\1\r\1 ; XXX FIXME --  Unnecessary duplicated code.@
 
 %s@^\s\+defb 0x[0-9A-F]\{2}\n\s\+nop$@& ; XXX FIXME -- Unnecessary.@
+
+%s@^\s\+push hl\n\s\+jp next$@  ; XXX FIXME -- Optimize: `jp pushhl`:\r&@
+
+%s@^\s\+defw over_cfa\n\s\+defw over_cfa$@  ; XXX FIXME -- Optimize: `2DUP` instead of `OVER OVER`:\r&@
+
+%s@^\(rp\|sp\)_store_pfa:$@&\r  ; XXX FIXME -- Optimize: no need to use the DE register:@
+
+%s@^  push de\n  jp pushhl@  ; XXX FIXME -- Optimize: `jp pushde` instead of `push de` and `jp pushhl`:\r&@
+
+%s@^cold_pfa:$@&\r  ; XXX FIXME -- `FIRST` should be used instead of compiled literals with its value:@
+
+%s@^paren_line_pfa:$@&\r  ; XXX FIXME -- `C/L` should be used instead of the compiled literals (0x0040):@
 
 %s@^origin:$@\r  ; Parameter area\r\r&\r@
 
@@ -148,6 +172,26 @@ call append(line('.'),'  ; XXX FIXME -- It should be 0x41 ("A").')
 %s@^init_s0_value:@\r  ; User variables init values\r\r&@
 
 %s@^user_pointer_value:$@\r&@
+
+%s@^init_user_pointer_value:$@&\r  ; XXX NOTE: The fig-Forth model uses this in `COLD`,\r  ;           but Abersoft Forth doesn't.@
+
+%s@^\(flash\|bright\|gover\|inverse\)_pfa:$@&\r  ; XXX FIXME -- Only one store operation is needed, at the end,\r  ;              what saves 6 bytes without speed penalty.@
+%s@^\(gover\|inverse\)_pfa:$@&\r  ; XXX FIXME -- The final store operations should be `C!`, not `!`,\r  ;              else the next system variable, MEMBOT, is affected.@
+
+%s@^question_terminal_pfa:\n\s\+ld hl,0x0000$@& ; XXX FIXME -- This command is unnecessary.@
+call search('^question_terminal_routine:$','wc')
+call append(line('.'),'  ; XXX FIXME -- Saving and restoring the DE and BC registers is unnecessary.')
+
+call search('^j_pfa:$','wc')
+call append(line('.')+1,'  ; XXX FIXME -- Optimize:')
+call append(line('.')+2,'  ;              `ld hl,4 / add hl,de` is faster than four `inc hl`,')
+call append(line('.')+3,'  ;              and the same size.')
+
+call search('^paren_do_pfa:$','wc')
+call append(line('.')+1,'  ; XXX FIXME -- Optimize:')
+call append(line('.')+2,'  ;              `ld hl,-4 / add hl,de` is faster than four `dec hl`,')
+call append(line('.')+3,'  ;              and the same size.')
+call append(line('.')+4,'  ;              But the code of CP/M fig-Forth 1.1g is a bit better.')
 
 call search('^cold_entry:','wc')
 call append(line('.')-1,'  ; Entry points')
@@ -168,8 +212,9 @@ call search('^link_status:','wc')
 call append(line('.')-1,'')
 
 call search('^mon_pfa:','wc')
-call append(line('.'),'  ; XXX FIXME -- Checking NMIADD (undocumented feature) is not compatible with ZX Spectrum +3.')
-call append(line('.')+2,'  ; XXX FIXME -- This code wastes 3 bytes.')
+call append(line('.')+0,'  ; XXX FIXME -- Checking NMIADD (undocumented feature)')
+call append(line('.')+1,'  ;              is not compatible with ZX Spectrum +3.')
+call append(line('.')+3,'  ; XXX FIXME -- This code wastes 3 bytes.')
 
 call search('^pushde:','wc')
 call append(line('.')-1,['','  ; Interpreter',''])
@@ -218,6 +263,30 @@ call append(line('.')-1,'')
 call search('^paren_emit_cfa:$','wc')
 call append(line('.')-1,'')
 
+call search('^dictionary_pointer_after_cold:$','wc')
+call append(line('.')-1,'')
+call append(line('.'),['','end cold_entry'])
+
+call search('^message_pfa:$','wc')
+call append(line('.')+04,'  ; XXX FIXME --')
+call append(line('.')+05,'  ; Because of the conditional branch below, error message 0')
+call append(line('.')+06,'  ; is not printed when `WARNING` is 1, in other words:')
+call append(line('.')+07,'  ; when error messages are the text of a line relative to screen 4.')
+call append(line('.')+08,'  ; This condition is in other fig-Forth implementations,')
+call append(line('.')+09,'  ; but in Abersoft Forth it is a bug,')
+call append(line('.')+10,'  ; because error 0 is used by the system: "Word not found".')
+
+call cursor(1,1)
+while search('^  ld hl,(init_s0_value)\n  ld sp,hl','W')
+  call append(line('.')-1,'  ; XXX FIXME --  `ld sp,(init_s0_value)` can be used instead:')
+endwhile
+
+" Useless Z80 instruction in `INKEY`
+%s@ld c,0x00@& ; XXX FIXME --  useless instruction@
+
+" Useless `QUIT` at the end of `WHERE`
+%s@defw editor_cfa\n  defw quit_cfa@& ; XXX FIXME -- useless, because `ERROR` already executed it@
+
 call TidyTrace('new_comments')
 
 function! TidyRuler(heading)
@@ -257,11 +326,12 @@ call TidyTrace('tape_headers')
 
 call cursor(1,1)
 call search('^\s\+org\>')
-call append(line('.'),'precedence_bit: equ 0x40')
+call append(line('.'),'precedence_bit_mask: equ 0x40')
 
 " --------------------------------------------------------------
 " Add symbols whose values appear only in compiled literals in Forth words.
 
+call append(line('.'),'smudge_bit_mask: equ 0x20')
 call append(line('.'),'sys_coordx: equ 0x5C7D')
 call append(line('.'),'sys_coordy: equ 0x5C7E')
 call append(line('.'),'sys_attr_p: equ 0x5C8D')
@@ -276,15 +346,19 @@ call append(line('.'),'ram_disc_top: equ 0xFBFF')
 %s,defw 0x5C91$,defw sys_p_flag,
 %s,defw 0xFBFF$,defw ram_disc_top,
 
+%s,defw lit_cfa\n\s\+defw 0x0020\n\s\+defw toggle_cfa$,defw lit_cfa\r\  defw smudge_bit_mask\r  defw toggle_cfa,
+
 " --------------------------------------------------------------
 " Add symbols whose values appear also in variables, constants or compiled
 " literals, where they are not substituted by the disassembler.
 
+%s,defw 0x5E40$,defw origin,
 %s,defw 0x5E4C$,defw top_most_word_in_forth_voc,
 %s,defw 0x5E52$,defw init_s0_value,
 %s,defw 0x5E66$,defw user_pointer_value,
 %s,defw 0x5E6A$,defw pushde,
 %s,defw 0x5E6B$,defw pushhl,
+%s,defw 0x5E6C$,defw next,
 
 %s,defw 0x6CF8$,defw forth_vocabulary_latest,
 
@@ -304,6 +378,20 @@ call append(line('.')-1,'')
 call TidyTrace('new_symbols')
 
 " --------------------------------------------------------------
+" Adjust `?STACK`
+
+" During the execution of the self-disassembling tools, `?STACK` has already
+" been patched by the Afera library module <lowersys.fsb>. Though the patch is
+" modified by <patches.fsb>, and its apparent size is the same than the
+" original, the `LIT` of its definition were overwritten by the first patch,
+" what causes the tools can not create the proper symbols and zones.
+"
+" The following commands fix the disassembling of `?STACK`.
+
+/^question_stack_nfa:$/,/^interpret_nfa:$/ s@defw 0x5E7D\n\s\+defw 0x0080$@defw lit_cfa,0x0080@
+/^question_stack_nfa:$/,/^interpret_nfa:$/ s@defw 0x656F$@defw u_less_than_cfa@
+
+" --------------------------------------------------------------
 " Convert the name fields.
 
 source tidy_name_fields.vim
@@ -321,7 +409,7 @@ call TidyTrace('branches')
 " Remove the comment addresses of branch words that are not actual branches,
 " but compiled by `compile`.
 
-%s@\(defw compile_cfa\)\n\s\+defw \S\+ ; 0x[0-9A-F]\{4}$@\1@
+%s@\(defw compile_cfa\n\s\+defw \S\+\) ; 0x[0-9A-F]\{4}$@\1@
 
 " --------------------------------------------------------------
 " Tidy the strings
@@ -359,19 +447,27 @@ call TidyString('0x06','0x53','SCR # ')         " in `WHERE`
 call TidyTrace('strings')
 
 " --------------------------------------------------------------
+" Tidy the RST calls
+
+%s@\<rst 10h\>@rst 0x10@
+%s@\<rst 8\>@rst 0x08@
+
+" --------------------------------------------------------------
 " Tidy the compiled literals.
 
-%s@^\(\s\+defw lit_cfa\)\n\s\+defw \(\(sys_\|ram_\|0x\).\+\)$@\1,\2@
+%s@^\(\s\+defw lit_cfa\)\n\s\+defw \(sys_\S\+\|ram_\S\+\|0x[0-9A-F]\+.*\|origin\|\S\+_value\|first_buffer\|top_most_word\S\+\|forth_vocabulary_latest\|smudge_bit_mask\)$@\1,\2@
 
 call TidyTrace('literal')
 
 " --------------------------------------------------------------
 " Add the header.
 
-call setline(1,'; Abersoft Forth disassembled')
-call append(1,'; By Marcos Cruz (programandala.net), 2015')
+call setline(1,'; ZX Spectrum Abersoft Forth')
+call append(1,'; Disassembled by Marcos Cruz (programandala.net), 2015')
 call append(2,'; http://programandala.net/en.program.abersoft_forth.html')
-call append(3,'')
+call append(3,'; Original program by John Jones-Steel, 1983')
+call append(4,'; http://www.worldofspectrum.org/infoseekid.cgi?id=0008178')
+call append(5,'')
 
 " --------------------------------------------------------------
 " Remove empty lines.

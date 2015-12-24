@@ -1,36 +1,258 @@
 = Abersoft Forth _disassembled_ README
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-05-23
+:revdate: 2015-11-13
 
-How to disassemble Abersoft Forth.
+// This file is written in AsciDoc/Asciidoctor format
+// (see <http://asciidoctor.org>).
 
-The file <abersoft_forth.disassembled.z80s> contains the Z80 source
-code of Abersoft Forth.
+Project webpage:
 
+http://programandala.net/en.program.abersoft_forth.html
 
+== How to disassemble Abersoft Forth
 
-// XXX OLD
-// XXX TODO rewrite!
+You don't have to, I already did it.
 
-0. Create or update "dis_compiling.tap" with `make dis`, if needed.
+The file <abersoft_forth.disassembled.z80s> contains the tidy Z80
+source code of Abersoft Forth, even with some comments about known
+bugs or possible improvements.
 
-1. Open "dis_compiling.tap" with your ZX Spectrum emulator of choice
-(Fuse recommended). Abersoft Forth will start.
+As said, you don't have to disassemble Abersoft Forth, but you can if
+you wish. If so, keep on reading.
 
-2. Configure your emulator to send the printer output to a new empty
-text file of the host system.
+== Requiriments
 
-3. Compile dis with `LOADT 1 LOAD`. The process will be slow. Set your
-emulator to its maximun speed.
+The following programs are needed to disassemble Abersoft Forth:
 
-4. When the compilation is finished, a welcome message will be printed
-on screen. Then follow the simple instructions: give the command
-`dis`. Maybe you need to slow down the emulator to be able to type it.
-The process will start. Set your emulator to its maximun speed. At the
-end, the program will print "Done!".
+- http://worldofspectrum.org[bas2tap], by Martijn van der Heide.
+- http://programandala.net/en.program.fsb.html[fsb], by Marcos Cruz
+  (programandala.net).
+- GNU make, by the Free Software Foundation.
+- head, cat and sort, from the GNU coreutils.
+- http://pasmo.speccy.org/[Pasmo], by Julián Albo.
+- http://vim.org[Vim], by Bram Moolenaar.
+- http://www.tablix.org/~avian/z80dasm/[z80dasm], by Tomaž Šolc.
 
-5. Overwrite the file <dis_printout.txt> with the new printout
-produced by dis, wherever it is (it depends on the configuration of
-your emulator).
+== Files
 
-6. Command `make z80`.
+A detailed description of the files included in the tarball of this
+project seems the simplest way to explain how the whole complex thing
+works, for the improbable case someone needs to modify something...
+
+=== Misc files
+
+README.adoc ::
+  This file you are reading.
+TO-DO.adoc ::
+  Some little things to do. (Nothing as of 2015-08-14).
+
+=== Disassembling tools written in Abersoft Forth
+
+Three tools written in Abersoft Forth are used to print out system
+information in the format required by z80dasm or Vim.  The printer
+output of the ZX Spectrum emulator (Fuse is used by default) is
+redirected to the correspondent host system file. Four files are
+created this way. Some of them are ready to be used, the rest have to
+be modified first by other programs, during the automatic
+disassembling process.
+
+In order to compile and execute these Forth tools,
+use the command `LOADT 1 LOAD` at the Forth prompt and follow the instructions.
+
+==== AbersoftForth2branches
+
+This tool creates two files:
+<tidy_branches.vim> and <z80dasm_symbols.branches.z80s>.
+
+abersoftforth2branches.boot.symbols-output.sh ::
+  The program loader for the Fuse emulator,
+  that sets its printer output file to <tidy_branches.vim>.
+  If you use other emulator, adapt this file or manually copy its printout to <tidy_branches.vim>.
+abersoftforth2branches.boot.vim-output.sh ::
+  The program loader for the Fuse emulator,
+  that sets its printer output file to <tidy_branches.vim>.
+  If you use other emulator, adapt this file or manually copy its printout to <tidy_branches.vim>.
+abersoftforth2branches_compiling.tap ::
+  TAP file ready to be loaded with the emulator and compile the program.
+  It contains Abersoft Forth, Afera library modules and the program itself.
+  Use the command `LOADT 1 LOAD` at the Forth prompt and follow the instructions.
+abersoftforth2branches.fsb ::
+  Source of the program.
+tidy_branches.vim ::
+  One of the two files created by the program.
+  This is done automatically when <abersoftforth2branches.boot.vim-output.sh> is used to run it,
+  using the Fuse emulator.
+  This file is a Vim program that tidies the Forth branches in the Z80 source.
+z80dasm_symbols.branches.z80s ::
+  One of the two files created by the program.
+  This is done automatically when <abersoftforth2branches.boot.symbols-output.sh> is used to run it,
+  using the Fuse emulator.
+  This file contains the z80dasm block definitions of the Forth branches destinations.
+
+==== AbersoftForth2nfa4vim
+
+This tool creates the file <abersoftforth2nfa4vim_printout.txt> (that Vim will
+convert to <tidy_name_fields.vim>). 
+
+abersoftforth2nfa4vim.boot.sh ::
+  The program loader for the Fuse emulator,
+  that sets its printer output file to <abersoftforth2nfa4vim_printout.txt>.
+  If you use other emulator,
+  adapt this file or manually copy its printout to <abersoftforth2nfa4vim_printout.txt>.
+abersoftforth2nfa4vim_compiling.tap ::
+  TAP file ready to be loaded with the emulator and compile the program.
+  It contains Abersoft Forth, Afera library modules and the program itself.
+  Use the command `LOADT 1 LOAD` at the Forth prompt and follow the instructions.
+abersoftforth2nfa4vim.fsb ::
+  Source of the program.
+abersoftforth2nfa4vim_printout.txt ::
+  The file created by the program.
+  This is done automatically when <abersoftforth2nfa4vim.boot.sh> is used to run it,
+  using the Fuse emulator.
+  This file contains a raw program for Vim that will be tidied before executed.
+
+==== AbersoftForth2z80dasmblocks
+
+This tool creates the file <abersoftforth2z80dasmblocks_printout.txt>.
+
+abersoftforth2z80dasmblocks.boot.sh ::
+  The program loader for the Fuse emulator,
+  that sets its printer output file to <abersoftforth2z80dasmblocks_printout.txt>.
+  If you use other emulator,
+  adapt this file or manually copy its printout to <abersoftforth2z80dasmblocks_printout.txt>.
+abersoftforth2z80dasmblocks_compiling.tap ::
+  TAP file ready to be loaded with the emulator and compile the program.
+  It contains Abersoft Forth, Afera library modules and the program itself.
+  Use the command `LOADT 1 LOAD` at the Forth prompt and follow the instructions.
+abersoftforth2z80dasmblocks.fsb ::
+  Source of the program.
+abersoftforth2z80dasmblocks_printout.txt ::
+  The file created by the program.
+  This is done automatically when <abersoftforth2z80dasmblocks.boot.sh> is used to run it,
+  using the Fuse emulator.
+  This file contains a raw blocks file for z80dasm that will be tidied before used.
+abersoftforth2z80dasmblocks_printout.tidy.txt ::
+  The tidy version of <abersoftforth2z80dasmblocks_printout.txt>, created by Vim
+  with the commands in <word_labels.z80dasm_blocks.vim>.
+
+==== Afera library
+
+The http://programandala.net/en.program.afera[Afera library] makes
+Abersoft Forth a much more powerful system. It is used by the
+disassembling tools written in Abersoft Forth.
+
+lib/ ::
+  This directory contains some modules from the Afera library,
+  needed by the tools written in Abersoft Forth.
+afera_for_disassembling.fsb ::
+  This is a modified version of <afera.fsb>, the main file of the Afera
+  library.  It does the same than the original one except some
+  modifications to the original words that would cause an output
+  different than with the original system.  In order to disassemble
+  Abersoft Forth, an original binary is used, not the one patched by
+  Afera, so it doesn't make any difference if the original words have
+  been patched by Afera or not -- unless their apparent size has been
+  changed by a patch (e.g. by moving the final `(;S)` of the word).
+  That is what this version of <afera.fsb> avoids.
+afera_for_disassembling.tap ::
+  TAP version of <afera_for_disassembling.fsb>,
+  ready to be used by the tools written in Abersoft Forth.
+patches.fsb ::
+  A little program written in Abersoft Forth that
+  modifies some patches created by modules of the
+  Afera library, in order to make the patched words the same
+  size than their original versions.
+  Otherwise the disassembling tools written in Abersoft
+  Forth would make wrong calculations.
+patches.tap ::
+  The TAP version of <patches.fsb>,
+  ready to be used by the tools written in Abersoft Forth.
+
+=== Original binary
+
+abersoft_forth.original.bin ::
+  Original binary of Abersoft Forth, without any file header.
+abersoft_forth.original.tap ::
+  Original binary of Abersoft Forth, in TAP format.
+abersoft_forth.padded.bin ::
+  Modified version of <abersoft_forth.original.bin>.
+  The original binary must be padded with zeroes, both at the start (because of
+  the way Abersoft Forth stores some values at the start, before the actual
+  loading address of the binary) and at the end (to prevent errors caused by
+  patched words that use words that don't belong to the original system).
+  This is the file disassembled by z80dasm.
+
+=== Main files
+
+Makefile ::
+  The core of the disassembling process.
+  Beside the three tools written in Abersoft Forth,
+  that are needed only once to create four files,
+  the whole process is automatic. Just use the `make` command.
+
+tidy_name_fields.vim ::
+  File created by Vim from <abersoftforth2nfa4vim_printout.txt>,
+  by executing <word_labels.name_fields.vim>.
+  It contains the Vim program that tidies the name fields
+  of all Forth words in the final Z80 source.
+
+tidy_z80.vim ::
+  This file contains the Vim program that does all the
+  non-automatic tidy task in the final final Z80 source.
+
+word_labels.name_fields.vim ::
+  This Vim program translates the temporary Z80 labels
+  used in <abersoftforth2nfa4vim_printout.txt>
+  (the file created by AbersoftForth2nfa4vim),
+  in order to create the file <tidy_name_fields.vim>.
+
+word_labels.z80dasm_blocks.vim ::
+  This Vim program translates the temporary Z80 labels
+  used in <abersoftforth2z80dasmblocks_printout.txt>
+  (the file created by AbersoftForth2z80dasmblocks),
+  in order to create the file <abersoftforth2z80dasmblocks_printout.tidy.txt>.
+
+z80dasm_blocks.custom.txt ::
+  This file contains block definitions for z80dasm that can not be calculated
+  by AbersoftForth2z80dasmblocks.
+
+z80dasm_blocks.txt ::
+  This is the blocks definitions file used as input for z80dasm.
+  It's simply a concatenation of
+  <abersoftforth2z80dasmblocks_printout.tidy.txt> and
+  <z80dasm_blocks.custom.txt>. It is needed because z80dasm accepts only one file with
+  block definitions.
+
+z80dasm_symbols.z80s ::
+  The main symbols file used as input for z80dasm.
+
+zx_spectrum_rom_routines.z80s ::
+  Labels of ZX Spectrum ROM routines.
+
+zx_spectrum_system_variables.z80s ::
+  Labels of ZX Spectrum system variables.
+
+=== Result
+
+abersoft_forth.disassembled.raw.z80s ::
+  Source file created by z80dasm from <abersoft_forth.padded.bin>.
+abersoft_forth.disassembled.z80s ::
+  Final result, created by Vim from <abersoft_forth.disassembled.raw.z80s>
+  with the commands in <tidy_z80.vim>.
+
+=== The rebuilt sytem
+
+In order to check that the disassembling is perfect,
+<abersoft_forth.disassembled.z80s> is compiled by Pasmo.
+
+abersoft_forth_loader.bas ::
+  The source of the new BASIC loader.
+abersoft_forth_loader.tap ::
+  The new BASIC loader in TAP format.
+abersoft_forth.rebuilt.bin.tap ::
+  The new recompiled binary in TAP format.
+abersoft_forth.rebuilt.symbols.z80s ::
+  The symbols file created by Pasmo during the compilation.
+abersoft_forth.rebuilt.tap ::
+  The new system, ready to be loaded by an emulator.
+

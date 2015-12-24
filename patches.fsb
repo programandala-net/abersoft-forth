@@ -13,7 +13,7 @@
   \ provided the copyright notice and this notice are
   \ preserved.  This file is offered as-is, without any
   \ warranty.
-  
+
   \ -----------------------------------------------------------
   \ Description
 
@@ -22,7 +22,7 @@
   \ size than their original versions. Otherwise the Abersoft
   \ Forth tools that create data and programs to process the
   \ disassembling, would make wrong calculations.
-  
+
   \ -----------------------------------------------------------
   \ History
 

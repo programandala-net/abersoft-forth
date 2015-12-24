@@ -119,7 +119,7 @@ vocabulary print-voc immediate  print-voc definitions hex
 : special-id  ( nfa ca len -- ca len | ca' len' )
   \ Manage special id cases.
   rot dup ' addr !  7900 > if  editor-id ?exit  then
-  addr 6923 = if  2drop s" onezeroword" exit  then  ;
+  addr 6923 = if  2drop s" null" exit  then  ;
 
 : id  ( nfa -- ca len )
   \ Return the name of a word.

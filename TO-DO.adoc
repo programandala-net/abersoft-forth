@@ -1,12 +1,9 @@
 = Abersoft Forth disassembled TO-DO
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-06-02
+:revdate: 2015-09-03
 
-.2015-05-31:
+// This file is written in AsciDoc/Asciidoctor format
+// (see <http://asciidoctor.org>).
 
-Document the `COLD` bug.
-
-.2015-06-02:
-
-Tidy the number of `rst` calls.
+Nothing left.
 
