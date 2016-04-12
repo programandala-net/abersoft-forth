@@ -1,9 +1,14 @@
 = Abersoft Forth disassembled TO-DO
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-09-03
+:revdate: 2016-04-10
 
 // This file is written in AsciDoc/Asciidoctor format
 // (see <http://asciidoctor.org>).
 
-Nothing left.
+.2016-04-10:
+
+Fix: The labels `tape_load_header` (first) and `tape_save_header`
+(second) are wrong: The SA-ALL ROM routine uses only the first header
+for saving, and copies it to the second one for loading and verifying.
+Then Headers are loader from tape into the second header.
 
