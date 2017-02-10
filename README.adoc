@@ -1,6 +1,7 @@
 = Abersoft Forth _Disassembled_
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-12-24
+:revdate: 2017-02-10
+:linkattrs:
 
 // This file is written in AsciDoc/Asciidoctor format
 // (see <http://asciidoctor.org>).
@@ -24,14 +25,14 @@ you wish. If so, keep on reading.
 
 The following programs are needed to disassemble Abersoft Forth:
 
-- http://worldofspectrum.org[bas2tap], by Martijn van der Heide.
+- http://worldofspectrum.org[bas2tap,role="external"], by Martijn van der Heide.
 - http://programandala.net/en.program.fsb.html[fsb], by Marcos Cruz
   (programandala.net).
 - GNU make, by the Free Software Foundation.
 - head, cat and sort, from the GNU coreutils.
-- http://pasmo.speccy.org/[Pasmo], by Julián Albo.
-- http://vim.org[Vim], by Bram Moolenaar.
-- http://www.tablix.org/~avian/z80dasm/[z80dasm], by Tomaž Šolc.
+- http://pasmo.speccy.org/[Pasmo,role="external"], by Julián Albo.
+- http://vim.org[Vim,role="external"], by Bram Moolenaar.
+- http://www.tablix.org/~avian/z80dasm/[z80dasm,role="external"], by Tomaž Šolc.
 
 == Files
 
