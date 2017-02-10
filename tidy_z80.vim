@@ -23,6 +23,7 @@
 " 2015-08-14: Notes about `ld hl,(init_s0_value)`; `ld c,0x00` in `INKEY`; `;S`
 " in `WHERE`.
 " 2015-09-03: Divided some comments that were longer than 80 characters.
+" 2017-02-10: Fix typo in a comment added to the result.
 
 " --------------------------------------------------------------
 " Trace
@@ -184,7 +185,7 @@ call append(line('.'),'  ; XXX FIXME -- Saving and restoring the DE and BC regis
 
 call search('^j_pfa:$','wc')
 call append(line('.')+1,'  ; XXX FIXME -- Optimize:')
-call append(line('.')+2,'  ;              `ld hl,4 / add hl,de` is faster than four `inc hl`,')
+call append(line('.')+2,'  ;              `ld de,4 / add hl,de` is faster than four `inc hl`,')
 call append(line('.')+3,'  ;              and the same size.')
 
 call search('^paren_do_pfa:$','wc')

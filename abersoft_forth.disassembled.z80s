@@ -5507,7 +5507,7 @@ j_cfa:
 j_pfa:
   ld hl,(return_pointer_value)
   ; XXX FIXME -- Optimize:
-  ;              `ld hl,4 / add hl,de` is faster than four `inc hl`,
+  ;              `ld de,4 / add hl,de` is faster than four `inc hl`,
   ;              and the same size.
   inc hl
   inc hl
