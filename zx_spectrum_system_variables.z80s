@@ -17,6 +17,11 @@
 ; 2015-09-06: Offset extracted to <zx_spectrum_system_variables_offsets.z80s>,
 ; because the z80dasm disassembler does not accept calculations in its input
 ; symbols file.
+;
+; 2016-08-05: Remove useless comment.
+;
+; 2016-08-15: Add individual bytes of sys_k_state; the second one is addressed
+; by TR-DOS 5.03.
 
 ; --------------------------------------------------------------
 ; ZX Spectrum +3
@@ -56,14 +61,18 @@ sys_target:         equ 23384 ; (0x5B58) (N2)
 sys_retaddr:        equ 23386 ; (0x5B5A) (X2)
                               ; Return address in ROM 1.
 sys_bankm:          equ 23388 ; (0x5B5C) (X1)
-                              ; Copy of last byte output to I/O port
-                              ; 7FFDh (32765). This port is used to
-                              ; control the RAM paging (bits 0...2),
-                              ; the 'horizontal' ROM switch (01 and
-                              ; 23 - bit 4), screen selection (bit
-                              ; 3) and added I/O disabling (bit 5).
-                              ; This byte must be kept up to date with
-                              ; the last value output to the port if
+                              ; Copy of last byte output to I/O
+                              ; port 7FFDh (32765). This port
+                              ; is used to control the RAM
+                              ; paging (bits 0..2: page 0..7),
+                              ; screen selection (bit 3:
+                              ; 0=normal, 1=shadow),
+                              ; 'horizontal' ROM switch (bit 4:
+                              ; 0=128k editor, 1=48k BASIC) and
+                              ; added I/O disabling (bit 5).
+                              ; the This byte must be kept up
+                              ; to date with the last value
+                              ; output to the port if
                               ; interrupts are enabled.
 sys_ramrst:         equ 23389 ; (0x5B5D) (X1)
                               ; RST 8 instruction. Used by ROM 1 to
@@ -164,6 +173,13 @@ sys_tstack:         equ 23551 ; (0x5BFF) (X115)
 ; ZX Spectrum 48K
 
 sys_kstate:      equ 23552 ; (n8) Used in reading the keyboard.
+sys_kstate.1:    equ 23553
+sys_kstate.2:    equ 23554
+sys_kstate.3:    equ 23555
+sys_kstate.4:    equ 23556
+sys_kstate.5:    equ 23557
+sys_kstate.6:    equ 23558
+sys_kstate.7:    equ 23559
 sys_last_k:      equ 23560 ; (nl) Stores newly pressed key.
 sys_last_key:    equ 23560
 sys_repdel:      equ 23561 ; (1) Time (in 50ths of a second
@@ -214,9 +230,7 @@ sys_nxtlin:      equ 23637 ; (x2) Address of next line in program.
 sys_datadd:      equ 23639 ; (x2) Address of terminator of last DATA item.
 sys_e_line:      equ 23641 ; (x2) Address of command being typed in.
 sys_k_cur:       equ 23643 ; (2) Address of cursor.
-sys_ch_add:      equ 23645 ; (x2) Address of the next character to be interpreted:
-                           ; the character after the argument of PEEK,
-                           ; or the NEWLINE at the end of a POKE statement.
+sys_ch_add:      equ 23645 ; (x2) Address of the next character to be interpreted.
 sys_x_ptr:       equ 23647 ; (2) Address of the character after the ? marker.
 sys_worksp:      equ 23649 ; (x2) Address of temporary work space.
 sys_stkbot:      equ 23651 ; (x2) Address of bottom of calculator stack.
@@ -279,4 +293,5 @@ sys_unused1:     equ 23728 ; (1) Not used.
 sys_unused2:     equ 23729 ; (1) Not used.
 sys_ramtop:      equ 23730 ; (2) Address of last byte of BASIC system area.
 sys_p_ramt:      equ 23732 ; (2) Address of last byte of physical RAM.
+sys_p_ramt.high: equ 23733
 
