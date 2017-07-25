@@ -1,6 +1,6 @@
 = Abersoft Forth _Disassembled_
 :author: Marcos Cruz (programandala.net)
-:revdate: 2017-02-10
+:revdate: 2017-07-25
 :linkattrs:
 
 // This file is written in AsciDoc/Asciidoctor format
@@ -256,4 +256,20 @@ abersoft_forth.rebuilt.symbols.z80s ::
   The symbols file created by Pasmo during the compilation.
 abersoft_forth.rebuilt.tap ::
   The new system, ready to be loaded by an emulator.
+
+== History of the project
+
+2015-05-20: Start of the project.
+
+2015-05-25: First successful disassembly and reassembly.
+
+2015-06: Improve the comments added to the disassembled code.
+
+2015-12-24: Create a Git repository from the files of the finished
+project.
+
+2017-07-25: Create a Git repository from the development backups in
+order to preserve the evolution of the project. Include also the
+changes from the previous repository. Replace the old repository in
+GitHub.
 
